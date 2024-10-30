@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/Domain_User/Domain_User.iml" filepath="$PROJECT_DIR$/Domain_User/Domain_User.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Visitor/Domain_Visitor.iml" filepath="$PROJECT_DIR$/Domain_Visitor/Domain_Visitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MarketplaceApp.iml" filepath="$PROJECT_DIR$/.idea/MarketplaceApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Repository/Repository.iml" filepath="$PROJECT_DIR$/Repository/Repository.iml" />
     </modules>
   </component>
 </project>
