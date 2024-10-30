@@ -1,12 +1,11 @@
 import java.util.Map;
 
 public class Category {
-    Map<String,Integer> categories;
+    public int categoryID;
+    public CategoryName name;
 
-    public Category(Map<String, Integer> categories) {
-        this.categories = categories;
+    public Category(int categoryID, CategoryName name) {
+        this.categoryID = categoryID;
+        this.name = name;
     }
-
-    public boolean addToCategory(Object product){};
-    public boolean removeFromCategory(Object product){};
 }

@@ -19,6 +19,16 @@ public class User extends Account{
         return userName.equals(this.userName) && password.equals(this.password);
     }
 
+    @Override
+    boolean addToCategory(Object product) {
+        return false;
+    }
+
+    @Override
+    boolean removeFromCategory(Object product) {
+        return false;
+    }
+
     public int getAccountID() {
         return accountID;
     }
