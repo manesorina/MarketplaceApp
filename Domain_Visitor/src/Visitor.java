@@ -9,7 +9,7 @@ public class Visitor {
 
     public String[] searchUsers(){};
 
-    public boolean createAccount(){};
+    public boolean createAccount(String username, String Email, String password, String phone){};
 
 
 }

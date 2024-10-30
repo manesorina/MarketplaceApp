@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Domain_Account/Domain_Account.iml" filepath="$PROJECT_DIR$/Domain_Account/Domain_Account.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_User/Domain_User.iml" filepath="$PROJECT_DIR$/Domain_User/Domain_User.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Visitor/Domain_Visitor.iml" filepath="$PROJECT_DIR$/Domain_Visitor/Domain_Visitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MarketplaceApp.iml" filepath="$PROJECT_DIR$/.idea/MarketplaceApp.iml" />

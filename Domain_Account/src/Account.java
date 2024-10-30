@@ -1,9 +1,9 @@
 abstract class Account {
-    int AccountID;
+    int accountID;
     String userName;
     String password;
     String email;
     String phone;
 
-    abstract boolean authenticate();
+    abstract boolean authenticate(String userName,String password);
 }
