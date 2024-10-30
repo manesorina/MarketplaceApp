@@ -15,8 +15,10 @@ public class User extends Account{
 
     @Override
     boolean authenticate(String userName, String password) {
-        return false;
+        return userName.equals(this.userName) && password.equals(this.password);
     }
+
+
 
 
 
