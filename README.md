@@ -32,6 +32,8 @@ The application is an online marketplace, where users can buy, sell, and review 
   ○ Enable Affordable Fashion Choices: Provide users with a wide variety of quality, affordable clothing options, making fashion 
     accessible to everyone.
 
-![Entity Relationship Diagram Team Whiteboard in Red Yellow Purple Trendy Stickers Style (1)](https://github.com/user-attachments/assets/63bec707-aa72-4f14-abce-a27b94360f96)
+
+![Entity Relationship Diagram Team Whiteboard in Red Yellow Purple Trendy Stickers Style (3)](https://github.com/user-attachments/assets/d1e450f2-35ca-49d2-967a-4e29e9ae96ac)
+
 
     
