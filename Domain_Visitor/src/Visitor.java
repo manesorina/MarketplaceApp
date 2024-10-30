@@ -5,7 +5,7 @@ public class Visitor {
         this.VId = VId;
     }
 
-    public String[] serchItems(){};
+    public String[] searchItems(){};
 
     public String[] searchUsers(){};
 
