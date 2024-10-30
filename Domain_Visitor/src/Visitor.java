@@ -1,13 +1,15 @@
 public class Visitor {
-    public int Id;
+    public int VId;
 
     public Visitor(int VId) {
-        this.Id = Id;
+        this.VId = VId;
     }
 
     public String[] serchItems(){};
 
     public String[] searchUsers(){};
+
+    public boolean createAccount(){};
 
 
 }
