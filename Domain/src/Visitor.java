@@ -1,15 +1,21 @@
 public class Visitor {
-    public int VId;
+    public int visitorID;
 
-    public Visitor(int VId) {
-        this.VId = VId;
+    public Visitor(int visitorID) {
+        this.visitorID = visitorID;
     }
 
-    public String[] searchItems(){};
+    public String[] searchItems(){
+        return new String[0];
+    };
 
-    public String[] searchUsers(){};
+    public String[] searchUsers(){
+        return new String[0];
+    };
 
-    public boolean createAccount(String username, String Email, String password, String phone){};
+    public boolean createAccount(String username, String Email, String password, String phone){
+        return false;
+    };
 
 
 }

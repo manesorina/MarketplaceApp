@@ -5,8 +5,12 @@ public class Admin extends User {
         super(accountID, userName, password, email, phone, score);
     }
 
-    public boolean deleteUser(User user){};
-    public boolean deleteReview(Review review){};
+    public boolean deleteUser(User user){
+        return false;
+    };
+    public boolean deleteReview(Review review){
+        return false;
+    };
 
     @Override
     boolean authenticate(String userName, String password) {
