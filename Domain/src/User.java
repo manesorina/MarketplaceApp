@@ -1,17 +1,15 @@
 import java.util.List;
 
-public class User extends Account{
-
+public class User extends Account implements Identifiable {
+    private int id;
     double score;
 
-    public User(int accountID, String userName, String password, String email, String phone, double score){
-        this.accountID=accountID;
+    public User(String userName, String password, String email, String phone, double score){
         this.userName=userName;
         this.password=password;
         this.email=email;
         this.phone=phone;
         this.score=0.0;
-
     }
 
     @Override
@@ -20,18 +18,20 @@ public class User extends Account{
     }
 
     @Override
-    boolean addToCategory(Object product) {
+    boolean addToCategory(Product product) {
         return false;
     }
 
     @Override
-    boolean removeFromCategory(Object product) {
+    boolean removeFromCategory(Product product) {
         return false;
     }
 
-    public int getAccountID() {
-        return accountID;
+    @Override
+    public int getId() {
+        return id;
     }
+    public void setId(int id) {this.id = id;}
     public String getUserName() {
         return userName;
     }
@@ -61,15 +61,12 @@ public class User extends Account{
     public void denyOffer() {};
     public void writeReview() {};
     public void deleteReview() {};
-    public void placeOrder(List<Object> products, String shippingAddress) {};
+    public void placeOrder(List<Product> products, String shippingAddress) {};
     public void getOrders() {};
     public void addProduct() {};
     public void removeProduct() {};
     public void getProducts() {};
     public void getFavorites() {};
-
-
-
 
 
 }

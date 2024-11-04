@@ -1,14 +1,23 @@
-public class Offer {
-    int offerID;
+public class Offer implements Identifiable{
+    int id;
     String message;
     double offeredPrice;
-    Object targetedObject;
+    Product targetedProduct;
+    String status;
 
-    public Offer(int offerID, String message, double offeredPrice, Object targetedObject) {
-        this.offerID = offerID;
+    public Offer(String message, double offeredPrice, Product targetedProduct, String status) {
         this.message = message;
         this.offeredPrice = offeredPrice;
-        this.targetedObject = targetedObject;
+        this.targetedProduct = targetedProduct;
+        this.status = "Pending...";
     }
 
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

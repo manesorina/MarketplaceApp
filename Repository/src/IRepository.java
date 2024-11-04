@@ -1,7 +1,9 @@
-public interface IRepository<T> {
+import java.util.List;
 
+public interface IRepository<T> {
     public void create(T object);
-    public void read(int id);
+    public T read(int id);
     public void update(T object);
-    public void delete(T object);
+    public T delete(int id);
+    List<T> getAll();
 }

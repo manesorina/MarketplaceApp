@@ -1,17 +1,24 @@
-public class Review {
+public class Review implements Identifiable {
 
-    int reviewID;
+    int id;
     double grade;
     String message;
     User reviewer;
     User reviewee;
 
-    public Review(int reviewID, double grade, String message, User reviewer, User reviewee) {
-        this.reviewID = reviewID;
+    public Review(double grade, String message, User reviewer, User reviewee) {
         this.grade = grade;
         this.message = message;
         this.reviewer = reviewer;
         this.reviewee = reviewee;
     }
 
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

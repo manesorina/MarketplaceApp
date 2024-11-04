@@ -1,8 +1,8 @@
-public class Visitor {
-    public int visitorID;
+public class Visitor implements Identifiable{
+    public int id;
 
-    public Visitor(int visitorID) {
-        this.visitorID = visitorID;
+    public Visitor() {
+
     }
 
     public String[] searchItems(){
@@ -17,5 +17,13 @@ public class Visitor {
         return false;
     };
 
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }
