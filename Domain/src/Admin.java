@@ -25,10 +25,8 @@ public class Admin extends Account implements Identifiable {
 
     @Override
     boolean authenticate(String userName, String password) {
-        return true;
-
+        return this.userName.equals(userName) && this.password.equals(password);
     }
-
     @Override
     boolean addToCategory(Product product) {
         return false;
