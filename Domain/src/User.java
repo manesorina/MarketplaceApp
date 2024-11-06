@@ -13,7 +13,7 @@ public class User extends Account implements Identifiable {
     }
 
     @Override
-    boolean authenticate(String userName, String password) {
+    public boolean authenticate(String userName, String password) {
         return userName.equals(this.userName) && password.equals(this.password);
     }
 

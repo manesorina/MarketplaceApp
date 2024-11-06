@@ -2,6 +2,7 @@ public class Product implements Identifiable{
 
     int id;
     private Category category;
+    String name;
     String color;
     int size;
     double price;

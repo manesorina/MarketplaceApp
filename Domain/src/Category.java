@@ -1,5 +1,3 @@
-import java.util.Map;
-
 public class Category implements Identifiable{
     public int id;
     public CategoryName name;

@@ -3,12 +3,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class IMRepository<T> implements IRepository<T> {
+public class IMRepository<T extends Identifiable> implements IRepository<T> {
     private final Map<Integer, T> storage = new HashMap<>();
     private int currentId = 1;
 
     @Override
     public void create(T object) {
+        object.setId(currentId);
         storage.put(currentId++, object);
     }
 
@@ -31,8 +32,11 @@ public class IMRepository<T> implements IRepository<T> {
         return storage.remove(id);
     }
 
-    @Override
+
+
     public List<T> getAll() {
         return new ArrayList<>(storage.values());
     }
 }
+
+
