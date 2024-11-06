@@ -15,26 +15,4 @@ public class Admin extends Account implements Identifiable {
 
     public void setId(int id) {this.id = id;}
 
-    public boolean deleteUser(User user){
-        return false;
-    };
-
-    public boolean deleteReview(Review review){
-        return false;
-    };
-
-    @Override
-    boolean authenticate(String userName, String password) {
-        return this.userName.equals(userName) && this.password.equals(password);
-    }
-    @Override
-    boolean addToCategory(Product product) {
-        return false;
-    }
-
-    @Override
-    boolean removeFromCategory(Product product) {
-        return false;
-    }
-
 }

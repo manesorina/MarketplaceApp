@@ -21,4 +21,36 @@ public class Review implements Identifiable {
     public void setId(int id) {
         this.id = id;
     }
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public User getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(User reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    public User getReviewee() {
+        return reviewee;
+    }
+
+    public void setReviewee(User reviewee) {
+        this.reviewee = reviewee;
+    }
 }

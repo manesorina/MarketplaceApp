@@ -14,4 +14,12 @@ public class Category implements Identifiable{
     public void setId(int id) {
         this.id = id;
     }
+
+    public CategoryName getName() {
+        return name;
+    }
+
+    public void setName(CategoryName name) {
+        this.name = name;
+    }
 }

@@ -1,4 +1,11 @@
 public class VisitorService {
-    //logic for browsing products and users, like sorting by user score,
-    //listing products in alphabetical order or by category
+    private final IMRepository<User> userRepo;
+    private final IMRepository<Product> productRepo;
+
+    public VisitorService(IMRepository<User> userRepo, IMRepository<Product> productRepo) {
+        this.userRepo = userRepo;
+        this.productRepo = productRepo;
+    }
+
+
 }
