@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="Domain" />
     <orderEntry type="module" module-name="Repository" />
     <orderEntry type="module" module-name="Service" />
+    <orderEntry type="module" module-name="Controller" />
   </component>
 </module>
