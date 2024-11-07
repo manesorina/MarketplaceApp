@@ -51,6 +51,9 @@ public class Main {
         System.out.println(adminService.removeProduct(a1.getId(),p1.getId(),u1));
 
 
+        Visitor v1 = new Visitor();
+        VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo);
+        System.out.println(visitorService.createAccount("ana", "123", "blabla", "030492"));
 
 
         //System.out.println(reviewRepo.getAll());
