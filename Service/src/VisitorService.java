@@ -16,6 +16,15 @@ public class VisitorService {
 
     }
 
+    public boolean createAccount(String username, String password, String email, String phone) {
+        User newUser = new User(username, password, email, phone, 0.0);
+        userRepo.create(newUser);
+        User confirmation = userRepo.read(newUser.getId());
+        if (confirmation != null)
+            return true;
+        else return false;
+    }
+
     public List<User> seeAllUsers() {
         return userRepo.getAll().stream().map(u -> u).collect(Collectors.toList());
     }

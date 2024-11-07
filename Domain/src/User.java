@@ -9,7 +9,7 @@ public class User extends Account implements Identifiable {
         this.password=password;
         this.email=email;
         this.phone=phone;
-        this.score=0.0;
+        this.score=score;
     }
 
     @Override

@@ -94,6 +94,9 @@ public class Main {
 
 
 
+        Visitor v1 = new Visitor();
+        VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo);
+        System.out.println(visitorService.createAccount("ana", "123", "blabla", "030492"));
 
 
         //System.out.println(reviewRepo.getAll());
