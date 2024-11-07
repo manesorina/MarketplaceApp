@@ -1,10 +1,10 @@
 public class Review implements Identifiable {
 
-    int id;
-    double grade;
-    String message;
-    User reviewer;
-    User reviewee;
+    private int id;
+    private double grade;
+    private String message;
+    private User reviewer;
+    private User reviewee;
 
     public Review(double grade, String message, User reviewer, User reviewee) {
         this.grade = grade;

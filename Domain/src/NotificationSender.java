@@ -1,7 +1,7 @@
 public class NotificationSender implements Identifiable{
 
-    int id;
-    String message;
+    private int id;
+    private String message;
 
     public NotificationSender(String message) {
         this.message = message;

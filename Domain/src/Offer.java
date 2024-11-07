@@ -1,9 +1,9 @@
 public class Offer implements Identifiable{
-    int id;
-    String message;
-    double offeredPrice;
-    Product targetedProduct;
-    String status;
+    private int id;
+    private String message;
+    private double offeredPrice;
+    private Product targetedProduct;
+    private String status;
 
     public Offer(String message, double offeredPrice, Product targetedProduct, String status) {
         this.message = message;

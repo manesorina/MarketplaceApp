@@ -2,7 +2,7 @@ import java.util.List;
 
 public class User extends Account implements Identifiable {
     private int id;
-    double score;
+    private double score;
 
     public User(String userName, String password, String email, String phone, double score){
         this.userName=userName;
@@ -18,4 +18,11 @@ public class User extends Account implements Identifiable {
     }
     public void setId(int id) {this.id = id;}
 
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
 }

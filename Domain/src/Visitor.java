@@ -1,5 +1,5 @@
 public class Visitor implements Identifiable{
-    public int id;
+    private int id;
 
     public Visitor() {
 

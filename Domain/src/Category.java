@@ -1,6 +1,6 @@
 public class Category implements Identifiable{
-    public int id;
-    public CategoryName name;
+    private int id;
+    private CategoryName name;
 
     public Category(CategoryName name) {
         this.name = name;

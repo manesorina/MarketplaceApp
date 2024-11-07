@@ -1,14 +1,15 @@
 public class Product implements Identifiable{
 
-    int id;
+    private int id;
     private Category category;
-    String name;
-    String color;
-    int size;
-    double price;
-    String brand;
-    String condition;
-    int nrViews;
+    private String name;
+    private String color;
+    private int size;
+    private double price;
+    private String brand;
+    private String condition;
+    private int nrViews;
+    private User listedBy;
 
     public Product(String color, int size, double price, String brand, String condition, int nrViews) {
         this.color = color;
@@ -17,6 +18,15 @@ public class Product implements Identifiable{
         this.brand = brand;
         this.condition = condition;
         this.nrViews = nrViews;
+        this.listedBy = listedBy;
+    }
+
+    public User getListedBy() {
+        return listedBy;
+    }
+
+    public void setListedBy(User listedBy) {
+        this.listedBy = listedBy;
     }
 
     public Category getCategory() {

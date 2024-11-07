@@ -43,15 +43,15 @@ public class Main {
         reviewRepo.create(r1);
         reviewRepo.create(r2);
 
-        AdminService adminService = new AdminService(userRepo, reviewRepo, adminRepo);
+        //AdminService adminService = new AdminService(userRepo, reviewRepo, adminRepo);
 
         //System.out.println(reviewRepo.getAll());
 //        System.out.println(a1.deleteReview(r2));
 //        System.out.println(reviewRepo.getAll());
 
-        System.out.println(userRepo.getAll());
-        adminService.deleteUser(a1.getId(), a1.userName, a1.password, u1.getId());
-        System.out.println(userRepo.getAll());
+//        System.out.println(userRepo.getAll());
+//        adminService.deleteUser(a1.getId(), a1.userName, a1.password, u1.getId());
+//        System.out.println(userRepo.getAll());
 
 
 

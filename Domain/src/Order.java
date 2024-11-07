@@ -1,11 +1,11 @@
 import java.util.List;
 
 public class Order implements Identifiable{
-    int id;
-    List<Product> products;
-    String status;
-    double totalPrice;
-    String shippingAddress;
+    private int id;
+    private List<Product> products;
+    private String status;
+    private double totalPrice;
+    private String shippingAddress;
 
     public Order(List<Product> products, String status, double totalPrice, String shippingAddress) {
         this.products = products;

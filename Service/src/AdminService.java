@@ -1,12 +1,11 @@
-public class AdminService {
-    private final IMRepository<User> userRepo;
-    private final IMRepository<Review> reviewRepo;
+import java.security.Provider;
+
+public class AdminService extends VisitorService {
     private final IMRepository<Admin> adminRepo;
 
-    public AdminService(IMRepository<User> userRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo) {
-        this.userRepo = userRepo;
-        this.reviewRepo = reviewRepo;
-        this.adminRepo=adminRepo;
+    public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo) {
+        super(userRepo, productRepo, reviewRepo);
+        this.adminRepo = adminRepo;
     }
 
     public boolean deleteUser(int adminId, String adminUsername, String adminPassword, int userId) {
