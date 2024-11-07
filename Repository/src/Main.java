@@ -48,7 +48,7 @@ public class Main {
 
 
         AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo);
-        System.out.println(adminService.removeFromCategory(a1.getId(),p1.getId(),u1));
+        System.out.println(adminService.removeProduct(a1.getId(),p1.getId(),u1));
 
 
 

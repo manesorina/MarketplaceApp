@@ -8,10 +8,12 @@ public class VisitorService {
     protected final IMRepository<Product> productRepo;
     protected final IMRepository<Review> reviewRepo;
 
+
     public VisitorService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo) {
         this.userRepo = userRepo;
         this.productRepo = productRepo;
         this.reviewRepo = reviewRepo;
+
     }
 
     public List<User> seeAllUsers() {

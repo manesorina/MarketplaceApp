@@ -11,11 +11,13 @@ public class AdminService extends VisitorService {
     }
 
 
-
+    private boolean authenticate(int adminId, String userName, String password) {
+        Admin admin = adminRepo.read(adminId);
+        return admin != null && admin.getUserName().equals(userName) && admin.getPassword().equals(password);
+    }
 
     public boolean deleteUser(int adminId, String adminUsername, String adminPassword, int userId) {
-        Admin admin = adminRepo.read(adminId);
-        if (admin != null && admin.authenticate(adminUsername, adminPassword)) {
+        if (authenticate(adminId, adminUsername, adminPassword)) {
             User user = userRepo.read(userId);
             if (user != null) {
                 userRepo.delete(userId);
@@ -26,9 +28,7 @@ public class AdminService extends VisitorService {
     }
 
     public boolean deleteReview(int adminId, String adminUsername, String adminPassword, int reviewId) {
-
-        Admin admin = adminRepo.read(adminId);
-        if (admin != null && admin.authenticate(adminUsername, adminPassword)) {
+        if (authenticate(adminId, adminUsername, adminPassword)) {
             Review review = reviewRepo.read(reviewId);
             if (review != null) {
                 reviewRepo.delete(reviewId);
@@ -40,7 +40,7 @@ public class AdminService extends VisitorService {
 
     public boolean removeProduct(int adminId, int productId, User seller) {
         Admin admin = adminRepo.read(adminId);
-        if (admin != null && admin.authenticate(admin.userName, admin.password)) {
+        if (admin != null && authenticate(adminId, admin.getUserName(), admin.getPassword())) {
             Product product = productRepo.read(productId);
             if (product != null && product.getListedBy().equals(seller)) {
                 productRepo.delete(product.getId());
@@ -49,6 +49,8 @@ public class AdminService extends VisitorService {
         }
         return false;
     }
+
+
 
 
 
