@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VisitorService {
-    private final IMRepository<User> userRepo;
-    private final IMRepository<Product> productRepo;
-    private final IMRepository<Review> reviewRepo;
+    protected final IMRepository<User> userRepo;
+    protected final IMRepository<Product> productRepo;
+    protected final IMRepository<Review> reviewRepo;
 
     public VisitorService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo) {
         this.userRepo = userRepo;

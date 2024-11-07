@@ -4,16 +4,13 @@ public class Main {
     public static void main(String[] args) {
 
 
-        IMRepository<Product> repo=new IMRepository<>();
+        IMRepository<Product> productRepo=new IMRepository<>();
         IMRepository<Admin> adminRepo=new IMRepository<>();
         IMRepository<User> userRepo=new IMRepository<>();
         IMRepository<Review> reviewRepo=new IMRepository<>();
 
 
-        //Product p1=new Product("blue",36,8.99,"Nike","Worn",0);
-        //Product p2=new Product("black",38,10.99,"Nike","Worn",0);
-//        repo.create(p1);
-//        repo.create(p2);
+
         //repo.delete(1);
         //System.out.print(repo.getAll());
 
@@ -36,6 +33,11 @@ public class Main {
 
         //System.out.println(userRepo.getAll());
 
+        Product p1=new Product("blue",36,8.99,"Nike","Worn",0,0,u1);
+        Product p2=new Product("black",38,10.99,"Nike","Worn",0,0,u2);
+        productRepo.create(p1);
+        productRepo.create(p2);
+
 
 
         Review r1=new Review(4.5,"I liked the service",u1,u2);
@@ -43,7 +45,13 @@ public class Main {
         reviewRepo.create(r1);
         reviewRepo.create(r2);
 
-        //AdminService adminService = new AdminService(userRepo, reviewRepo, adminRepo);
+
+
+        AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo);
+        System.out.println(adminService.removeFromCategory(a1.getId(),p1.getId(),u1));
+
+
+
 
         //System.out.println(reviewRepo.getAll());
 //        System.out.println(a1.deleteReview(r2));

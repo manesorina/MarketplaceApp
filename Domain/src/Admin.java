@@ -15,4 +15,7 @@ public class Admin extends Account implements Identifiable {
 
     public void setId(int id) {this.id = id;}
 
+    boolean authenticate(String userName, String password) {
+        return this.userName.equals(userName) && this.password.equals(password);
+    }
 }
