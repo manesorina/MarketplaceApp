@@ -9,9 +9,10 @@ public class Product implements Identifiable{
     private String brand;
     private String condition;
     private int nrViews;
+    private int nrLikes;
     private User listedBy;
 
-    public Product(String color, int size, double price, String brand, String condition, int nrViews) {
+    public Product(String color, int size, double price, String brand, String condition, int nrViews, int nrLikes, User listedBy) {
         this.color = color;
         this.size = size;
         this.price = price;
@@ -19,6 +20,7 @@ public class Product implements Identifiable{
         this.condition = condition;
         this.nrViews = nrViews;
         this.listedBy = listedBy;
+        this.nrLikes = nrLikes;
     }
 
     public User getListedBy() {
@@ -100,6 +102,14 @@ public class Product implements Identifiable{
 
     public void setNrViews(int nrViews) {
         this.nrViews = nrViews;
+    }
+
+    public int getNrLikes() {
+        return nrLikes;
+    }
+
+    public void setNrLikes(int nrLikes) {
+        this.nrLikes = nrLikes;
     }
 }
 

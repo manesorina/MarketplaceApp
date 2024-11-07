@@ -10,10 +10,10 @@ public class Main {
         IMRepository<Review> reviewRepo=new IMRepository<>();
 
 
-        Product p1=new Product("blue",36,8.99,"Nike","Worn",0);
-        Product p2=new Product("black",38,10.99,"Nike","Worn",0);
-        repo.create(p1);
-        repo.create(p2);
+        //Product p1=new Product("blue",36,8.99,"Nike","Worn",0);
+        //Product p2=new Product("black",38,10.99,"Nike","Worn",0);
+//        repo.create(p1);
+//        repo.create(p2);
         //repo.delete(1);
         //System.out.print(repo.getAll());
 
