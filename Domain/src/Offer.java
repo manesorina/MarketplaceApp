@@ -3,13 +3,13 @@ public class Offer implements Identifiable{
     private String message;
     private double offeredPrice;
     private Product targetedProduct;
-    private String status;
+    private Boolean accepted;
 
-    public Offer(String message, double offeredPrice, Product targetedProduct, String status) {
+    public Offer(String message, double offeredPrice, Product targetedProduct, Boolean accepted) {
         this.message = message;
         this.offeredPrice = offeredPrice;
         this.targetedProduct = targetedProduct;
-        this.status = status;
+        this.accepted=accepted;
     }
 
     @Override
@@ -45,11 +45,11 @@ public class Offer implements Identifiable{
         this.targetedProduct = targetedProduct;
     }
 
-    public String getStatus() {
-        return status;
+    public Boolean getStatus() {
+        return accepted;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(Boolean accepted) {
+        this.accepted = accepted;
     }
 }

@@ -12,7 +12,8 @@ public class Product implements Identifiable{
     private int nrLikes;
     private User listedBy;
 
-    public Product(String color, int size, double price, String brand, String condition, int nrViews, int nrLikes, User listedBy) {
+    public Product(String name,String color, int size, double price, String brand, String condition, int nrViews, int nrLikes, User listedBy) {
+        this.name=name;
         this.color = color;
         this.size = size;
         this.price = price;

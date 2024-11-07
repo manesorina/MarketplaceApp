@@ -1,4 +1,5 @@
-import java.sql.SQLOutput;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -8,11 +9,13 @@ public class Main {
         IMRepository<Admin> adminRepo=new IMRepository<>();
         IMRepository<User> userRepo=new IMRepository<>();
         IMRepository<Review> reviewRepo=new IMRepository<>();
+        IMRepository<Offer> offerRepo=new IMRepository<>();
+        IMRepository<Order> orderRepo=new IMRepository<>();
 
 
 
         //repo.delete(1);
-        //System.out.print(repo.getAll());
+
 
 
         Admin a1=new Admin("JohnDoe","qwerty1234","johnedoe@email.com","0747896547");
@@ -33,12 +36,22 @@ public class Main {
 
         //System.out.println(userRepo.getAll());
 
-        Product p1=new Product("blue",36,8.99,"Nike","Worn",0,0,u1);
-        Product p2=new Product("black",38,10.99,"Nike","Worn",0,0,u2);
+        Product p1=new Product("TShirt","blue",36,8.99,"Nike","Worn",0,0,u1);
+        Product p2=new Product("Pants","black",38,10.99,"Nike","Worn",0,0,u2);
+        Product p3=new Product("Shoes","yellow",40,11.45,"Puma","New",0,0,u1);
+        Product p4=new Product("Dress","pink",40,15.23,"H&M","Good",0,0,u1);
+
+        Category categoryTops = new Category(CategoryName.TOPS);
+        Category categoryDresses= new Category(CategoryName.DRESSES);
+        Category categoryShoes = new Category(CategoryName.FOOTWEAR);
+        p1.setCategory(categoryTops);
+        p2.setCategory(categoryTops);
+        p3.setCategory(categoryShoes);
+        p4.setCategory(categoryDresses);
         productRepo.create(p1);
         productRepo.create(p2);
-
-
+        productRepo.create(p3);
+        productRepo.create(p4);
 
         Review r1=new Review(4.5,"I liked the service",u1,u2);
         Review r2=new Review(1.5,"Very bad service",u2,u3);
@@ -48,7 +61,37 @@ public class Main {
 
 
         AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo);
-        System.out.println(adminService.removeProduct(a1.getId(),p1.getId(),u1));
+        UserService userService=new UserService(userRepo,productRepo,reviewRepo,orderRepo,offerRepo);
+
+        VisitorService visitorService=new VisitorService(userRepo,productRepo,reviewRepo);
+        Category category = p2.getCategory();
+       // System.out.println(category.getName());
+
+        List<Product> orderProducts = Arrays.asList(p3, p4);
+        Order or1=new Order(orderProducts,"sent",0,"Strada xyz");
+
+        //System.out.println(userService.placeOrder(u3.getId(),u1,or1));
+        //System.out.println(or1.getTotalPrice());
+
+
+
+
+
+
+        Category newCategory = new Category(CategoryName.OUTERWEAR);
+
+       // System.out.println(adminService.updateCategory(a1.getId(),p2.getId(),newCategory));
+        //Category category2 = p2.getCategory();
+        //System.out.println(category2.getName());
+
+
+
+        //System.out.println(visitorService.searchProductsByUsername(u2.getUserName()));
+        Offer o1=new Offer("Would you sell he product with 7.00? ",7.00,p1,null);
+        offerRepo.create(o1);
+        //System.out.println(userService.sendOffer(u1,u2.getId(),o1,p1.getId()));
+       // System.out.println(userService.acceptOffer(u2.getId(),o1));
+
 
 
 

@@ -38,7 +38,7 @@ public class AdminService extends VisitorService {
         return false;
     }
 
-    public boolean removeProduct(int adminId, int productId, User seller) {
+    public boolean deleteProduct(int adminId, int productId, User seller) {
         Admin admin = adminRepo.read(adminId);
         if (admin != null && authenticate(adminId, admin.getUserName(), admin.getPassword())) {
             Product product = productRepo.read(productId);
@@ -50,6 +50,17 @@ public class AdminService extends VisitorService {
         return false;
     }
 
+    public boolean updateCategory(int adminId, int productId, Category newCategory){
+        Admin admin = adminRepo.read(adminId);
+        if (admin != null && authenticate(adminId, admin.getUserName(), admin.getPassword())) {
+            Product product = productRepo.read(productId);
+            product.setCategory(newCategory);
+            productRepo.update(product);
+            return true;
+
+        }
+        return false;
+    }
 
 
 
