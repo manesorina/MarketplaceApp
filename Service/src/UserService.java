@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserService extends VisitorService{
 
     IMRepository<Order> orderRepo;
@@ -37,28 +40,79 @@ public class UserService extends VisitorService{
         return offer.getStatus();
     }
 
-    public boolean placeOrder(int buyerId, User seller, Order order) {
+    public boolean placeOrder(User seller, Order order) {
+        User buyer = order.getBuyer();
 
-        User buyer = userRepo.read(buyerId);
-        if (buyer == null || !authenticate(buyerId, buyer.getUserName(), buyer.getPassword())) {
+        if (buyer == null || !authenticate(buyer.getId(), buyer.getUserName(), buyer.getPassword())) {
             return false;
-
         }
+
         for (Product product : order.getProducts()) {
             Product fetchedProduct = productRepo.read(product.getId());
             if (fetchedProduct == null || !fetchedProduct.getListedBy().equals(seller)) {
                 return false;
             }
         }
-        double totalPrice = 0;
-        for (Product product : order.getProducts()) {
-            totalPrice += product.getPrice();
 
-        }
-        order.setTotalPrice(totalPrice);
+        order.setTotalPrice(order.getTotalPrice());
         orderRepo.create(order);
         return true;
     }
+
+
+    public boolean writeReview(Review review){
+        User reviewer=review.getReviewer();
+        User reviewee=review.getReviewee();
+
+        if(reviewer!= null && authenticate(reviewer.getId(),reviewer.getUserName(),reviewer.getPassword())){
+
+            List<Order> orders=orderRepo.getAll();
+            for(Order order:orders){
+                if(order.getProducts().stream().anyMatch(product -> product.getListedBy().equals(reviewee))
+                && order.getId()==reviewer.getId()){
+
+                    reviewRepo.create(review);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean deleteReview( int userId){
+        User user=userRepo.read(userId);
+        List<Review> reviews=reviewRepo.getAll();
+        if( user != null && authenticate(userId, user.getUserName(), user.getPassword())){
+            for(Review review:reviews){
+                if(review.getReviewer().equals(user)){
+                    reviewRepo.delete(review.getId());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public List<Order> getOrders(int userID){
+        User user= userRepo.read(userID);
+       List<Order> personalOrders=new ArrayList<>();
+        if(user!= null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+           List<Order>orders=orderRepo.getAll();
+           for(Order order:orders){
+                if(order.getBuyer().equals(user)){
+                    personalOrders.add(order);
+                }
+           }
+       }
+        return personalOrders;
+    }
+
+
+
 
 
 

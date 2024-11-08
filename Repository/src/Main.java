@@ -53,7 +53,7 @@ public class Main {
         productRepo.create(p3);
         productRepo.create(p4);
 
-        Review r1=new Review(4.5,"I liked the service",u1,u2);
+        Review r1=new Review(4.5,"I liked the service",u3,u1);
         Review r2=new Review(1.5,"Very bad service",u2,u3);
         reviewRepo.create(r1);
         reviewRepo.create(r2);
@@ -68,11 +68,12 @@ public class Main {
        // System.out.println(category.getName());
 
         List<Product> orderProducts = Arrays.asList(p3, p4);
-        Order or1=new Order(orderProducts,"sent",0,"Strada xyz");
+        Order or1=new Order(orderProducts,"sent","Strada xyz",u3);
 
-        //System.out.println(userService.placeOrder(u3.getId(),u1,or1));
+        System.out.println(userService.placeOrder(u1,or1));
         //System.out.println(or1.getTotalPrice());
-
+        System.out.println(userService.writeReview(r1));
+        System.out.println(userService.getOrders(u3.getId()));
 
 
 
@@ -95,7 +96,7 @@ public class Main {
 
 
         Visitor v1 = new Visitor();
-        VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo);
+        //VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo);
         System.out.println(visitorService.createAccount("ana", "123", "blabla", "030492"));
 
 
