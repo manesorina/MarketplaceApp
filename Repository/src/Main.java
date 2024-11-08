@@ -25,7 +25,7 @@ public class Main {
 
         //System.out.println(a1.authenticate("johnDoe","qwerty1234"));
         //System.out.print(a2.authenticate("johnDoe","1234"));
-
+        //List<Product> favourites= Arrays.asList({})
 
         User u1= new User("MikeHouse","1q2w3e4r","mikehouse@gmail.com","0748996332",0);
         User u2= new User("LisaTeak","xyz987","lisateak@gmail.com","0747558114",4.5);
@@ -73,7 +73,7 @@ public class Main {
         System.out.println(userService.placeOrder(u1,or1));
         //System.out.println(or1.getTotalPrice());
         System.out.println(userService.writeReview(r1));
-        System.out.println(userService.getOrders(u3.getId()));
+        System.out.println(userService.displayOrders(u3.getId()));
 
 
 

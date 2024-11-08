@@ -97,7 +97,7 @@ public class UserService extends VisitorService{
 
 
 
-    public List<Order> getOrders(int userID){
+    public List<Order> displayOrders(int userID){
         User user= userRepo.read(userID);
        List<Order> personalOrders=new ArrayList<>();
         if(user!= null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
@@ -110,6 +110,41 @@ public class UserService extends VisitorService{
        }
         return personalOrders;
     }
+
+
+
+    public boolean addToFavorites(int userId,Product product){
+        User user=userRepo.read(userId);
+        if(user!=null && authenticate(user.getId(),user.getUserName(), user.getPassword())){
+            if(product!=null && !user.favourites.contains(product)){
+                user.favourites.add(product);
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public boolean removeFromFavourites(int userId, Product product){
+        User user=userRepo.read(userId);
+        if(user!=null && authenticate(user.getId(),user.getUserName(), user.getPassword())){
+            if(product!=null && user.favourites.contains(product)){
+                user.favourites.remove(product);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Product> displayFavourites(int userId){
+        User user=userRepo.read(userId);
+        if(user!=null && authenticate(user.getId(),user.getUserName(), user.getPassword())){
+            return user.getFavourites();
+        }
+        return new ArrayList<>();
+    }
+
+    public boolean listProduct()
 
 
 
