@@ -20,6 +20,8 @@ public class UserService extends VisitorService{
         return user != null && user.getUserName().equals(userName) && user.getPassword().equals(password);
     }
 
+
+
     public boolean sendOffer(User seller, int buyerId, Offer offer, int productId){
         User buyer=userRepo.read(buyerId);
         if( buyer != null && authenticate(buyerId, buyer.getUserName(), buyer.getPassword())){
@@ -144,7 +146,35 @@ public class UserService extends VisitorService{
         return new ArrayList<>();
     }
 
-    public boolean listProduct()
+    public boolean listProduct(int userId, Product product){
+        User user=userRepo.read(userId);
+        if(user!=null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+            if(product!=null && !user.listedProducts.contains(product)){
+                user.listedProducts.add(product);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteListedProduct(int userId, Product product){
+        User user=userRepo.read(userId);
+        if(user!=null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+            if(product!=null && user.listedProducts.contains(product)){
+                user.listedProducts.remove(product);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Product> displayListedProducts(int userId){
+        User user=userRepo.read(userId);
+        if(user!=null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+            return user.getListedProducts();
+        }
+        return new ArrayList<>();
+    }
 
 
 

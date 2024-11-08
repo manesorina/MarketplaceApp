@@ -11,7 +11,7 @@ public class AdminService extends VisitorService {
     }
 
 
-    private boolean authenticate(int adminId, String userName, String password) {
+    protected boolean authenticate(int adminId, String userName, String password) {
         Admin admin = adminRepo.read(adminId);
         return admin != null && admin.getUserName().equals(userName) && admin.getPassword().equals(password);
     }
