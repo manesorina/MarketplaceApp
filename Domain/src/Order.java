@@ -65,4 +65,15 @@ public class Order implements Identifiable{
         return products.stream().mapToDouble(Product::getPrice).sum();
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", products=" + products +
+                ", status='" + status + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", shippingAddress='" + shippingAddress + '\'' +
+                ", buyer=" + buyer +
+                '}';
+    }
 }

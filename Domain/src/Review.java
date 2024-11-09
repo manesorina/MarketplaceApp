@@ -53,4 +53,15 @@ public class Review implements Identifiable {
     public void setReviewee(User reviewee) {
         this.reviewee = reviewee;
     }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", grade=" + grade +
+                ", message='" + message + '\'' +
+                ", reviewer=" + reviewer +
+                ", reviewee=" + reviewee +
+                '}';
+    }
 }

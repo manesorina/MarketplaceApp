@@ -22,4 +22,12 @@ public class Category implements Identifiable{
     public void setName(CategoryName name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name=" + name +
+                '}';
+    }
 }

@@ -44,7 +44,7 @@ public class ConsoleApp {
         String password = scanner.nextLine();
         System.out.println("Please enter your phone number: ");
         String phoneNumber = scanner.nextLine();
-        boolean success = false; //aici functia din controller pt sign up
+        boolean success = controller.createAccount(username, password, email, phoneNumber);
         if (success){
             System.out.println("Account created successfully! Please log in to continue.");
         }

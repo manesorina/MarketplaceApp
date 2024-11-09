@@ -52,4 +52,15 @@ public class Offer implements Identifiable{
     public void setStatus(Boolean accepted) {
         this.accepted = accepted;
     }
+
+    @Override
+    public String toString() {
+        return "Offer{" +
+                "id=" + id +
+                ", message='" + message + '\'' +
+                ", offeredPrice=" + offeredPrice +
+                ", targetedProduct=" + targetedProduct +
+                ", accepted=" + accepted +
+                '}';
+    }
 }

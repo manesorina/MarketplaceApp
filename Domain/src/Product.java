@@ -112,5 +112,22 @@ public class Product implements Identifiable{
     public void setNrLikes(int nrLikes) {
         this.nrLikes = nrLikes;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", category=" + category +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                ", size=" + size +
+                ", price=" + price +
+                ", brand='" + brand + '\'' +
+                ", condition='" + condition + '\'' +
+                ", nrViews=" + nrViews +
+                ", nrLikes=" + nrLikes +
+                ", listedBy=" + listedBy +
+                '}';
+    }
 }
 

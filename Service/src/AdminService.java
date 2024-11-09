@@ -10,10 +10,10 @@ public class AdminService extends VisitorService {
 
     }
 
-
-    protected boolean authenticate(int adminId, String userName, String password) {
-        Admin admin = adminRepo.read(adminId);
-        return admin != null && admin.getUserName().equals(userName) && admin.getPassword().equals(password);
+    protected boolean authenticate(String userName, String password) {
+        List<Admin> admins = adminRepo.findByCriteria(admin -> admin.getUserName().equals(userName) && admin.getPassword().equals(password));
+        Admin admin = admins.getFirst();
+        return admin != null;
     }
 
     public boolean deleteUser(int adminId, String adminUsername, String adminPassword, int userId) {

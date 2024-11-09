@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class IMRepository<T extends Identifiable> implements IRepository<T> {
     private final Map<Integer, T> storage = new HashMap<>();
@@ -36,6 +38,12 @@ public class IMRepository<T extends Identifiable> implements IRepository<T> {
 
     public List<T> getAll() {
         return new ArrayList<>(storage.values());
+    }
+
+    public List<T> findByCriteria(Predicate<T> predicate) {
+        return storage.values().stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
     }
 
 

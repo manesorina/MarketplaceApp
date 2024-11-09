@@ -15,9 +15,10 @@ public class UserService extends VisitorService{
 
     }
 
-    public boolean authenticate(int userId,String userName, String password){
-        User user= userRepo.read(userId);
-        return user != null && user.getUserName().equals(userName) && user.getPassword().equals(password);
+    public boolean authenticate(String userName, String password){
+        List<User> users = userRepo.findByCriteria(user -> user.getUserName().equals(userName) && user.getPassword().equals(password));
+        User user = users.getFirst();
+        return user != null;
     }
 
 
@@ -82,7 +83,7 @@ public class UserService extends VisitorService{
     }
 
 
-    public boolean deleteReview( int userId){
+    public boolean deleteReview(int userId){
         User user=userRepo.read(userId);
         List<Review> reviews=reviewRepo.getAll();
         if( user != null && authenticate(userId, user.getUserName(), user.getPassword())){

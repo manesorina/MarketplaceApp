@@ -15,5 +15,14 @@ public class Admin extends Account implements Identifiable {
 
     public void setId(int id) {this.id = id;}
 
-
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }
