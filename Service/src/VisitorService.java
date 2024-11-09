@@ -42,17 +42,17 @@ public class VisitorService {
                         .contains(username.toLowerCase())).collect(Collectors.toList());
     }
 
-    public List<User> searchUsersByScoreRange(double minScore, double maxScore) {
+    public List<User> searchUsersByMinimumScore(double minScore) {
         return userRepo.getAll().stream()
-                .filter(user -> user.getScore() >= minScore && user.getScore() <= maxScore)
+                .filter(user -> user.getScore() >= minScore)
                 .collect(Collectors.toList());
     }
 
-    public List<User> searchUsersByReviewCountRange(double reviewMin, double reviewMax) {
+    public List<User> searchUsersByMinimumReviewCount(double reviewMin) {
         Map<User, Long> reviewCounts = reviewRepo.getAll().stream()
                 .collect(Collectors.groupingBy(Review::getReviewee, Collectors.counting()));
         return reviewCounts.entrySet().stream()
-                .filter(entry -> entry.getValue() >= reviewMin && entry.getValue() <= reviewMax)
+                .filter(entry -> entry.getValue() >= reviewMin)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
