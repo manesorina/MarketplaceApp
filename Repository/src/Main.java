@@ -73,7 +73,7 @@ public class Main {
         System.out.println(userService.placeOrder(u1,or1));
         //System.out.println(or1.getTotalPrice());
         System.out.println(userService.writeReview(r1));
-        System.out.println(userService.displayOrders(u3.getId()));
+        System.out.println(userService.displayOrders(u3.getUserName(),u3.getPassword()));
 
 
 
@@ -105,7 +105,7 @@ public class Main {
 //        System.out.println(reviewRepo.getAll());
 
 //        System.out.println(userRepo.getAll());
-//        adminService.deleteUser(a1.getId(), a1.userName, a1.password, u1.getId());
+//           adminService.deleteUser(a1.userName, a1.password, u1.getUserName());
 //        System.out.println(userRepo.getAll());
 
 

@@ -16,47 +16,49 @@ public class AdminService extends VisitorService {
         return admin != null;
     }
 
-    public boolean deleteUser(int adminId, String adminUsername, String adminPassword, int userId) {
-        if (authenticate(adminId, adminUsername, adminPassword)) {
-            User user = userRepo.read(userId);
-            if (user != null) {
-                userRepo.delete(userId);
+    public boolean deleteUser(String adminUsername, String adminPassword, String nameOfUser) {
+        if (authenticate(adminUsername, adminPassword)) {
+            List<User> users = userRepo.findByCriteria(user -> user.getUserName().equals(nameOfUser));
+            if (!users.isEmpty()) {
+                userRepo.delete(users.getFirst().getId());
                 return true;
             }
         }
         return false;
     }
 
-    public boolean deleteReview(int adminId, String adminUsername, String adminPassword, int reviewId) {
-        if (authenticate(adminId, adminUsername, adminPassword)) {
-            Review review = reviewRepo.read(reviewId);
-            if (review != null) {
-                reviewRepo.delete(reviewId);
+    public boolean deleteReview(int adminId, String adminUsername, String adminPassword, User reviewerName, User revieweeName) {
+        if (authenticate(adminUsername, adminPassword)) {
+            List<Review> reviews = reviewRepo.findByCriteria(review -> review.getReviewer().equals(reviewerName) && review.getReviewee().equals(revieweeName));
+            if (!reviews.isEmpty()) {
+                reviewRepo.delete(reviews.getFirst().getId());
                 return true;
             }
         }
         return false;
     }
 
-    public boolean deleteProduct(int adminId, int productId, User seller) {
-        Admin admin = adminRepo.read(adminId);
-        if (admin != null && authenticate(adminId, admin.getUserName(), admin.getPassword())) {
-            Product product = productRepo.read(productId);
-            if (product != null && product.getListedBy().equals(seller)) {
-                productRepo.delete(product.getId());
+    public boolean deleteProduct(String adminUsername, String adminPassword, int productId, User seller) {
+        if (authenticate(adminUsername,adminPassword)) {
+            
+            List<Product> products=productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
+            
+            if (!products.isEmpty()) {
+                productRepo.delete(products.getFirst().getId());
                 return true;
             }
         }
         return false;
     }
 
-    public boolean updateCategory(int adminId, int productId, Category newCategory){
-        Admin admin = adminRepo.read(adminId);
-        if (admin != null && authenticate(adminId, admin.getUserName(), admin.getPassword())) {
-            Product product = productRepo.read(productId);
-            product.setCategory(newCategory);
-            productRepo.update(product);
-            return true;
+    public boolean updateCategory(String adminUsername,String adminPassword, User seller, Category newCategory){
+        if (authenticate(adminUsername,adminPassword)) {
+            List<Product> products=productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
+            if(!products.isEmpty()){
+                products.getFirst().setCategory(newCategory);
+                productRepo.update(products.getFirst());
+                return true;
+            }
 
         }
         return false;

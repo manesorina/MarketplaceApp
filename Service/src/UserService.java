@@ -23,11 +23,11 @@ public class UserService extends VisitorService{
 
 
 
-    public boolean sendOffer(User seller, int buyerId, Offer offer, int productId){
-        User buyer=userRepo.read(buyerId);
-        if( buyer != null && authenticate(buyerId, buyer.getUserName(), buyer.getPassword())){
-            Product product = productRepo.read(productId);
-            if (product != null && product.getListedBy().equals(seller)) {
+    public boolean sendOffer(User seller, String buyerUsername,String buyerPassword, Offer offer){
+
+        if(authenticate(buyerUsername,buyerPassword)){
+            List<Product> products=productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
+            if (!products.isEmpty()) {
                 offerRepo.create(offer);
                 return true;
             }
@@ -35,9 +35,8 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public boolean acceptOffer(int sellerId, Offer offer){
-        User seller=userRepo.read(sellerId);
-        if(seller != null && authenticate(sellerId,seller.getUserName(), seller.getPassword())){
+    public boolean acceptOffer(String sellerUsername,String sellerPassword, Offer offer){
+        if(authenticate(sellerUsername,sellerPassword)){
             offer.setStatus(true);
         }
         return offer.getStatus();
@@ -46,7 +45,7 @@ public class UserService extends VisitorService{
     public boolean placeOrder(User seller, Order order) {
         User buyer = order.getBuyer();
 
-        if (buyer == null || !authenticate(buyer.getId(), buyer.getUserName(), buyer.getPassword())) {
+        if (buyer == null || !authenticate(buyer.getUserName(), buyer.getPassword())) {
             return false;
         }
 
@@ -67,7 +66,7 @@ public class UserService extends VisitorService{
         User reviewer=review.getReviewer();
         User reviewee=review.getReviewee();
 
-        if(reviewer!= null && authenticate(reviewer.getId(),reviewer.getUserName(),reviewer.getPassword())){
+        if(reviewer!= null && authenticate(reviewer.getUserName(),reviewer.getPassword())){
 
             List<Order> orders=orderRepo.getAll();
             for(Order order:orders){
@@ -83,12 +82,12 @@ public class UserService extends VisitorService{
     }
 
 
-    public boolean deleteReview(int userId){
-        User user=userRepo.read(userId);
-        List<Review> reviews=reviewRepo.getAll();
-        if( user != null && authenticate(userId, user.getUserName(), user.getPassword())){
-            for(Review review:reviews){
-                if(review.getReviewer().equals(user)){
+    public boolean deleteReview(String username, String password) {
+        User user = findByCriteriaHelper(username, password);
+        if (user != null) {
+            List<Review> reviews = reviewRepo.getAll();
+            for (Review review : reviews) {
+                if (review.getReviewer().equals(user)) {
                     reviewRepo.delete(review.getId());
                     return true;
                 }
@@ -100,12 +99,12 @@ public class UserService extends VisitorService{
 
 
 
-    public List<Order> displayOrders(int userID){
-        User user= userRepo.read(userID);
+    public List<Order> displayOrders(String userName, String password){
        List<Order> personalOrders=new ArrayList<>();
-        if(user!= null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
-           List<Order>orders=orderRepo.getAll();
-           for(Order order:orders){
+       User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
+            List<Order>orders=orderRepo.getAll();
+            for(Order order:orders){
                 if(order.getBuyer().equals(user)){
                     personalOrders.add(order);
                 }
@@ -116,11 +115,13 @@ public class UserService extends VisitorService{
 
 
 
-    public boolean addToFavorites(int userId,Product product){
-        User user=userRepo.read(userId);
-        if(user!=null && authenticate(user.getId(),user.getUserName(), user.getPassword())){
+    public boolean addToFavorites(String userName, String password,Product product){
+        User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
             if(product!=null && !user.favourites.contains(product)){
                 user.favourites.add(product);
+                int newNrOfLikes= product.getNrLikes()+1;
+                product.setNrLikes(newNrOfLikes);
                 return true;
             }
         }
@@ -128,9 +129,9 @@ public class UserService extends VisitorService{
 
     }
 
-    public boolean removeFromFavourites(int userId, Product product){
-        User user=userRepo.read(userId);
-        if(user!=null && authenticate(user.getId(),user.getUserName(), user.getPassword())){
+    public boolean removeFromFavourites(String userName,String password, Product product){
+        User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
             if(product!=null && user.favourites.contains(product)){
                 user.favourites.remove(product);
                 return true;
@@ -139,17 +140,17 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public List<Product> displayFavourites(int userId){
-        User user=userRepo.read(userId);
-        if(user!=null && authenticate(user.getId(),user.getUserName(), user.getPassword())){
+    public List<Product> displayFavourites(String userName, String password){
+        User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
             return user.getFavourites();
         }
         return new ArrayList<>();
     }
 
-    public boolean listProduct(int userId, Product product){
-        User user=userRepo.read(userId);
-        if(user!=null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+    public boolean listProduct(String userName,String password, Product product){
+        User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
             if(product!=null && !user.listedProducts.contains(product)){
                 user.listedProducts.add(product);
                 return true;
@@ -158,9 +159,9 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public boolean deleteListedProduct(int userId, Product product){
-        User user=userRepo.read(userId);
-        if(user!=null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+    public boolean deleteListedProduct(Product product,String userName,String password){
+        User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
             if(product!=null && user.listedProducts.contains(product)){
                 user.listedProducts.remove(product);
                 return true;
@@ -169,16 +170,22 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public List<Product> displayListedProducts(int userId){
-        User user=userRepo.read(userId);
-        if(user!=null && authenticate(user.getId(),user.getUserName(),user.getPassword())){
+    public List<Product> displayListedProducts(String userName, String password){
+        User user=findByCriteriaHelper(userName,password);
+        if(user!=null){
             return user.getListedProducts();
         }
         return new ArrayList<>();
     }
 
 
-
+    public User findByCriteriaHelper(String username,String password){
+        if(authenticate(username,password)){
+            List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
+            return users.getFirst();
+        }
+        return null;
+    }
 
 
 
