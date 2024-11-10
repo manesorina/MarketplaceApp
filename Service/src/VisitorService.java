@@ -1,6 +1,4 @@
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class VisitorService {
@@ -269,6 +267,18 @@ public class VisitorService {
         return reviewRepo.getAll().stream().filter(review -> review.getReviewer().getUserName().contains(name))
                 .sorted(Comparator.comparing(Review::getGrade).reversed()).collect(Collectors.toList());
     }
+
+    public List<Product> displayUserListings(String username) {
+        List<User> users =userRepo.findByCriteria(user -> user.getUserName().equals(username));
+        User user=users.getFirst();
+        if (user != null) {
+            return user.getListedProducts();
+        }
+        return new ArrayList<>();
+
+    }
+
+
 
 
 }

@@ -88,8 +88,8 @@ public class Main {
 
 
         //System.out.println(visitorService.searchProductsByUsername(u2.getUserName()));
-        Offer o1=new Offer("Would you sell he product with 7.00? ",7.00,p1,null);
-        offerRepo.create(o1);
+        //Offer o1=new Offer("Would you sell he product with 7.00? ",7.00,p1,null);
+        //offerRepo.create(o1);
         //System.out.println(userService.sendOffer(u1,u2.getId(),o1,p1.getId()));
        // System.out.println(userService.acceptOffer(u2.getId(),o1));
 

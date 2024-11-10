@@ -249,7 +249,16 @@ public class ConsoleApp {
 
         int choice = scanner.nextInt();
         scanner.nextLine();
-        List<Product> sortedProducts = new ArrayList<>(); //controller.sortProducts(choice);
+
+        System.out.println("Sort in:");
+        System.out.println("1. Ascending");
+        System.out.println("2. Descending");
+        System.out.print("Choose an option: ");
+
+        int order = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Product> sortedProducts = controller.sortProducts(choice, order);
         sortedProducts.forEach(System.out::println);
         return sortedProducts;
     }
@@ -267,7 +276,7 @@ public class ConsoleApp {
         System.out.println("Choose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-        List<Product> filteredProducts = new ArrayList<>(); //controller.sortProducts(choice);
+        List<Product> filteredProducts = controller.filterProducts(choice);
         filteredProducts.forEach(System.out::println);
         return filteredProducts;
     }
@@ -430,7 +439,18 @@ public class ConsoleApp {
         System.out.print("Choose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-        List<User> sortedUsers = new ArrayList<>(); //controller.sortUsers(choice);
+
+        System.out.println("Sort in:");
+        System.out.println("1. Ascending");
+        System.out.println("2. Descending");
+        System.out.print("Choose an option: ");
+
+        int order = scanner.nextInt();
+        scanner.nextLine();
+
+
+
+        List<User> sortedUsers = controller.sortUsers(choice,order);
         sortedUsers.forEach(System.out::println);
         return sortedUsers;
     }
@@ -443,7 +463,7 @@ public class ConsoleApp {
         System.out.print("Choose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-        List<User> filteredUsers = new ArrayList<>(); //controller.filterUsers(choice);
+        List<User> filteredUsers =controller.filterUsers(choice);
         filteredUsers.forEach(System.out::println);
         return filteredUsers;
     }
@@ -484,7 +504,7 @@ public class ConsoleApp {
         System.out.print("Enter User ID to view their listings: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
-        List<Product> userProducts = new ArrayList<>(); //controller.getUserListings();
+        List<Product> userProducts = controller.getUserListings();
         if (userProducts.isEmpty()) {
             System.out.println("This user has no listed products.");
         } else {

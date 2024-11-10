@@ -23,11 +23,14 @@ public class UserService extends VisitorService{
 
 
 
-    public boolean sendOffer(User seller, String buyerUsername,String buyerPassword, Offer offer){
-
-        if(authenticate(buyerUsername,buyerPassword)){
-            List<Product> products=productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
+    public boolean sendOffer(User seller, String buyerUsername, String buyerPassword, Offer offer) {
+        if (authenticate(buyerUsername, buyerPassword)) {
+            List<Product> products = productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
             if (!products.isEmpty()) {
+
+                offer.setSender(findByCriteriaHelper(buyerUsername, buyerPassword));
+                offer.setReciever(seller);
+
                 offerRepo.create(offer);
                 return true;
             }
@@ -35,12 +38,42 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public boolean acceptOffer(String sellerUsername,String sellerPassword, Offer offer){
-        if(authenticate(sellerUsername,sellerPassword)){
-            offer.setStatus(true);
+
+    public boolean acceptOffer(String sellerUsername, String sellerPassword, Offer offer) {
+        if (authenticate(sellerUsername, sellerPassword)) {
+            if (offer.getReciever().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
+                offer.setStatus(true);
+                return true;
+            }
         }
-        return offer.getStatus();
+        return false;
     }
+
+    public boolean declineOffer(String sellerUsername, String sellerPassword, Offer offer){
+        if(authenticate(sellerUsername,sellerPassword)){
+            if(offer.getReciever().equals(findByCriteriaHelper(sellerUsername,sellerPassword))){
+                offer.setStatus(false);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Offer> displayOffers(String username, String password) {
+        List<Offer> personalOffers = new ArrayList<>();
+        User user = findByCriteriaHelper(username, password);
+        if (user != null) {
+            List<Offer> offers = offerRepo.getAll();
+            for (Offer offer : offers) {
+                if (offer.getSender().equals(user) || offer.getReciever().equals(user)) {
+                    personalOffers.add(offer);
+                }
+            }
+        }
+        return personalOffers;
+    }
+
+
 
     public boolean placeOrder(User seller, Order order) {
         User buyer = order.getBuyer();
@@ -179,6 +212,8 @@ public class UserService extends VisitorService{
     }
 
 
+
+
     public User findByCriteriaHelper(String username,String password){
         if(authenticate(username,password)){
             List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
@@ -186,6 +221,8 @@ public class UserService extends VisitorService{
         }
         return null;
     }
+
+
 
 
 
