@@ -137,7 +137,7 @@ public class Controller {
     }
 
     public List<Review> getReviewsLeftForUser(String username){
-        return new ArrayList<>();
+        return visitorService.displayReviewsLeftForUser(username);
     }
 
     public boolean deleteReview(String username,String password){
@@ -145,20 +145,59 @@ public class Controller {
     }
 
     public List<Review> getReviewsLeftByUser(String username){
-        return new ArrayList<>();
+        return visitorService.displayReviewsLeftByUser(username);
     }
 
-    //public boolean deleteProduct
+    public boolean deleteReview(String adminUsername, String AdminPassword,String reviewerUsername, String revieweeUsername){
+        return adminService.deleteReview(adminUsername, AdminPassword, reviewerUsername, revieweeUsername);
+    }
+
+    public boolean deleteUser (String adminUsername, String adminPassword, String nameOfUser){
+        return adminService.deleteUser(adminUsername, adminPassword, nameOfUser);
+    }
+
+    public boolean deleteProduct(String adminUsername, String adminPassword, String sellerUsername){
+        return adminService.deleteProduct(adminUsername, adminPassword, sellerUsername);
+    }
 
 
 
+    public List<Category> getCategories(){
+        return adminService.getAllCategories();
+    }
 
+    public boolean changeCategory(Product product, int categoryChoice, String adminUsername, String adminPassword) {
+        Category newCategory;
 
+        switch (categoryChoice) {
+            case 1 -> newCategory = new Category(CategoryName.TOPS);
+            case 2 -> newCategory = new Category(CategoryName.BOTTOMS);
+            case 3 -> newCategory = new Category(CategoryName.DRESSES);
+            case 4 -> newCategory = new Category(CategoryName.OUTERWEAR);
+            case 5 -> newCategory = new Category(CategoryName.FOOTWEAR);
+            case 6 -> newCategory = new Category(CategoryName.ACCESSORIES);
+            case 7 -> newCategory = new Category(CategoryName.SWIMWEAR);
+            default -> {
+                return false;
+            }
+        }
 
-
+        User seller = product.getListedBy();
+       return adminService.updateCategory(adminUsername, adminPassword, seller, newCategory);
 
 
     }
+
+
+
+
+
+
+
+
+
+
+}
 
 
 

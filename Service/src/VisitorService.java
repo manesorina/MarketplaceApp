@@ -278,6 +278,38 @@ public class VisitorService {
 
     }
 
+    public List<Review> displayReviewsLeftForUser(String username){
+        List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
+        User user=users.getFirst();
+        List<Review> receivedReviews=new ArrayList<>();
+        if(user != null){
+            List<Review> reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if (review.getReviewee().equals(user)){
+                    receivedReviews.add(review);
+                }
+            }
+        }
+        return receivedReviews;
+
+    }
+
+    public List<Review> displayReviewsLeftByUser(String username){
+        List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
+        User user=users.getFirst();
+        List<Review> receivedReviews=new ArrayList<>();
+        if(user != null){
+            List<Review> reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if (review.getReviewer().equals(user)){
+                    receivedReviews.add(review);
+                }
+            }
+        }
+        return receivedReviews;
+
+    }
+
 
 
 

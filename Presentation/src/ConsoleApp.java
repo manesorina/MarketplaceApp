@@ -504,7 +504,7 @@ public class ConsoleApp {
         System.out.print("Enter User ID to view their listings: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
-        List<Product> userProducts = controller.getUserListings();
+        List<Product> userProducts = new ArrayList<>();//controller.getUserListings();
         if (userProducts.isEmpty()) {
             System.out.println("This user has no listed products.");
         } else {

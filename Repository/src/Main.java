@@ -11,6 +11,7 @@ public class Main {
         IMRepository<Review> reviewRepo=new IMRepository<>();
         IMRepository<Offer> offerRepo=new IMRepository<>();
         IMRepository<Order> orderRepo=new IMRepository<>();
+        IMRepository<Category> categoryRepo=new IMRepository<>();
 
 
 
@@ -60,7 +61,7 @@ public class Main {
 
 
 
-        AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo);
+        AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo, categoryRepo);
         UserService userService=new UserService(userRepo,productRepo,reviewRepo,orderRepo,offerRepo);
 
         VisitorService visitorService=new VisitorService(userRepo,productRepo,reviewRepo);

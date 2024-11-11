@@ -2,11 +2,13 @@ import java.util.List;
 
 public class AdminService extends VisitorService {
     private final IMRepository<Admin> adminRepo;
+    private final IMRepository<Category> categoryRepo;
 
 
-    public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo) {
+    public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo, IMRepository<Category> categoryRepo) {
         super(userRepo, productRepo, reviewRepo);
         this.adminRepo = adminRepo;
+        this.categoryRepo=categoryRepo;
 
     }
 
@@ -27,9 +29,9 @@ public class AdminService extends VisitorService {
         return false;
     }
 
-    public boolean deleteReview(int adminId, String adminUsername, String adminPassword, User reviewerName, User revieweeName) {
+    public boolean deleteReview(String adminUsername, String adminPassword, String reviewerUsername, String revieweeUsername) {
         if (authenticate(adminUsername, adminPassword)) {
-            List<Review> reviews = reviewRepo.findByCriteria(review -> review.getReviewer().equals(reviewerName) && review.getReviewee().equals(revieweeName));
+            List<Review> reviews = reviewRepo.findByCriteria(review -> review.getReviewer().getUserName().equals(reviewerUsername) && review.getReviewee().getUserName().equals(revieweeUsername));
             if (!reviews.isEmpty()) {
                 reviewRepo.delete(reviews.getFirst().getId());
                 return true;
@@ -38,10 +40,10 @@ public class AdminService extends VisitorService {
         return false;
     }
 
-    public boolean deleteProduct(String adminUsername, String adminPassword, int productId, User seller) {
+    public boolean deleteProduct(String adminUsername, String adminPassword, String sellerUsername) {
         if (authenticate(adminUsername,adminPassword)) {
             
-            List<Product> products=productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
+            List<Product> products=productRepo.findByCriteria(product -> product.getListedBy().getUserName().equals(sellerUsername));
             
             if (!products.isEmpty()) {
                 productRepo.delete(products.getFirst().getId());
@@ -64,7 +66,9 @@ public class AdminService extends VisitorService {
         return false;
     }
 
-
+    public List<Category> getAllCategories(){
+        return categoryRepo.getAll();
+    }
 
 
 
