@@ -188,6 +188,10 @@ public class Controller {
 
     }
 
+    public Product getProduct(String sellerUsername){
+        adminService.getProductBySellerUsername(sellerUsername);
+    }
+
 
 
 

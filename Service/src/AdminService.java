@@ -70,6 +70,16 @@ public class AdminService extends VisitorService {
         return categoryRepo.getAll();
     }
 
+    public Product getProductBySellerUsername(String sellerUsername){
+        List<Product> products = productRepo.findByCriteria(product -> product.getListedBy().getUserName().equals(username));
+        if (!products.isEmpty()) {
+            return products.get(0);
+        }
+        ;
+        return null;
+
+    }
+
 
 
 
