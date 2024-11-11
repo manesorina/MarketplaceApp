@@ -189,7 +189,7 @@ public class Controller {
     }
 
     public Product getProduct(String sellerUsername){
-        adminService.getProductBySellerUsername(sellerUsername);
+        return adminService.getProductBySellerUsername(sellerUsername);
     }
 
 
