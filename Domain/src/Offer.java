@@ -14,6 +14,7 @@ public class Offer implements Identifiable{
         this.accepted=accepted;
         this.sender=sender;
         this.reciever=reciever;
+        this.accepted=false;
     }
 
     @Override

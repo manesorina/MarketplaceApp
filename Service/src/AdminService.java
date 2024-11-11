@@ -71,7 +71,7 @@ public class AdminService extends VisitorService {
     }
 
     public Product getProductBySellerUsername(String sellerUsername){
-        List<Product> products = productRepo.findByCriteria(product -> product.getListedBy().getUserName().equals(username));
+        List<Product> products = productRepo.findByCriteria(product -> product.getListedBy().getUserName().equals(sellerUsername));
         if (!products.isEmpty()) {
             return products.get(0);
         }
