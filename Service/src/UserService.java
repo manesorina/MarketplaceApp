@@ -239,21 +239,6 @@ public class UserService extends VisitorService{
         return personalReviews;
     }
 
-//    public List<Review> displayReceivedPersonalReviews(String username, String password){
-//        List<Review> personalReviews=new ArrayList<>();
-//        User user=findByCriteriaHelper(username,password);
-//        if(user!=null){
-//            List<Review>reviews=reviewRepo.getAll();
-//            for(Review review:reviews){
-//                if(review.getReviewee().equals(user)){
-//                    personalReviews.add(review);
-//                }
-//            }
-//        }
-//        return personalReviews;
-//    }
-
-
 
     //Favorites
     public boolean addToFavorites(String userName, String password,int productId){
@@ -294,7 +279,6 @@ public class UserService extends VisitorService{
         return new ArrayList<>();
     }
 
-    //in loc de pordus, trebuie atributele produsului
 
 
     //Product
