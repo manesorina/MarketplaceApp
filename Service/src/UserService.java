@@ -18,11 +18,9 @@ public class UserService extends VisitorService{
         List<User> users = userRepo.findByCriteria(user -> user.getUserName().equals(userName) && user.getPassword().equals(password));
         try{
             User user = users.getFirst();
-        }catch(NoSuchElementException e){
+        }catch (NoSuchElementException e){
             return false;
         }
-
-
         return true;
     }
 
@@ -324,7 +322,6 @@ public class UserService extends VisitorService{
         return null;
     }
 
-
     public List<Review> displayProfileReviews(String username, String password) {
         User user=findByCriteriaHelper(username,password);
         List<Review> res = new ArrayList<>();
@@ -339,18 +336,32 @@ public class UserService extends VisitorService{
         return res;
     }
 
-    public List<Product> getMyListedProducts(String username, String password) {
-        User user=findByCriteriaHelper(username,password);
-        List<Product> res = new ArrayList<>();
-        if(user!=null){
-            List<Product> products=productRepo.getAll();
-            for(Product product:products){
-                if(product.getListedBy().equals(user)){
-                    res.add(product);
-                }
+    public double userAverageOfferAcceptanceRate(int userId){
+        User user=userRepo.read(userId);
+        List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
+        if (receivedOffers.isEmpty()) {
+            return 0;
+        }
+        int nrOfAcceptedOffers=0;
+        for(Offer offer:receivedOffers){
+
+            if (offer.getStatus()){
+                nrOfAcceptedOffers++;
             }
         }
-        return res;
+        return (double) (nrOfAcceptedOffers/receivedOffers.size())*100;
+
+
     }
+
+
+
+
+
+
+
+
+
+
 }
 
