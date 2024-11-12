@@ -564,5 +564,23 @@ public class UserService extends VisitorService{
         }
         return new ArrayList<>();
     }
+
+    public List<Review> displayProfileReviews(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        List<Review> profileReviews=new ArrayList<>();
+        if(user!=null){
+            List<Review> reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if(review.getReviewee().equals(user)){
+                    profileReviews.add(review);
+                }
+            }
+            return profileReviews;
+        }
+        return new ArrayList<>();
+    }
+
+
 }
+
 
