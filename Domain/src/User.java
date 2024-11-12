@@ -43,13 +43,7 @@ public class User extends Account implements Identifiable {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", score=" + score +
-                ", favourites=" + favourites +
-                ", listedProducts=" + listedProducts +
                 ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
                 '}';
     }
 }

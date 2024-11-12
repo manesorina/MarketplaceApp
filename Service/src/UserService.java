@@ -130,7 +130,8 @@ public class UserService extends VisitorService{
     }
 
 
-    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId) {
+    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds,
+                              String status, String shippingAddress, int sellerId) {
         if(authenticate(buyerUsername,buyerPassword)){
             User buyer=findByCriteriaHelper(buyerUsername,buyerPassword);
 
@@ -355,13 +356,12 @@ public class UserService extends VisitorService{
     }
 
 
-
-
-
-
-
-
-
-
+    public List<Product> getMyListedProducts(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        if(user!=null){
+            return user.getListedProducts();
+        }
+        return new ArrayList<>();
+    }
 }
 

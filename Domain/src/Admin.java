@@ -20,9 +20,6 @@ public class Admin extends Account implements Identifiable {
         return "Admin{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
                 '}';
     }
 }

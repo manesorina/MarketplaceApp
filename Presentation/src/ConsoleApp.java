@@ -82,8 +82,8 @@ public class ConsoleApp {
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
-                case 1 -> sortProducts();
-                case 2 -> filterProducts();
+                case 1 -> products = sortProducts();
+                case 2 -> products = filterProducts();
                 case 0 -> browsing = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -104,8 +104,8 @@ public class ConsoleApp {
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
-                case 1 -> sortUsers();
-                case 2 -> filterUsers();
+                case 1 -> displayedUsers = sortUsers();
+                case 2 -> displayedUsers = filterUsers();
                 case 3 -> viewUserReviews(displayedUsers);
                 case 0 -> browsing = false;
                 default -> System.out.println("Invalid choice. Please try again.");
@@ -122,10 +122,11 @@ public class ConsoleApp {
             System.out.println("2. Browse Users");
             System.out.println("3. View My Listings");
             System.out.println("4. View My Orders");
-            System.out.println("5. View Received Offers");
-            System.out.println("6. View Sent Offers");
-            System.out.println("7. View My Reviews");
-            System.out.println("8. View My Liked Products");
+            System.out.println("5. View Received Orders");
+            System.out.println("6. View Received Offers");
+            System.out.println("7. View Sent Offers");
+            System.out.println("8. View My Reviews");
+            System.out.println("9. View My Liked Products");
             System.out.println("0. Log Out");
             System.out.print("Select an option: ");
             int choice = scanner.nextInt();
@@ -135,10 +136,11 @@ public class ConsoleApp {
                 case 2 -> browseUsersUser(username, password);
                 case 3 -> viewMyListings(username, password);
                 case 4 -> viewMyOrders(username, password);
-                case 5 -> viewOffers(username, password);
-                case 6 -> viewSentOffers(username, password);
-                case 7 -> viewMyReviews(username, password);
-                case 8 -> viewLikes(username, password);
+                case 5 -> viewReceivedOrders(username, password);
+                case 6 -> viewOffers(username, password);
+                case 7 -> viewSentOffers(username, password);
+                case 8 -> viewMyReviews(username, password);
+                case 9 -> viewLikes(username, password);
                 case 0 -> loggedIn = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -250,17 +252,21 @@ public class ConsoleApp {
                 managingOffers = false;
             }
             else if (offers.stream().map(Offer::getId).anyMatch(x -> x.equals(choice))) {
-                Offer selectedOffer = offers.get(choice - 1);
-                System.out.println("You selected offer: " + selectedOffer);
-                System.out.println("1. Accept Offer");
-                System.out.println("2. Decline Offer");
-                System.out.print("Choose an option: ");
-                int action = scanner.nextInt();
-                scanner.nextLine();
-                switch (action) {
-                    case 1 -> acceptOffer(username, password, selectedOffer);
-                    case 2 -> declineOffer(username, password, selectedOffer);
-                    default -> System.out.println("Invalid action. Returning to offers menu.");
+                for (Offer offer: offers) {
+                    if (offer.getId() == choice) {
+                        Offer selectedOffer = offers.get(choice - 1);
+                        System.out.println("You selected offer: " + selectedOffer);
+                        System.out.println("1. Accept Offer");
+                        System.out.println("2. Decline Offer");
+                        System.out.print("Choose an option: ");
+                        int action = scanner.nextInt();
+                        scanner.nextLine();
+                        switch (action) {
+                            case 1 -> acceptOffer(username, password, selectedOffer);
+                            case 2 -> declineOffer(username, password, selectedOffer);
+                            default -> System.out.println("Invalid action. Returning to offers menu.");
+                        }
+                    }
                 }
             }
             else {
@@ -303,8 +309,20 @@ public class ConsoleApp {
         }
     }
 
+    private void viewReceivedOrders(String username, String password) {
+        List<Order> orders = controller.getReceivedOrders(username, password);
+        if (orders.isEmpty()) {
+            System.out.println("You have no orders.");
+            return;
+        }
+        System.out.println("Your Orders:");
+        for (Order order : orders) {
+            System.out.println(order);
+        }
+    }
+
     private void viewMyOrders(String username, String password) {
-        List<Order> orders = controller.getOrders(username, password);
+        List<Order> orders = controller.getMadeOrders(username, password);
         if (orders.isEmpty()) {
             System.out.println("You have no orders.");
             return;
@@ -391,22 +409,25 @@ public class ConsoleApp {
         System.out.print("Enter Product ID to select for action: ");
         int productId = scanner.nextInt();
         if (products.stream().map(Product::getId).anyMatch(x -> x.equals(productId))) {
-            Product selectedProduct = products.get(productId);
-            scanner.nextLine();
-            System.out.println("Choose Action for Product:");
-            System.out.println("1. Like Product");
-            System.out.println("2. Send Offer");
-            System.out.print("Enter your choice: ");
+            for (Product product: products)
+                if (product.getId() == productId){
+                    scanner.nextLine();
+                    System.out.println("Choose Action for Product:");
+                    System.out.println("1. Like Product");
+                    System.out.println("2. Send Offer");
+                    System.out.print("Enter your choice: ");
 
-            int actionChoice = scanner.nextInt();
-            scanner.nextLine();
-            switch (actionChoice) {
-                case 1 -> likeProducts(username, password, selectedProduct);
-                case 2 -> sendOffer(username, password, selectedProduct);
-                default -> System.out.println("Invalid action choice. Please try again.");
-            }
+                    int actionChoice = scanner.nextInt();
+                    scanner.nextLine();
+                    switch (actionChoice) {
+                        case 1 -> likeProducts(username, password, product);
+                        case 2 -> sendOffer(username, password, product);
+                        default -> System.out.println("Invalid action choice. Please try again.");
+                    }
+                }
         }
     }
+
 
     private void likeProducts(String username, String password,Product selectedProduct) {
         boolean success = controller.likeProduct(username, password, selectedProduct.getId());
@@ -441,11 +462,12 @@ public class ConsoleApp {
             }
             option = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Enter your address: ");
         String address = scanner.nextLine();
         for (int sellerId : orderedProducts.keySet()) {
             boolean success = controller.makeOrder(username, password, orderedProducts.get(sellerId),
-                    "Pending", address, sellerId);
+                    "processing", address, sellerId);
             if (success) {
                 System.out.println("Order placed successfully!");
             } else {
@@ -605,8 +627,11 @@ public class ConsoleApp {
         System.out.print("Enter User ID to see their rating: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
+        List<Review> reviews = controller.displayReviewsLeftForUser(userId);
         if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId)))
-            controller.displayReviewsLeftForUser(userId);
+            for (Review review : reviews) {
+                System.out.println(review);
+            }
         else System.out.println("Invalid ID.");
     }
 
