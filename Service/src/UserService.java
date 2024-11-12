@@ -32,7 +32,7 @@ public class UserService extends VisitorService{
             if (product!=null) {
                 User sender = findByCriteriaHelper(senderUsername, senderPassword);
                 User seller = selectedProduct.getListedBy();
-                if (seller != null && !seller.getUserName().equals(senderUsername)) {
+                if (seller != null && !seller.getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
                     Offer offer = new Offer(message, offeredPrice, selectedProduct, false, sender, seller);
                     offerRepo.create(offer);
 
@@ -50,6 +50,7 @@ public class UserService extends VisitorService{
             Offer offer=offerRepo.read(offerId);
             if (offer.getReciever().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
                 offer.setStatus(true);
+                offer.getTargetedProduct().setPrice(offer.getOfferedPrice());
                 return true;
             }
         }
@@ -239,20 +240,6 @@ public class UserService extends VisitorService{
         return personalReviews;
     }
 
-    public List<Review> displayProfileReviews(String username, String password){
-        List<Review> personalReviews=new ArrayList<>();
-        User user=findByCriteriaHelper(username,password);
-        if(user!=null){
-            List<Review>reviews=reviewRepo.getAll();
-            for(Review review:reviews){
-                if(review.getReviewee().equals(user)){
-                    personalReviews.add(review);
-                }
-            }
-        }
-        return personalReviews;
-    }
-
 
     //Favorites
     public boolean addToFavorites(String userName, String password,int productId){
@@ -296,22 +283,6 @@ public class UserService extends VisitorService{
 
 
     //Product
-
-    public List<Product> getMyListedProducts(String username, String password) {
-        if (authenticate(username,password)){
-            User user=findByCriteriaHelper(username,password);
-            List<Product> products = productRepo.getAll();
-            List<Product> myProducts=new ArrayList<>();
-            for(Product product:products){
-                if (product.getListedBy().equals(user)){
-                    myProducts.add(product);
-                }
-            }
-            return myProducts;
-        }
-        return new ArrayList<>();
-    }
-
     public boolean listProduct(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
         if(authenticate(userName,password)){
             User seller=findByCriteriaHelper(userName,password);
@@ -349,6 +320,18 @@ public class UserService extends VisitorService{
         }
         return null;
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
