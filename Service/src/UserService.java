@@ -1,4 +1,9 @@
 import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class UserService extends VisitorService{
 
@@ -6,6 +11,17 @@ public class UserService extends VisitorService{
     IMRepository<Offer> offerRepo;
 
 
+
+    /**
+     * Constructor for the UserService class. Initializes the service with the provided repositories for
+     * users, products, reviews, orders, and offers.
+     *
+     * @param userRepo the repository to handle user-related operations
+     * @param productRepo the repository to handle product-related operations
+     * @param reviewRepo the repository to handle review-related operations
+     * @param orderRepo the repository to handle order-related operations
+     * @param offerRepo the repository to handle offer-related operations
+     */
     public UserService(IMRepository<User> userRepo, IMRepository<Product> productRepo,
                        IMRepository<Review> reviewRepo, IMRepository<Order> orderRepo,IMRepository<Offer> offerRepo) {
         super(userRepo, productRepo, reviewRepo);
@@ -14,6 +30,14 @@ public class UserService extends VisitorService{
 
     }
 
+
+    /**
+     * Authenticates a user based on their username and password.
+     *
+     * @param userName the username of the user.
+     * @param password the password of the user.
+     * @return {@code true} if the user is authenticated; {@code false} otherwise.
+     */
     public boolean authenticate(String userName, String password){
         List<User> users = userRepo.findByCriteria(user -> user.getUserName().equals(userName) && user.getPassword().equals(password));
         try{
@@ -26,6 +50,16 @@ public class UserService extends VisitorService{
 
 
     //Offer Methods
+    /**
+     * Sends an offer from a buyer to a seller for a specific product.
+     *
+     * @param senderUsername the username of the sender making the offer.
+     * @param senderPassword the password of the sender for authentication.
+     * @param message a message included with the offer.
+     * @param selectedProduct the product for which the offer is being made.
+     * @param offeredPrice the price offered by the sender.
+     * @return {@code true} if the offer is created and sent successfully; {@code false} otherwise.
+     */
 
     public boolean sendOffer( String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice) {
         if (authenticate(senderUsername, senderPassword)) {
@@ -45,7 +79,14 @@ public class UserService extends VisitorService{
     }
 
 
-
+    /**
+     * Accepts an offer made to a seller.
+     *
+     * @param sellerUsername the username of the seller.
+     * @param sellerPassword the password of the seller for authentication.
+     * @param offerId the ID of the offer to be accepted.
+     * @return {@code true} if the offer is accepted; {@code false} otherwise.
+     */
     public boolean acceptOffer(String sellerUsername, String sellerPassword, int offerId) {
         if (authenticate(sellerUsername, sellerPassword)) {
             Offer offer=offerRepo.read(offerId);
@@ -58,6 +99,15 @@ public class UserService extends VisitorService{
         return false;
     }
 
+
+    /**
+     * Declines an offer made to a seller.
+     *
+     * @param sellerUsername the username of the seller.
+     * @param sellerPassword the password of the seller for authentication.
+     * @param offerId the ID of the offer to be declined.
+     * @return {@code true} if the offer is declined; {@code false} otherwise.
+     */
     public boolean declineOffer(String sellerUsername, String sellerPassword, int offerId){
         if(authenticate(sellerUsername,sellerPassword)){
             Offer offer=offerRepo.read(offerId);
@@ -70,6 +120,13 @@ public class UserService extends VisitorService{
     }
 
 
+    /**
+     * Displays the offers made by the user.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of offers made by the user.
+     */
     public List<Offer> displayMadeOffers(String username, String password) {
         List<Offer> personalOffers = new ArrayList<>();
         User user = findByCriteriaHelper(username, password);
@@ -83,6 +140,15 @@ public class UserService extends VisitorService{
         }
         return personalOffers;
     }
+
+
+    /**
+     * Displays the offers received by the user.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of offers received by the user.
+     */
     public List<Offer> displayReceivedOffers(String username, String password) {
         List<Offer> personalOffers = new ArrayList<>();
         User user = findByCriteriaHelper(username, password);
@@ -97,6 +163,14 @@ public class UserService extends VisitorService{
         return personalOffers;
     }
 
+
+    /**
+     * Displays all offers involving the user (both sent and received).
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of all offers involving the user.
+     */
     public List<Offer> displayAllUserOffers(String username, String password) {
         List<Offer> personalOffers = new ArrayList<>();
         User user = findByCriteriaHelper(username, password);
@@ -115,9 +189,14 @@ public class UserService extends VisitorService{
 
 
     //Order
-    //adauga atributele de la order
 
 
+    /**
+     * Selects products for an order based on provided product IDs.
+     *
+     * @param productIds a list of product IDs to be selected.
+     * @return a list of selected products.
+     */
     public List<Product> selectProductsForOrder(List<Integer> productIds) {
         List<Product> selectedProducts = new ArrayList<>();
         for (int productId : productIds) {
@@ -130,8 +209,20 @@ public class UserService extends VisitorService{
     }
 
 
-    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds,
-                              String status, String shippingAddress, int sellerId) {
+
+    /**
+     * Places an order for a list of selected products.
+     *
+     * @param buyerUsername the username of the buyer.
+     * @param buyerPassword the password of the buyer for authentication.
+     * @param selectedProductsIds a list of product IDs for the order.
+     * @param status the status of the order.
+     * @param shippingAddress the shipping address for the order.
+     * @param sellerId the ID of the seller.
+     * @return {@code true} if the order is placed successfully; {@code false} otherwise.
+     */
+
+    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId) {
         if(authenticate(buyerUsername,buyerPassword)){
             User buyer=findByCriteriaHelper(buyerUsername,buyerPassword);
 
@@ -155,6 +246,14 @@ public class UserService extends VisitorService{
 
     }
 
+
+    /**
+     * Displays orders made by the user.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of orders made by the user.
+     */
     public List<Order> displayMadeOrders(String username, String password){
         List<Order> personalOrders=new ArrayList<>();
         User user=findByCriteriaHelper(username,password);
@@ -169,6 +268,14 @@ public class UserService extends VisitorService{
         return personalOrders;
     }
 
+
+    /**
+     * Displays orders received by the user.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of orders received by the user.
+     */
     public List<Order> displayReceivedOrders(String username, String password){
         List<Order> personalOrders=new ArrayList<>();
         User user=findByCriteriaHelper(username,password);
@@ -182,6 +289,15 @@ public class UserService extends VisitorService{
         }
         return personalOrders;
     }
+
+
+    /**
+     * Displays all orders involving the user (both made and received).
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of all orders involving the user.
+     */
 
     public List<Order> displayAllUsersOrders(String username, String password){
         List<Order> personalOrders=new ArrayList<>();
@@ -199,6 +315,18 @@ public class UserService extends VisitorService{
 
 
     //Review
+
+
+    /**
+     * Writes a review from one user to another.
+     *
+     * @param reviewerUsername the username of the reviewer.
+     * @param reviewerPassword the password of the reviewer for authentication.
+     * @param grade the grade for the review.
+     * @param message the message content of the review.
+     * @param revieweeId the ID of the user being reviewed.
+     * @return {@code true} if the review is written successfully; {@code false} otherwise.
+     */
     public boolean writeReview(String reviewerUsername, String reviewerPassword, double grade, String message, int revieweeId ){
         if(authenticate(reviewerUsername,reviewerPassword)){
             User reviewer=findByCriteriaHelper(reviewerUsername,reviewerPassword);
@@ -213,7 +341,16 @@ public class UserService extends VisitorService{
 
     }
 
-    //pt ca avem metoda de display personal reviews unde o sa fie vizibil si id ul review urilor am pus review id
+
+    /**
+     * Deletes a review made by the user.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @param reviewId the ID of the review to be deleted.
+     * @return {@code true} if the review is deleted successfully; {@code false} otherwise.
+     */
+
     public boolean deleteReview(String username, String password,int reviewId) {
         if (authenticate(username,password)){
             List<Review> reviews=reviewRepo.getAll();
@@ -227,6 +364,16 @@ public class UserService extends VisitorService{
         }
         return false;
     }
+
+
+
+    /**
+     * Displays personal reviews made by the user.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of reviews made by the user.
+     */
 
     public List<Review> displayMadePersonalReviews(String username, String password){
         List<Review> personalReviews=new ArrayList<>();
@@ -244,6 +391,17 @@ public class UserService extends VisitorService{
 
 
     //Favorites
+
+
+
+    /**
+     * Adds a product to the user's favorites.
+     *
+     * @param userName the username of the user.
+     * @param password the password of the user for authentication.
+     * @param productId the ID of the product to be added to favorites.
+     * @return {@code true} if the product is added successfully; {@code false} otherwise.
+     */
     public boolean addToFavorites(String userName, String password,int productId){
         if(authenticate(userName,password)){
             User user=findByCriteriaHelper(userName,password);
@@ -258,6 +416,16 @@ public class UserService extends VisitorService{
         return false;
 
     }
+
+
+    /**
+     * Removes a product from the user's favorites.
+     *
+     * @param userName the username of the user.
+     * @param password the password of the user for authentication.
+     * @param productId the ID of the product to be removed from favorites.
+     * @return {@code true} if the product is removed successfully; {@code false} otherwise.
+     */
 
     public boolean removeFromFavourites(String userName,String password, int productId){
         if(authenticate(userName,password)){
@@ -274,6 +442,14 @@ public class UserService extends VisitorService{
     }
 
 
+
+    /**
+     * Displays the user's favorite products.
+     *
+     * @param userName the username of the user.
+     * @param password the password of the user for authentication.
+     * @return a list of the user's favorite products.
+     */
     public List<Product> displayFavourites(String userName, String password){
         User user=findByCriteriaHelper(userName,password);
         if(user!=null){
@@ -285,6 +461,24 @@ public class UserService extends VisitorService{
 
 
     //Product
+
+
+    /**
+     * Lists a new product for sale by the user.
+     *
+     * @param userName the username of the seller.
+     * @param password the password of the seller for authentication.
+     * @param category the category of the product.
+     * @param name the name of the product.
+     * @param color the color of the product.
+     * @param size the size of the product.
+     * @param price the price of the product.
+     * @param brand the brand of the product.
+     * @param condition the condition of the product.
+     * @param nrOfViews the number of views the product has.
+     * @param nrOfLikes the number of likes the product has.
+     * @return {@code true} if the product is listed successfully; {@code false} otherwise.
+     */
     public boolean listProduct(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
         if(authenticate(userName,password)){
             User seller=findByCriteriaHelper(userName,password);
@@ -298,6 +492,15 @@ public class UserService extends VisitorService{
     }
 
 
+
+    /**
+     * Deletes a product listed by the user.
+     *
+     * @param username the username of the seller.
+     * @param password the password of the seller for authentication.
+     * @param productId the ID of the product to be deleted.
+     * @return {@code true} if the product is deleted successfully; {@code false} otherwise.
+     */
     public boolean deleteListedProduct(String username,String password,int productId){
         if(authenticate(username,password)){
             User user=findByCriteriaHelper(username,password);
@@ -314,7 +517,13 @@ public class UserService extends VisitorService{
 
     }
 
-
+    /**
+     * Finds a user by their username and password.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user for authentication.
+     * @return the user if found and authenticated; {@code null} otherwise.
+     */
     public User findByCriteriaHelper(String username,String password){
         if(authenticate(username,password)){
             List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
@@ -323,20 +532,12 @@ public class UserService extends VisitorService{
         return null;
     }
 
-    public List<Review> displayProfileReviews(String username, String password) {
-        User user=findByCriteriaHelper(username,password);
-        List<Review> res = new ArrayList<>();
-        if(user!=null){
-            List<Review> reviews=reviewRepo.getAll();
-            for(Review review:reviews){
-                if(review.getReviewee().equals(user)){
-                    res.add(review);
-                }
-            }
-        }
-        return res;
-    }
-
+    /**
+     * Calculates the user's average offer acceptance rate.
+     *
+     * @param userId the ID of the user.
+     * @return the acceptance rate as a percentage. Returns 0 if no offers are received.
+     */
     public double userAverageOfferAcceptanceRate(int userId){
         User user=userRepo.read(userId);
         List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
