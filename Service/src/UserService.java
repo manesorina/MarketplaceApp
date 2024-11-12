@@ -322,6 +322,26 @@ public class UserService extends VisitorService{
     }
 
 
+    public double userAverageOfferAcceptanceRate(int userId){
+        User user=userRepo.read(userId);
+        List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
+        if (receivedOffers.isEmpty()) {
+            return 0;
+        }
+        int nrOfAcceptedOffers=0;
+        for(Offer offer:receivedOffers){
+
+            if (offer.getStatus()){
+                nrOfAcceptedOffers++;
+            }
+        }
+        return (double) (nrOfAcceptedOffers/receivedOffers.size())*100;
+
+
+    }
+
+
+
 
 
 

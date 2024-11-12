@@ -144,32 +144,33 @@ public class Main {
        // System.out.println(category.getName());
 
         List<Product> orderProducts0 = Arrays.asList(p3, p4);
-        Order or1=new Order(orderProducts0,"sent","Strada xyz",u3);
+        Order or1 = new Order(orderProducts0, "sent", "Strada xyz", u3, p3.getListedBy()); // Seller is the product's listedBy attribute
 
         List<Product> orderProducts1 = Arrays.asList(p1, p5);
-        Order or2 = new Order(orderProducts1, "delivered", "Strada ABC", u2); // Review r2
+        Order or2 = new Order(orderProducts1, "delivered", "Strada ABC", u2, p1.getListedBy()); // Assuming p1's listedBy is used
 
         List<Product> orderProducts2 = List.of(p2);
-        Order or3 = new Order(orderProducts2, "delivered", "Strada DEF", u5); // Review r5
+        Order or3 = new Order(orderProducts2, "delivered", "Strada DEF", u5, p2.getListedBy());
 
         List<Product> orderProducts3 = Arrays.asList(p3, p6);
-        Order or4 = new Order(orderProducts3, "shipped", "Strada GHI", u6); // Review r6
+        Order or4 = new Order(orderProducts3, "shipped", "Strada GHI", u6, p3.getListedBy());
 
         List<Product> orderProducts4 = Arrays.asList(p1, p4);
-        Order or5 = new Order(orderProducts4, "delivered", "Strada JKL", u7); // Review r7
+        Order or5 = new Order(orderProducts4, "delivered", "Strada JKL", u7, p1.getListedBy());
 
         List<Product> orderProducts5 = Arrays.asList(p2, p5);
-        Order or6 = new Order(orderProducts5, "shipped", "Strada MNO", u8); // Review r8
+        Order or6 = new Order(orderProducts5, "shipped", "Strada MNO", u8, p2.getListedBy());
 
         List<Product> orderProducts6 = List.of(p3);
-        Order or7 = new Order(orderProducts6, "delivered", "Strada PQR", u3); // Review r9
+        Order or7 = new Order(orderProducts6, "delivered", "Strada PQR", u3, p3.getListedBy());
 
         List<Product> orderProducts7 = Arrays.asList(p4, p5);
-        Order or8 = new Order(orderProducts7, "sent", "Strada STU", u1); // Review r11
+        Order or8 = new Order(orderProducts7, "sent", "Strada STU", u1, p4.getListedBy());
 
         List<Product> orderProducts8 = List.of(p6);
-        Order or9 = new Order(orderProducts8, "shipped", "Strada VWX", u6); // Review r12
+        Order or9 = new Order(orderProducts8, "shipped", "Strada VWX", u6, p6.getListedBy());
 
+// Adding orders to the repository
         orderRepo.create(or1);
         orderRepo.create(or2);
         orderRepo.create(or3);
@@ -180,15 +181,15 @@ public class Main {
         orderRepo.create(or8);
         orderRepo.create(or9);
 
-        userService.placeOrder(u1,or9);
-        userService.placeOrder(u2, or3);
-        userService.placeOrder(u1, or4);
-        userService.placeOrder(u1, or5);
-        userService.placeOrder(u3, or6);
-        userService.placeOrder(u1, or7);
-        userService.placeOrder(u3, or8);
-        userService.placeOrder(u3, or9);
-
+// Placing orders using the service method
+        userService.placeOrder(u3.getUserName(), u3.getPassword(), List.of(p6.getId()), "shipped", "Strada VWX", p6.getListedBy().getId());
+        userService.placeOrder(u2.getUserName(), u2.getPassword(), List.of(p2.getId()), "delivered", "Strada DEF", p2.getListedBy().getId());
+        userService.placeOrder(u1.getUserName(), u1.getPassword(), Arrays.asList(p3.getId(), p6.getId()), "shipped", "Strada GHI", p3.getListedBy().getId());
+        userService.placeOrder(u1.getUserName(), u1.getPassword(), Arrays.asList(p1.getId(), p4.getId()), "delivered", "Strada JKL", p1.getListedBy().getId());
+        userService.placeOrder(u3.getUserName(), u3.getPassword(), Arrays.asList(p2.getId(), p5.getId()), "shipped", "Strada MNO", p2.getListedBy().getId());
+        userService.placeOrder(u1.getUserName(), u1.getPassword(), List.of(p3.getId()), "delivered", "Strada PQR", p3.getListedBy().getId());
+        userService.placeOrder(u3.getUserName(), u3.getPassword(), Arrays.asList(p4.getId(), p5.getId()), "sent", "Strada STU", p4.getListedBy().getId());
+        userService.placeOrder(u3.getUserName(), u3.getPassword(), List.of(p6.getId()), "shipped", "Strada VWX", p6.getListedBy().getId());
 
 
         //System.out.println(userService.placeOrder(u1,or1));
