@@ -125,6 +125,7 @@ public class ConsoleApp {
             System.out.println("3. View My Listings");
             System.out.println("4. View My Orders");
             System.out.println("5. View Offers");
+            System.out.println("6. View My Reviews");
             System.out.println("0. Log Out");
             System.out.print("Select an option: ");
             int choice = scanner.nextInt();
@@ -135,10 +136,16 @@ public class ConsoleApp {
                 case 3 -> viewMyListings(username, password);
                 case 4 -> viewMyOrders(username, password);
                 case 5 -> viewOffers(username, password);
+                case 6 -> viewMyReviews(username, password);
                 case 0 -> loggedIn = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    private void viewMyReviews(String username, String password) {
+        //aici doua optiuni display reviews left by me and reviews left by other users for me n=and my score
+
     }
 
     private void viewOffers(String username, String password) {
@@ -318,13 +325,16 @@ public class ConsoleApp {
         System.out.print("Enter your offer amount: ");
         double offerAmount = scanner.nextDouble();
         scanner.nextLine();
+        System.out.print("Enter your offer message: ");
+        String message = scanner.nextLine();
         //de corectat metodele send offer in controller si userservice, nu este verificat daca
         // pretul oferit e corespunzator
         // nu ar trebui sa aiba un obiect Offer ca parametru
-        User seller = selectedProduct.getListedBy();
-
+        User receiver = selectedProduct.getListedBy();
+        User sender =
+        //String message, double offeredPrice, Product targetedProduct, Boolean accepted, User sender,User reciever
         // params: seller, username, password, date offer
-        boolean success = controller.sendOffer();
+        boolean success = controller.sendOffer(receiver, username, password, message, selectedProduct,);
         if (success) {
             System.out.println("Offer sent for product: " + selectedProduct.getName() + " with amount " + offerAmount);
         } else {
@@ -507,7 +517,6 @@ public class ConsoleApp {
         scanner.nextLine();
         //Problema aici: am putea folosi Id-urile userilor in clasa Review in loc de obiecte user
         //nevoie de validare id selectat daca e in lista displayedUsers
-        //Review newReview = new Review(rating, content,)
         //controller.writeReview(newReview);
     }
 

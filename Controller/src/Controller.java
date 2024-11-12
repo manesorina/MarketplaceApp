@@ -100,8 +100,8 @@ public class Controller {
         return userService.listProduct(userName, password, product);
     }
 
-    public boolean removeFromUserListings(String userName,String password, Product product){
-        return userService.deleteListedProduct(product, userName, password);
+    public boolean removeFromUserListings(String userName,String password, int productId){
+        return userService.deleteListedProduct(productId, userName, password);
     }
 
     public List<User> sortUsers(int choice, int order) {

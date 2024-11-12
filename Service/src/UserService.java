@@ -192,10 +192,10 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public boolean deleteListedProduct(Product product,String userName,String password){
+    public boolean deleteListedProduct(int productId,String userName,String password){
         User user=findByCriteriaHelper(userName,password);
         if(user!=null){
-            if(product!=null && user.listedProducts.contains(product)){
+            if(productRepo.read(productId)){
                 user.listedProducts.remove(product);
                 return true;
             }
@@ -210,8 +210,6 @@ public class UserService extends VisitorService{
         }
         return new ArrayList<>();
     }
-
-
 
 
     public User findByCriteriaHelper(String username,String password){
