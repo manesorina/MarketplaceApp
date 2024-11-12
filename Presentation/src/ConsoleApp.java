@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleApp {
     private final Controller controller;
@@ -124,8 +122,10 @@ public class ConsoleApp {
             System.out.println("2. Browse Users");
             System.out.println("3. View My Listings");
             System.out.println("4. View My Orders");
-            System.out.println("5. View Offers");
-            System.out.println("6. View My Reviews");
+            System.out.println("5. View Received Offers");
+            System.out.println("6. View Sent Offers");
+            System.out.println("7. View My Reviews");
+            System.out.println("8. View My Liked Products");
             System.out.println("0. Log Out");
             System.out.print("Select an option: ");
             int choice = scanner.nextInt();
@@ -136,20 +136,101 @@ public class ConsoleApp {
                 case 3 -> viewMyListings(username, password);
                 case 4 -> viewMyOrders(username, password);
                 case 5 -> viewOffers(username, password);
-                case 6 -> viewMyReviews(username, password);
+                case 6 -> viewSentOffers(username, password);
+                case 7 -> viewMyReviews(username, password);
+                case 8 -> viewLikes(username, password);
                 case 0 -> loggedIn = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
-    private void viewMyReviews(String username, String password) {
-        //aici doua optiuni display reviews left by me and reviews left by other users for me n=and my score
+    private void viewLikes(String username, String password) {
+        List<Product> liked = controller.displayLikedProducts(username, password);
+        for (Product product : liked) {
+            System.out.println(product);
+        }
+        System.out.println("Would you like to remove a product from your likes?");
+        System.out.println("1. Yes");
+        System.out.println("2. No");
+        int choice = scanner.nextInt();
+        while (true) {
+            switch (choice) {
+                case 1 -> removeLike(liked, username, password);
+                case 2 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+            choice = scanner.nextInt();
+        }
+    }
 
+    private void removeLike(List<Product> likedProducts, String username, String password) {
+        System.out.println("Enter the ID of the product you would like to delete: ");
+        int id = scanner.nextInt();
+        if (likedProducts.stream().map(Product::getId).anyMatch(x -> x.equals(id))) {
+            boolean success = controller.removeFromLiked(username, password, id);
+            if (success) {
+                System.out.println("Product deleted successfully!");
+            }
+            else {
+                System.out.println("Something went wrong.");
+            }
+        }
+        else System.out.println("Invalid ID.");
+    }
+
+    private void viewMyReviews(String username, String password) {
+        System.out.println("1. View Reviews Left by You");
+        System.out.println("2. View Other Users Reviews for You");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        switch (choice) {
+            case 1 -> reviewsByMe(username, password);
+            case 2 -> reviewsForMe(username, password);
+        }
+    }
+
+    private void reviewsByMe(String username, String password) {
+        List<Review> reviews = controller.displayReviewsLeftByUser(username, password);
+        if (reviews.isEmpty()) {
+            System.out.println("No reviews found. Please try again.");
+        }
+        else {
+            for (Review review : reviews) {
+                System.out.println(review);
+            }
+        }
+    }
+
+    private void reviewsForMe(String username, String password) {
+        //adauga sa vezi propriul rating
+        List<Review> reviews = controller.displayReviewsForMe(username, password);
+        if (reviews.isEmpty()) {
+            System.out.println("No reviews found. Please try again.");
+        }
+        else {
+            for (Review review : reviews) {
+                System.out.println(review);
+            }
+        }
+    }
+
+    private void viewSentOffers(String username, String password) {
+        List<Offer> madeOffers = controller.getMadeOffers(username, password);
+        if (madeOffers.isEmpty()) {
+            System.out.println("No sent offers found.");
+        }
+        else {
+            for (Offer offer : madeOffers) {
+                System.out.println(offer);
+            }
+        }
     }
 
     private void viewOffers(String username, String password) {
-        List<Offer> offers = controller.getOffers(username, password);
+        List<Offer> offers = controller.displayReceivedOffers(username, password);
         if (offers.isEmpty()) {
             System.out.println("You have no offers.");
             return;
@@ -162,13 +243,13 @@ public class ConsoleApp {
             }
             System.out.println("0. Go Back");
 
-            System.out.print("Select an offer to accept/decline (by number) or go back: ");
+            System.out.print("Select an offer ID to accept/decline or go back: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             if (choice == 0) {
                 managingOffers = false;
-            } //oare e ok validarea asta aici sau ar trebui in controller?
-            else if (choice > 0 && choice <= offers.size()) {
+            }
+            else if (offers.stream().map(Offer::getId).anyMatch(x -> x.equals(choice))) {
                 Offer selectedOffer = offers.get(choice - 1);
                 System.out.println("You selected offer: " + selectedOffer);
                 System.out.println("1. Accept Offer");
@@ -188,8 +269,22 @@ public class ConsoleApp {
         }
     }
 
+    private void sendOffer(String username, String password, Product selectedProduct) {
+        System.out.print("Enter your offer amount: ");
+        double offerAmount = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.print("Enter your offer message: ");
+        String message = scanner.nextLine();
+        boolean success = controller.sendOffer(username, password, message, selectedProduct, offerAmount);
+        if (success) {
+            System.out.println("Offer sent for product: " + selectedProduct.getName() + " with amount " + offerAmount);
+        } else {
+            System.out.println("Could not send offer. Please try again.");
+        }
+    }
+
     private void declineOffer(String username, String password,Offer selectedOffer) {
-        boolean success = controller.declineOffer(username, password, selectedOffer);
+        boolean success = controller.declineOffer(username, password, selectedOffer.getId());
         if (success) {
             System.out.println("Offer declined successfully!");
         }
@@ -199,7 +294,7 @@ public class ConsoleApp {
     }
 
     private void acceptOffer(String username, String password, Offer selectedOffer) {
-        boolean success = controller.acceptOffer(username, password, selectedOffer);
+        boolean success = controller.acceptOffer(username, password, selectedOffer.getId());
         if (success) {
             System.out.println("Offer accepted successfully!");
         }
@@ -228,7 +323,8 @@ public class ConsoleApp {
             System.out.println("Product Browsing Options: ");
             System.out.println("1. Sort Products");
             System.out.println("2. Filter Products");
-            System.out.println("3. Select Product for Action (like, offer, order)");
+            System.out.println("3. Select Product for Action (like, offer)");
+            System.out.println("4. Place an Order");
             System.out.println("0. Go Back to Main Menu");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
@@ -237,6 +333,7 @@ public class ConsoleApp {
                 case 1 -> products = sortProducts();
                 case 2 -> products = filterProducts();
                 case 3 -> selectProductAction(username, password, products);
+                case 4 -> makeOrder(username, password, products);
                 case 0 -> browsing = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -291,29 +388,28 @@ public class ConsoleApp {
             System.out.println("No products to select. Please search or filter products first.");
             return;
         }
-        //validare aici
         System.out.print("Enter Product ID to select for action: ");
         int productId = scanner.nextInt();
-        Product selectedProduct = products.get(productId);
-        scanner.nextLine();
-        System.out.println("Choose Action for Product:");
-        System.out.println("1. Like Product");
-        System.out.println("2. Send Offer");
-        System.out.println("3. Make Order");
-        System.out.print("Enter your choice: ");
+        if (products.stream().map(Product::getId).anyMatch(x -> x.equals(productId))) {
+            Product selectedProduct = products.get(productId);
+            scanner.nextLine();
+            System.out.println("Choose Action for Product:");
+            System.out.println("1. Like Product");
+            System.out.println("2. Send Offer");
+            System.out.print("Enter your choice: ");
 
-        int actionChoice = scanner.nextInt();
-        scanner.nextLine();
-        switch (actionChoice) {
-            case 1 -> likeProducts(username, password, selectedProduct);
-            case 2 -> sendOffer(username, password, selectedProduct);
-            case 3 -> makeOrder(username, password, selectedProduct);
-            default -> System.out.println("Invalid action choice. Please try again.");
+            int actionChoice = scanner.nextInt();
+            scanner.nextLine();
+            switch (actionChoice) {
+                case 1 -> likeProducts(username, password, selectedProduct);
+                case 2 -> sendOffer(username, password, selectedProduct);
+                default -> System.out.println("Invalid action choice. Please try again.");
+            }
         }
     }
 
     private void likeProducts(String username, String password,Product selectedProduct) {
-        boolean success = controller.likeProduct(username, password, selectedProduct);
+        boolean success = controller.likeProduct(username, password, selectedProduct.getId());
         if (success) {
             System.out.println("You liked the product: " + selectedProduct.getName());
         } else {
@@ -321,40 +417,47 @@ public class ConsoleApp {
         }
     }
 
-    private void sendOffer(String username, String password, Product selectedProduct) {
-        System.out.print("Enter your offer amount: ");
-        double offerAmount = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.print("Enter your offer message: ");
-        String message = scanner.nextLine();
-        //de corectat metodele send offer in controller si userservice, nu este verificat daca
-        // pretul oferit e corespunzator
-        // nu ar trebui sa aiba un obiect Offer ca parametru
-        User receiver = selectedProduct.getListedBy();
-        User sender =
-        //String message, double offeredPrice, Product targetedProduct, Boolean accepted, User sender,User reciever
-        // params: seller, username, password, date offer
-        boolean success = controller.sendOffer(receiver, username, password, message, selectedProduct,);
-        if (success) {
-            System.out.println("Offer sent for product: " + selectedProduct.getName() + " with amount " + offerAmount);
-        } else {
-            System.out.println("Could not send offer. Please try again.");
+    private void makeOrder(String username, String password, List<Product> products) {
+        if (products.isEmpty()) {
+            System.out.println("No products to select. Please search or filter products first.");
+            return;
         }
-    }
+        System.out.print("Enter Product IDs to add to your order. Press 0 to stop.");
+        int option = scanner.nextInt();
+        Map<Integer, List<Integer>> orderedProducts = new HashMap<>();
+        while (option != 0) {
+            int finalOption = option;
+            if(products.stream().map(Product::getId).anyMatch(x -> x.equals(finalOption))) {
+                for (Product product : products) {
+                    if (product.getId() == finalOption) {
+                        if (!orderedProducts.containsKey(product.getListedBy().getId())) {
+                            orderedProducts.put(product.getListedBy().getId(), new ArrayList<>());
+                        }
+                        if (!orderedProducts.get(product.getListedBy().getId()).contains(finalOption)) {
+                            orderedProducts.get(product.getListedBy().getId()).add(finalOption);
+                        }
+                    }
+                }
+            }
+            option = scanner.nextInt();
+        }
+        System.out.println("Enter your address: ");
+        String address = scanner.nextLine();
+        for (int sellerId : orderedProducts.keySet()) {
+            boolean success = controller.makeOrder(username, password, orderedProducts.get(sellerId),
+                    "Pending", address, sellerId);
+            if (success) {
+                System.out.println("Order placed successfully!");
+            } else {
+                System.out.println("Could not place order. Please try again.");
+            }
+        }
 
-    private void makeOrder(String username, String password, Product selectedProduct) {
-        //de implementat makeOrder
-        boolean success = controller.makeOrder();
-        if (success) {
-            System.out.println("Order placed for product: " + selectedProduct.getName());
-        } else {
-            System.out.println("Could not place order. Please try again.");
-        }
     }
 
     private void viewMyListings(String username, String password) {
         System.out.println("Your Current Listings:");
-        List<Product> myListings = controller.getUserListings(username, password);
+        List<Product> myListings = controller.getMyListings(username, password);
         if (myListings.isEmpty()) {
             System.out.println("You have no products listed.");
         }
@@ -372,7 +475,7 @@ public class ConsoleApp {
             scanner.nextLine();
             switch (choice) {
                 case 1 -> addProductToMyListings(username, password);
-                case 2 -> deleteProductFromMyListings(username, password);
+                case 2 -> deleteProductFromMyListings(username, password, myListings);
                 case 0 -> managingListings = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -381,6 +484,13 @@ public class ConsoleApp {
 
     private void addProductToMyListings(String username, String password) {
         System.out.println("Enter product details to add to your listings:");
+        List<Category> categories = controller.getCategories();
+        System.out.println("Choose a category: ");
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println((i+1) + "." + categories.get(i).getName());
+        }
+        int choice = scanner.nextInt();
+        Category category = categories.get(choice);
         System.out.print("Name: ");
         String name = scanner.nextLine();
         System.out.print("Color: ");
@@ -396,8 +506,8 @@ public class ConsoleApp {
         System.out.print("Condition (e.g., New, Used): ");
         String condition = scanner.nextLine();
 
-        //params: name, color, etc in loc de product
-        boolean success = controller.addToUserListings(username, password, );
+        boolean success = controller.addToUserListings(username, password, category, name, color, size, price,
+                brand, condition, 0, 0);
         if (success) {
             System.out.println("Product added to your listings successfully!");
         }
@@ -407,20 +517,19 @@ public class ConsoleApp {
 
     }
 
-    private void deleteProductFromMyListings(String username, String password) {
-        //validare aici
+    private void deleteProductFromMyListings(String username, String password, List<Product> myListings) {
         System.out.print("Enter the ID of the product you wish to delete: ");
         int productId = scanner.nextInt();
         scanner.nextLine();
-
-        //params: product_id in loc de product, username, password
-        boolean success = controller.removeFromUserListings(username, password, productId);
-        if (success) {
-            System.out.println("Product deleted successfully.");
+        if(myListings.stream().map(Product::getId).anyMatch(x -> x.equals(productId))) {
+            boolean success = controller.removeFromUserListings(username, password, productId);
+            if (success) {
+                System.out.println("Product deleted successfully.");
+            } else {
+                System.out.println("Product deletion failed.");
+            }
         }
-        else {
-            System.out.println("Product deletion failed. Please check the product ID.");
-        }
+        else System.out.println("Invalid ID.");
     }
 
     private void browseUsersUser(String username, String password) {
@@ -441,7 +550,7 @@ public class ConsoleApp {
             switch (choice) {
                 case 1 -> displayedUsers = sortUsers();
                 case 2 -> displayedUsers = filterUsers();
-                case 3 -> selectUserForReview(displayedUsers);
+                case 3 -> selectUserForReview(username, password, displayedUsers);
                 case 4 -> viewUserReviews(displayedUsers);
                 case 5 -> viewUserListings(displayedUsers);
                 case 0 -> browsing = false;
@@ -493,31 +602,36 @@ public class ConsoleApp {
             System.out.println("No users to select. Please search or filter first.");
             return;
         }
-        //validare aici
         System.out.print("Enter User ID to see their rating: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
-        //controller.getUserReview(userId);
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId)))
+            controller.displayReviewsLeftForUser(userId);
+        else System.out.println("Invalid ID.");
     }
 
-    private void selectUserForReview(List<User> displayedUsers) {
+    private void selectUserForReview(String username, String password, List<User> displayedUsers) {
         if (displayedUsers.isEmpty()) {
             System.out.println("No users to select. Please search or filter first.");
             return;
         }
-        //validare aici
         System.out.print("Enter User ID to leave a review for: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
-
-        System.out.print("Enter review content: ");
-        String content = scanner.nextLine();
-        System.out.print("Enter rating (1-5): ");
-        double rating = scanner.nextInt();
-        scanner.nextLine();
-        //Problema aici: am putea folosi Id-urile userilor in clasa Review in loc de obiecte user
-        //nevoie de validare id selectat daca e in lista displayedUsers
-        //controller.writeReview(newReview);
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId))) {
+            System.out.print("Enter review content: ");
+            String content = scanner.nextLine();
+            System.out.print("Enter rating (1-5): ");
+            double rating = scanner.nextInt();
+            scanner.nextLine();
+            boolean success = controller.writeReview(username, password, rating, content, userId);
+            if (success) {
+                System.out.println("Review added successfully.");
+            } else {
+                System.out.println("Review failed. Please try again.");
+            }
+        }
+        else System.out.println("Invalid ID.");
     }
 
     private void viewUserListings(List<User> displayedUsers) {
@@ -526,16 +640,17 @@ public class ConsoleApp {
             return;
         }
         System.out.print("Enter User ID to view their listings: ");
-        //nevoie de validare id selectat daca e in lista displayedUsers
         int userId = scanner.nextInt();
         scanner.nextLine();
-        //aici ar trbui facuta cautarea dupa id
-        List<Product> userProducts = controller.getUserListing();
-        if (userProducts.isEmpty()) {
-            System.out.println("This user has no listed products.");
-        } else {
-            userProducts.forEach(System.out::println);
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId))) {
+            List<Product> userProducts = controller.getUserListing(userId);
+            if (userProducts.isEmpty()) {
+                System.out.println("This user has no listed products.");
+            } else {
+                userProducts.forEach(System.out::println);
+            }
         }
+        else System.out.println("Invalid ID.");
     }
 
 //ADMIN
@@ -551,14 +666,14 @@ public class ConsoleApp {
             scanner.nextLine();
             switch (choice) {
                 case 1 -> manageProducts(username, password);
-                case 2 -> manageUsers();
+                case 2 -> manageUsers(username, password);
                 case 0 -> loggedIn = false;
                 default -> System.out.println("Invalid choice.");
             }
         }
     }
 
-    private void manageUsers() {
+    private void manageUsers(String username, String password) {
         boolean browsing = true;
         List<User> displayedUsers = new ArrayList<>();
         while (browsing) {
@@ -575,15 +690,15 @@ public class ConsoleApp {
             switch (choice) {
                 case 1 -> displayedUsers = sortUsers();
                 case 2 -> displayedUsers = filterUsers();
-                case 3 -> deleteUser(displayedUsers);
-                case 4 -> manageReviews(displayedUsers);
+                case 3 -> deleteUser(username, password, displayedUsers);
+                case 4 -> manageReviews(username, password, displayedUsers);
                 case 0 -> browsing = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
-    private void manageReviews(List<User> displayedUsers) {
+    private void manageReviews(String username, String password, List<User> displayedUsers) {
         if (displayedUsers.isEmpty()) {
             System.out.println("No users to select. Please search or filter first.");
             return;
@@ -597,77 +712,84 @@ public class ConsoleApp {
         scanner.nextLine();
 
         switch (choice) {
-            case 1 -> deleteReviewMadeByUser(displayedUsers);
-            case 2 -> deleteReviewLeftForUser(displayedUsers);
+            case 1 -> deleteReviewMadeByUser(username, password, displayedUsers);
+            case 2 -> deleteReviewLeftForUser(username, password, displayedUsers);
             default -> System.out.println("Invalid choice. Please try again.");
         }
     }
 
-    private void deleteReviewLeftForUser(List<User> displayedUsers) {
+    private void deleteReviewLeftForUser(String username, String password, List<User> displayedUsers) {
         System.out.println("Select a User to see reviews left for them:");
         for (int i = 0; i < displayedUsers.size(); i++) {
-            System.out.println((i + 1) + ". " + displayedUsers.get(i).getUserName() + " (ID: " + displayedUsers.get(i).getId() + ")");
+            System.out.println((i + 1) + ". " + displayedUsers.get(i));
         }
-        //aici ar trebui o validare
-        System.out.print("Enter the number of the user to manage: ");
-        int userChoice = scanner.nextInt();
+        System.out.print("Enter the ID of the user to manage: ");
+        int userId = scanner.nextInt();
         scanner.nextLine();
-        List<Review> reviewsLeftForUser = new ArrayList<>(); //controller.getReviewsLeftForUser()
-        if (reviewsLeftForUser.isEmpty()) {
-            System.out.println("No reviews found left for this user.");
-            return;
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId))) {
+            List<Review> reviewsLeftForUser = controller.displayReviewsLeftForUser(userId);
+            if (reviewsLeftForUser.isEmpty()) {
+                System.out.println("No reviews found left for this user.");
+                return;
+            }
+            System.out.println("Reviews left for this user: ");
+            System.out.println("Reviews: ");
+            for (Review review : reviewsLeftForUser) {
+                System.out.println(review);
+            }
+            System.out.print("Enter Review ID to delete: ");
+            int reviewId = scanner.nextInt();
+            scanner.nextLine();
+            if(reviewsLeftForUser.stream().map(Review::getId).anyMatch(x -> x.equals(reviewId))) {
+                boolean success = controller.deleteReviewAdmin(username, password, reviewId);
+                if (success) {
+                    System.out.println("Review deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete review. Please check the Review ID.");
+                }
+            }
+            else System.out.println("Invalid ID.");
         }
-        System.out.println("Reviews left for this user: ");
-        System.out.println("Reviews:");
-        for (Review review : reviewsLeftForUser) {
-            System.out.println("Review ID: " + review.getId() + " - " + review.getMessage() + " (Rating: " + review.getGrade() + ")");
-        }
-        //validare aici
-        System.out.print("Enter Review ID to delete: ");
-        int reviewId = scanner.nextInt();
-        scanner.nextLine();
-        //aici tb parametrii
-        boolean success = controller.deleteReviewAdmin();
-        if (success) {
-            System.out.println("Review deleted successfully.");
-        } else {
-            System.out.println("Failed to delete review. Please check the Review ID.");
-        }
+        else System.out.println("Invalid ID.");
     }
 
-    private void deleteReviewMadeByUser(List<User> displayedUsers) {
+    private void deleteReviewMadeByUser(String username, String password, List<User> displayedUsers) {
         System.out.println("Select a User to see reviews they have made:");
         for (int i = 0; i < displayedUsers.size(); i++) {
-            System.out.println((i + 1) + ". " + displayedUsers.get(i).getUserName() + " (ID: " + displayedUsers.get(i).getId() + ")");
+            System.out.println((i + 1) + ". " + displayedUsers.get(i));
         }
-        //validare aici
-        System.out.print("Enter the number of the user to manage: ");
+        System.out.print("Enter the ID of the user to manage: ");
         int userChoice = scanner.nextInt();
         scanner.nextLine();
-        List<Review> reviewsLeftByUser = controller.getReviewsLeftByUser();
-        if (reviewsLeftByUser.isEmpty()) {
-            System.out.println("No reviews made by this user.");
-            return;
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userChoice))) {
+            List<Review> reviewsLeftByUser = controller.displayReviewsLeftByUser(displayedUsers.get(userChoice)
+                    .getUserName(), displayedUsers.get(userChoice).getPassword());
+            if (reviewsLeftByUser.isEmpty()) {
+                System.out.println("No reviews made by this user.");
+                return;
+            }
+            System.out.println("Reviews made by this user: ");
+            System.out.println("Reviews:");
+            for (Review review : reviewsLeftByUser) {
+                System.out.println(review);
+            }
+            System.out.print("Enter Review ID to delete: ");
+            int reviewId = scanner.nextInt();
+            scanner.nextLine();
+            if(reviewsLeftByUser.stream().map(Review::getId).anyMatch(x -> x.equals(reviewId))) {
+                boolean success = controller.deleteReviewAdmin(username, password, reviewId);
+                if (success) {
+                    System.out.println("Review deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete review. Please check the Review ID.");
+                }
+            }
+            else System.out.println("Invalid ID.");
         }
-        System.out.println("Reviews made by this user: ");
-        System.out.println("Reviews:");
-        for (Review review : reviewsLeftByUser) {
-            System.out.println("Review ID: " + review.getId() + " - " + review.getMessage() + " (Rating: " + review.getGrade() + ")");
-        }
-        //validare aici
-        System.out.print("Enter Review ID to delete: ");
-        int reviewId = scanner.nextInt();
-        scanner.nextLine();
-
-        boolean success = controller.deleteReviewAdmin(reviewId);
-        if (success) {
-            System.out.println("Review deleted successfully.");
-        } else {
-            System.out.println("Failed to delete review. Please check the Review ID.");
-        }
+        else System.out.println("Invalid ID.");
     }
 
-    private void deleteUser(List<User> displayedUsers) {
+    private void deleteUser(String username, String password, List<User> displayedUsers) {
         if (displayedUsers.isEmpty()) {
             System.out.println("No users to select. Please search or filter first.");
             return;
@@ -676,22 +798,23 @@ public class ConsoleApp {
         for (User user : displayedUsers) {
             System.out.println("ID: " + user.getId() + ", Username: " + user.getUserName());
         }
-        //validare aici
         System.out.print("Enter User ID to delete: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
-        System.out.print("Are you sure you want to delete this account? (yes/no): ");
-        String confirmation = scanner.nextLine();
-        if (confirmation.equalsIgnoreCase("yes")) {
-            boolean success = controller.deleteUser(userId);
-            if (success)
-                System.out.println("Account deleted successfully.");
-            else
-                System.out.println("Failed to delete user.");
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId))) {
+            System.out.print("Are you sure you want to delete this account? (yes/no): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                boolean success = controller.deleteUser(username, password, userId);
+                if (success)
+                    System.out.println("Account deleted successfully.");
+                else
+                    System.out.println("Failed to delete user.");
+            } else {
+                System.out.println("Account deletion canceled.");
+            }
         }
-        else {
-            System.out.println("Account deletion canceled.");
-        }
+        else System.out.println("Invalid ID.");
     }
 
     private void manageProducts(String username, String password) {
@@ -722,32 +845,31 @@ public class ConsoleApp {
             System.out.println("No products to select. Please search or filter products first.");
             return;
         }
-        //validare aici
         System.out.print("Enter Product ID to select for action: ");
         int productId = scanner.nextInt();
-
-        //cautare cu id in loc de nume seller
-       // Product selectedProduct = controller.getProduct();
         scanner.nextLine();
-        System.out.println("Choose Action for Product:");
-        System.out.println("1. Change Product Category");
-        System.out.println("2. Delete Product");
-        System.out.print("Enter your choice: ");
+        if(products.stream().map(Product::getId).anyMatch(x -> x.equals(productId))) {
+            System.out.println("Choose Action for Product:");
+            System.out.println("1. Change Product Category");
+            System.out.println("2. Delete Product");
+            System.out.print("Enter your choice: ");
 
-        int actionChoice = scanner.nextInt();
-        scanner.nextLine();
-        switch (actionChoice) {
-            case 1 -> changeProductCategory(productId, username, password);
-            case 2 -> deleteProduct(productId, username, password);
-            default -> System.out.println("Invalid action choice. Please try again.");
+            int actionChoice = scanner.nextInt();
+            scanner.nextLine();
+            switch (actionChoice) {
+                case 1 -> changeProductCategory(productId, username, password);
+                case 2 -> deleteProduct(productId, username, password);
+                default -> System.out.println("Invalid action choice. Please try again.");
+            }
         }
+        else System.out.println("Invalid ID.");
     }
 
-    private void deleteProduct(Product selectedProduct, String username, String password) {
+    private void deleteProduct(int productId, String username, String password) {
         System.out.print("Are you sure you want to delete this product? (yes/no): ");
         String confirmation = scanner.nextLine();
         if (confirmation.equalsIgnoreCase("yes")) {
-            boolean success = controller.deleteProduct(username, password, );
+            boolean success = controller.deleteProduct(username, password, productId);
             if (success)
                 System.out.println("Product deleted successfully.");
             else
@@ -758,21 +880,23 @@ public class ConsoleApp {
         }
     }
 
-    private void changeProductCategory(Product selectedProduct, String username, String password) {
+    private void changeProductCategory(int productId, String username, String password) {
         System.out.println("Available Categories:");
         List<Category> categories = controller.getCategories();
         for (int i = 0; i < categories.size(); i++) {
-            System.out.println((i + 1) + ". " + categories.get(i).getName());
+            System.out.println((i + 1) + ". " + categories.get(i));
         }
-        //validare aici
         System.out.print("Choose a new category for the product: ");
         int categoryChoice = scanner.nextInt();
         scanner.nextLine();
-        boolean success = controller.changeCategory(selectedProduct, categoryChoice, username, password);
-        if (success)
-            System.out.println("Product category updated successfully.");
-        else
-            System.out.println("Failed to change category.");
+        if(categories.stream().map(Category::getId).anyMatch(x -> x.equals(categoryChoice))) {
+            boolean success = controller.changeCategory(productId, categoryChoice, username, password);
+            if (success)
+                System.out.println("Product category updated successfully.");
+            else
+                System.out.println("Failed to change category.");
+        }
+        else System.out.println("Invalid ID.");
     }
 
 

@@ -182,11 +182,13 @@ public class Controller {
 
 
     public boolean writeReview(String reviewerUsername, String reviewerPassword, double grade, String message, int revieweeId){
-        return userService.writeReview(reviewerUsername, reviewerPassword, grade, message, revieweeId);
+        if (grade >=1 && grade <= 5)
+            return userService.writeReview(reviewerUsername, reviewerPassword, grade, message, revieweeId);
+        else return false;
     }
 
     public boolean deleteReview(String username,String password, int reviewId){
-        return userService.deleteReview(username, password,reviewId);
+        return userService.deleteReview(username, password, reviewId);
     }
 
     public List<Review> displayReviewsLeftForUser(int userId){
@@ -197,9 +199,9 @@ public class Controller {
         return userService.displayMadePersonalReviews(username,password);
     }
 
-
-
-
+    public List<Review> displayReviewsForMe(String username, String password){
+        return userService.displayProfileReviews(username, password);
+    }
 
 
 
@@ -250,7 +252,9 @@ public class Controller {
     }
 
 
-
+    public List<Product> getMyListings(String username, String password) {
+        return userService.getMyListedProducts(username, password);
+    }
 }
 
 
