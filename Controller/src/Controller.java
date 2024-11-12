@@ -148,7 +148,7 @@ public class Controller {
         return visitorService.displayReviewsLeftByUser(username);
     }
 
-    public boolean deleteReview(String adminUsername, String AdminPassword,String reviewerUsername, String revieweeUsername){
+    public boolean deleteReviewAdmin(String adminUsername, String AdminPassword,String reviewerUsername, String revieweeUsername){
         return adminService.deleteReview(adminUsername, AdminPassword, reviewerUsername, revieweeUsername);
     }
 
@@ -181,9 +181,8 @@ public class Controller {
                 return false;
             }
         }
-
         User seller = product.getListedBy();
-       return adminService.updateCategory(adminUsername, adminPassword, seller, newCategory);
+        return adminService.updateCategory(adminUsername, adminPassword, seller, newCategory);
 
 
     }
@@ -193,14 +192,9 @@ public class Controller {
     }
 
 
-
-
-
-
-
-
-
-
+    public boolean makeOrder() {
+        return userService.placeOrder();
+    }
 }
 
 
