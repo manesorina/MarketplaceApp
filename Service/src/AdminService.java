@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class AdminService extends VisitorService {
     private final IMRepository<Admin> adminRepo;
@@ -14,8 +15,13 @@ public class AdminService extends VisitorService {
 
     protected boolean authenticate(String username, String password) {
         List<Admin> admins = adminRepo.findByCriteria(admin -> admin.getUserName().equals(username) && admin.getPassword().equals(password));
-        Admin admin = admins.getFirst();
-        return admin != null;
+        try{
+            Admin admin = admins.getFirst();
+        }catch (NoSuchElementException e){
+            return false;
+        }
+
+        return true;
     }
 
     //modifica

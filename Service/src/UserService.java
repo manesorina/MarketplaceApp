@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserService extends VisitorService{
 
@@ -19,8 +16,14 @@ public class UserService extends VisitorService{
 
     public boolean authenticate(String userName, String password){
         List<User> users = userRepo.findByCriteria(user -> user.getUserName().equals(userName) && user.getPassword().equals(password));
-        User user = users.getFirst();
-        return user != null;
+        try{
+            User user = users.getFirst();
+        }catch(NoSuchElementException e){
+            return false;
+        }
+
+
+        return true;
     }
 
 
@@ -322,16 +325,32 @@ public class UserService extends VisitorService{
     }
 
 
+    public List<Review> displayProfileReviews(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        List<Review> res = new ArrayList<>();
+        if(user!=null){
+            List<Review> reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if(review.getReviewee().equals(user)){
+                    res.add(review);
+                }
+            }
+        }
+        return res;
+    }
 
-
-
-
-
-
-
-
-
-
-
+    public List<Product> getMyListedProducts(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        List<Product> res = new ArrayList<>();
+        if(user!=null){
+            List<Product> products=productRepo.getAll();
+            for(Product product:products){
+                if(product.getListedBy().equals(user)){
+                    res.add(product);
+                }
+            }
+        }
+        return res;
+    }
 }
 
