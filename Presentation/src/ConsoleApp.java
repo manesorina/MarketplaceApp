@@ -718,7 +718,7 @@ public class ConsoleApp {
         int productId = scanner.nextInt();
 
         //cautare cu id in loc de nume seller
-        Product selectedProduct = controller.getProduct();
+       // Product selectedProduct = controller.getProduct();
         scanner.nextLine();
         System.out.println("Choose Action for Product:");
         System.out.println("1. Change Product Category");
@@ -728,8 +728,8 @@ public class ConsoleApp {
         int actionChoice = scanner.nextInt();
         scanner.nextLine();
         switch (actionChoice) {
-            case 1 -> changeProductCategory(selectedProduct, username, password);
-            case 2 -> deleteProduct(selectedProduct, username, password);
+            case 1 -> changeProductCategory(productId, username, password);
+            case 2 -> deleteProduct(productId, username, password);
             default -> System.out.println("Invalid action choice. Please try again.");
         }
     }

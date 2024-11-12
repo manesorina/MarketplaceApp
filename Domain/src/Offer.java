@@ -11,7 +11,7 @@ public class Offer implements Identifiable{
         this.message = message;
         this.offeredPrice = offeredPrice;
         this.targetedProduct = targetedProduct;
-        this.accepted=accepted;
+        this.accepted=false;
         this.sender=sender;
         this.reciever=reciever;
         this.accepted=false;

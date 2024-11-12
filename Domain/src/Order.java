@@ -7,12 +7,14 @@ public class Order implements Identifiable{
     private double totalPrice;
     private String shippingAddress;
     private User buyer;
+    private User seller;
 
-    public Order(List<Product> products, String status, String shippingAddress, User buyer) {
+    public Order(List<Product> products, String status, String shippingAddress, User buyer, User seller) {
         this.products = products;
         this.status = status;
         this.shippingAddress = shippingAddress;
         this.buyer=buyer;
+        this.seller=seller;
         this.totalPrice = calculateTotalPrice();
     }
 
@@ -63,6 +65,14 @@ public class Order implements Identifiable{
 
     private double calculateTotalPrice() {
         return products.stream().mapToDouble(Product::getPrice).sum();
+    }
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
     }
 
     @Override

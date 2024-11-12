@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserService extends VisitorService{
 
@@ -22,25 +24,30 @@ public class UserService extends VisitorService{
     }
 
 
+    //Offer Methods
 
-    public boolean sendOffer(User seller, String buyerUsername, String buyerPassword, Offer offer) {
-        if (authenticate(buyerUsername, buyerPassword)) {
-            List<Product> products = productRepo.findByCriteria(product -> product.getListedBy().equals(seller));
-            if (!products.isEmpty()) {
+    public boolean sendOffer( String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice) {
+        if (authenticate(senderUsername, senderPassword)) {
+            Product product = productRepo.read(selectedProduct.getId());
+            if (product!=null) {
+                User sender = findByCriteriaHelper(senderUsername, senderPassword);
+                User seller = selectedProduct.getListedBy();
+                if (seller != null && !seller.getUserName().equals(senderUsername)) {
+                    Offer offer = new Offer(message, offeredPrice, selectedProduct, false, sender, seller);
+                    offerRepo.create(offer);
 
-                offer.setSender(findByCriteriaHelper(buyerUsername, buyerPassword));
-                offer.setReciever(seller);
-
-                offerRepo.create(offer);
-                return true;
+                    return true;
+                }
             }
         }
         return false;
     }
 
 
-    public boolean acceptOffer(String sellerUsername, String sellerPassword, Offer offer) {
+
+    public boolean acceptOffer(String sellerUsername, String sellerPassword, int offerId) {
         if (authenticate(sellerUsername, sellerPassword)) {
+            Offer offer=offerRepo.read(offerId);
             if (offer.getReciever().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
                 offer.setStatus(true);
                 return true;
@@ -49,8 +56,9 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public boolean declineOffer(String sellerUsername, String sellerPassword, Offer offer){
+    public boolean declineOffer(String sellerUsername, String sellerPassword, int offerId){
         if(authenticate(sellerUsername,sellerPassword)){
+            Offer offer=offerRepo.read(offerId);
             if(offer.getReciever().equals(findByCriteriaHelper(sellerUsername,sellerPassword))){
                 offer.setStatus(false);
                 return true;
@@ -59,13 +67,41 @@ public class UserService extends VisitorService{
         return false;
     }
 
-    public List<Offer> displayOffers(String username, String password) {
+
+    public List<Offer> displayMadeOffers(String username, String password) {
         List<Offer> personalOffers = new ArrayList<>();
         User user = findByCriteriaHelper(username, password);
-        if (user != null) {
+        if (user != null && authenticate(username,password)) {
             List<Offer> offers = offerRepo.getAll();
             for (Offer offer : offers) {
-                if (offer.getSender().equals(user) || offer.getReciever().equals(user)) {
+                if (offer.getSender().equals(user)){
+                    personalOffers.add(offer);
+                }
+            }
+        }
+        return personalOffers;
+    }
+    public List<Offer> displayReceivedOffers(String username, String password) {
+        List<Offer> personalOffers = new ArrayList<>();
+        User user = findByCriteriaHelper(username, password);
+        if (user != null && authenticate(username,password)) {
+            List<Offer> offers = offerRepo.getAll();
+            for (Offer offer : offers) {
+                if (offer.getReciever().equals(user)) {
+                    personalOffers.add(offer);
+                }
+            }
+        }
+        return personalOffers;
+    }
+
+    public List<Offer> displayAllUserOffers(String username, String password) {
+        List<Offer> personalOffers = new ArrayList<>();
+        User user = findByCriteriaHelper(username, password);
+        if (user != null && authenticate(username,password)) {
+            List<Offer> offers = offerRepo.getAll();
+            for (Offer offer : offers) {
+                if (offer.getReciever().equals(user) || offer.getSender().equals(user)) {
                     personalOffers.add(offer);
                 }
             }
@@ -75,82 +111,155 @@ public class UserService extends VisitorService{
 
 
 
-    public boolean placeOrder(User seller, Order order) {
-        User buyer = order.getBuyer();
 
-        if (buyer == null || !authenticate(buyer.getUserName(), buyer.getPassword())) {
-            return false;
-        }
+    //Order
+    //adauga atributele de la order
 
-        for (Product product : order.getProducts()) {
-            Product fetchedProduct = productRepo.read(product.getId());
-            if (fetchedProduct == null || !fetchedProduct.getListedBy().equals(seller)) {
-                return false;
+
+    public List<Product> selectProductsForOrder(List<Integer> productIds) {
+        List<Product> selectedProducts = new ArrayList<>();
+        for (int productId : productIds) {
+            Product product = productRepo.read(productId);
+            if (product != null) {
+                selectedProducts.add(product);
             }
         }
-
-        order.setTotalPrice(order.getTotalPrice());
-        orderRepo.create(order);
-        return true;
+        return selectedProducts;
     }
 
 
-    public boolean writeReview(Review review){
-        User reviewer=review.getReviewer();
-        User reviewee=review.getReviewee();
+    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId) {
+        if(authenticate(buyerUsername,buyerPassword)){
+            User buyer=findByCriteriaHelper(buyerUsername,buyerPassword);
 
-        if(reviewer!= null && authenticate(reviewer.getUserName(),reviewer.getPassword())){
-
-            List<Order> orders=orderRepo.getAll();
-            for(Order order:orders){
-                if(order.getProducts().stream().anyMatch(product -> product.getListedBy().equals(reviewee))
-                && order.getId()==reviewer.getId()){
-
-                    reviewRepo.create(review);
-                    return true;
-                }
+            List<Product> orderedProducts = selectProductsForOrder(selectedProductsIds);
+            Map<User, List<Product>> productsBySeller=new HashMap<>();
+            for(Product product:orderedProducts){
+                productsBySeller.computeIfAbsent(product.getListedBy(),k -> new ArrayList<>()).add(product);
             }
+
+            for (Map.Entry<User, List<Product>> entry : productsBySeller.entrySet()) {
+                User seller = entry.getKey();
+                List<Product> productsForSeller = entry.getValue();
+
+                Order order = new Order(productsForSeller, status, shippingAddress, buyer, seller);
+                orderRepo.create(order);
+            }
+            return true;
+
         }
         return false;
+
     }
 
-
-    public boolean deleteReview(String username, String password) {
-        User user = findByCriteriaHelper(username, password);
-        if (user != null) {
-            List<Review> reviews = reviewRepo.getAll();
-            for (Review review : reviews) {
-                if (review.getReviewer().equals(user)) {
-                    reviewRepo.delete(review.getId());
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
-
-
-    public List<Order> displayOrders(String userName, String password){
-       List<Order> personalOrders=new ArrayList<>();
-       User user=findByCriteriaHelper(userName,password);
+    public List<Order> displayMadeOrders(String username, String password){
+        List<Order> personalOrders=new ArrayList<>();
+        User user=findByCriteriaHelper(username,password);
         if(user!=null){
             List<Order>orders=orderRepo.getAll();
             for(Order order:orders){
                 if(order.getBuyer().equals(user)){
                     personalOrders.add(order);
                 }
-           }
-       }
+            }
+        }
+        return personalOrders;
+    }
+
+    public List<Order> displayReceivedOrders(String username, String password){
+        List<Order> personalOrders=new ArrayList<>();
+        User user=findByCriteriaHelper(username,password);
+        if(user!=null){
+            List<Order>orders=orderRepo.getAll();
+            for(Order order:orders){
+                if(order.getSeller().equals(user)){
+                    personalOrders.add(order);
+                }
+            }
+        }
+        return personalOrders;
+    }
+
+    public List<Order> displayAllUsersOrders(String username, String password){
+        List<Order> personalOrders=new ArrayList<>();
+        User user=findByCriteriaHelper(username,password);
+        if(user!=null){
+            List<Order>orders=orderRepo.getAll();
+            for(Order order:orders){
+                if(order.getSeller().equals(user) || order.getBuyer().equals(user)){
+                    personalOrders.add(order);
+                }
+            }
+        }
         return personalOrders;
     }
 
 
+    //Review
+    public boolean writeReview(String reviewerUsername, String reviewerPassword, double grade, String message, int revieweeId ){
+        if(authenticate(reviewerUsername,reviewerPassword)){
+            User reviewer=findByCriteriaHelper(reviewerUsername,reviewerPassword);
+            User reviewee=userRepo.read(revieweeId);
+            if(reviewee!=null && !reviewee.getUserName().equals(reviewerUsername)){
+                Review review=new Review(grade,message,reviewer,reviewee);
+                reviewRepo.create(review);
+                return true;
+            }
+        }
+        return false;
 
-    public boolean addToFavorites(String userName, String password,Product product){
-        User user=findByCriteriaHelper(userName,password);
+    }
+
+    //pt ca avem metoda de display personal reviews unde o sa fie vizibil si id ul review urilor am pus review id
+    public boolean deleteReview(String username, String password,int reviewId) {
+        if (authenticate(username,password)){
+            List<Review> reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if(review.getId()==reviewId){
+                    reviewRepo.delete(reviewId);
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    public List<Review> displayMadePersonalReviews(String username, String password){
+        List<Review> personalReviews=new ArrayList<>();
+        User user=findByCriteriaHelper(username,password);
         if(user!=null){
+            List<Review>reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if(review.getReviewer().equals(user)){
+                    personalReviews.add(review);
+                }
+            }
+        }
+        return personalReviews;
+    }
+
+//    public List<Review> displayReceivedPersonalReviews(String username, String password){
+//        List<Review> personalReviews=new ArrayList<>();
+//        User user=findByCriteriaHelper(username,password);
+//        if(user!=null){
+//            List<Review>reviews=reviewRepo.getAll();
+//            for(Review review:reviews){
+//                if(review.getReviewee().equals(user)){
+//                    personalReviews.add(review);
+//                }
+//            }
+//        }
+//        return personalReviews;
+//    }
+
+
+
+    //Favorites
+    public boolean addToFavorites(String userName, String password,int productId){
+        if(authenticate(userName,password)){
+            User user=findByCriteriaHelper(userName,password);
+            Product product=productRepo.read(productId);
             if(product!=null && !user.favourites.contains(product)){
                 user.favourites.add(product);
                 int newNrOfLikes= product.getNrLikes()+1;
@@ -162,16 +271,20 @@ public class UserService extends VisitorService{
 
     }
 
-    public boolean removeFromFavourites(String userName,String password, Product product){
-        User user=findByCriteriaHelper(userName,password);
-        if(user!=null){
+    public boolean removeFromFavourites(String userName,String password, int productId){
+        if(authenticate(userName,password)){
+            User user=findByCriteriaHelper(userName,password);
+            Product product=productRepo.read(productId);
             if(product!=null && user.favourites.contains(product)){
                 user.favourites.remove(product);
                 return true;
             }
+
         }
         return false;
+
     }
+
 
     public List<Product> displayFavourites(String userName, String password){
         User user=findByCriteriaHelper(userName,password);
@@ -181,37 +294,38 @@ public class UserService extends VisitorService{
         return new ArrayList<>();
     }
 
-    public boolean listProduct(String userName,String password, Product product){
-        User user=findByCriteriaHelper(userName,password);
-        if(user!=null){
-            if(product!=null && !user.listedProducts.contains(product)){
-                user.listedProducts.add(product);
-                return true;
-            }
+    //in loc de pordus, trebuie atributele produsului
+
+
+    //Product
+    public boolean listProduct(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
+        if(authenticate(userName,password)){
+            User seller=findByCriteriaHelper(userName,password);
+            Product product=new Product(name,color,size,price,brand,condition,nrOfViews,nrOfLikes,seller);
+            product.setCategory(category);
+            productRepo.create(product);
+            seller.listedProducts.add(product);
+            return true;
         }
         return false;
     }
 
-    public boolean deleteListedProduct(Product product,String userName,String password){
-        User user=findByCriteriaHelper(userName,password);
-        if(user!=null){
-            if(product!=null && user.listedProducts.contains(product)){
-                user.listedProducts.remove(product);
-                return true;
+
+    public boolean deleteListedProduct(String username,String password,int productId){
+        if(authenticate(username,password)){
+            User user=findByCriteriaHelper(username,password);
+            for(Product product:user.listedProducts){
+                if(product.getId()==productId){
+                    user.listedProducts.remove(productRepo.read(productId));
+                    productRepo.delete(productId);
+                    return true;
+                }
             }
+
         }
         return false;
+
     }
-
-    public List<Product> displayListedProducts(String userName, String password){
-        User user=findByCriteriaHelper(userName,password);
-        if(user!=null){
-            return user.getListedProducts();
-        }
-        return new ArrayList<>();
-    }
-
-
 
 
     public User findByCriteriaHelper(String username,String password){
@@ -221,6 +335,9 @@ public class UserService extends VisitorService{
         }
         return null;
     }
+
+
+
 
 
 

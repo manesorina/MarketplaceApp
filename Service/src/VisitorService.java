@@ -268,9 +268,8 @@ public class VisitorService {
                 .sorted(Comparator.comparing(Review::getGrade).reversed()).collect(Collectors.toList());
     }
 
-    public List<Product> displayUserListings(String username) {
-        List<User> users =userRepo.findByCriteria(user -> user.getUserName().equals(username));
-        User user=users.getFirst();
+    public List<Product> displayUserListings(int userId) {
+        User user=userRepo.read(userId);
         if (user != null) {
             return user.getListedProducts();
         }
@@ -278,9 +277,8 @@ public class VisitorService {
 
     }
 
-    public List<Review> displayReviewsLeftForUser(String username){
-        List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
-        User user=users.getFirst();
+    public List<Review> displayReviewsLeftForUser(int userId){
+        User user=userRepo.read(userId);
         List<Review> receivedReviews=new ArrayList<>();
         if(user != null){
             List<Review> reviews=reviewRepo.getAll();
@@ -294,21 +292,7 @@ public class VisitorService {
 
     }
 
-    public List<Review> displayReviewsLeftByUser(String username){
-        List<User> users=userRepo.findByCriteria(user -> user.getUserName().equals(username));
-        User user=users.getFirst();
-        List<Review> receivedReviews=new ArrayList<>();
-        if(user != null){
-            List<Review> reviews=reviewRepo.getAll();
-            for(Review review:reviews){
-                if (review.getReviewer().equals(user)){
-                    receivedReviews.add(review);
-                }
-            }
-        }
-        return receivedReviews;
 
-    }
 
 
 

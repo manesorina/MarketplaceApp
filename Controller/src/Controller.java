@@ -62,47 +62,96 @@ public class Controller {
         };
     }
 
-    public List<Offer> getOffers(String username, String password) {
-        return userService.displayOffers(username, password);
+
+    //Offers
+    public List<Offer> getMadeOffers(String username, String password) {
+        return userService.displayMadeOffers(username,password);
 
     }
 
-    public boolean declineOffer(String username,String password,Offer offer){
-        return userService.declineOffer(username,password,offer);
+    public List<Offer> displayReceivedOffers(String username, String password){
+        return userService.displayReceivedOffers(username,password);
     }
 
-    public boolean acceptOffer(String username,String password,Offer offer){
-        return userService.acceptOffer(username,password,offer);
+    public List<Offer> getOffers(String username, String password){
+        return userService.displayAllUserOffers(username, password);
+    }
 
+    public boolean sendOffer(String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice){
+        return userService.sendOffer(senderUsername, senderPassword, message, selectedProduct, offeredPrice);
+    }
+
+
+
+    //Orders
+    public boolean declineOffer(String username,String password,int offerId){
+        return userService.declineOffer(username, password, offerId);
+    }
+
+    public boolean acceptOffer(String username,String password,int offerId){
+        return userService.acceptOffer(username,password,offerId);
+
+    }
+
+    public List<Order> getMadeOrders(String username, String password){
+        return userService.displayMadeOrders(username,password);
+    }
+
+    public List<Order> getReceivedOrders(String username, String password){
+        return userService.displayReceivedOrders(username, password);
     }
 
     public List<Order> getOrders(String username, String password){
-        return userService.displayOrders(username,password);
+        return userService.displayReceivedOrders(username,password);
     }
 
-    public boolean likeProduct(String username, String password, Product product){
-        return userService.addToFavorites(username,password,product);
+    public List<Product> selectProductsForOrder(List<Integer> productIds){
+        return userService.selectProductsForOrder(productIds);
     }
 
-    public boolean sendOffer(User seller, String buyerUsername, String buyerPassword, Offer offer){
-        return userService.sendOffer(seller, buyerUsername, buyerPassword, offer);
+    public boolean makeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId){
+        return userService.placeOrder(buyerUsername, buyerPassword, selectedProductsIds,  status, shippingAddress,  sellerId);
     }
 
-    public boolean makeOrder(User seller, Order order){
-        return userService.placeOrder(seller, order);
+
+
+    //liked products
+
+    public boolean likeProduct(String username, String password, int productId){
+        return userService.addToFavorites(username,password,productId);
     }
 
-    public List<Product> getUserListings(String username,String password){
-        return userService.displayListedProducts(username,password);
+    public boolean removeFromLiked(String username, String password, int productId){
+        return userService.removeFromFavourites(username, password, productId);
     }
 
-    public boolean addToUserListings(String userName,String password, Product product){
-        return userService.listProduct(userName, password, product);
+    public List<Product> displayLikedProducts(String username,String password){
+        return userService.displayFavourites(username, password);
     }
 
-    public boolean removeFromUserListings(String userName,String password, Product product){
-        return userService.deleteListedProduct(product, userName, password);
+
+
+
+    //Listings
+
+
+
+
+    public boolean addToUserListings(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
+        return userService.listProduct(userName, password, category, name, color, size, price, brand, condition, nrOfViews, nrOfLikes);
     }
+
+    public boolean removeFromUserListings(String userName,String password, int productId){
+        return userService.deleteListedProduct(userName, password, productId);
+    }
+
+    public List<Product> getUserListing(int userId){
+        return visitorService.displayUserListings(userId);
+    }
+
+
+
+    //Sort and filter Users
 
     public List<User> sortUsers(int choice, int order) {
         List<User> users = visitorService.seeAllUsers();
@@ -128,36 +177,45 @@ public class Controller {
 
     }
 
-    public boolean writeReview(Review review){
-        return userService.writeReview(review);
+
+    //Review
+
+
+    public boolean writeReview(String reviewerUsername, String reviewerPassword, double grade, String message, int revieweeId){
+        return userService.writeReview(reviewerUsername, reviewerPassword, grade, message, revieweeId);
     }
 
-    public List<Product> getUserListing(String username){
-        return visitorService.displayUserListings(username);
+    public boolean deleteReview(String username,String password, int reviewId){
+        return userService.deleteReview(username, password,reviewId);
     }
 
-    public List<Review> getReviewsLeftForUser(String username){
-        return visitorService.displayReviewsLeftForUser(username);
+    public List<Review> displayReviewsLeftForUser(int userId){
+        return visitorService.displayReviewsLeftForUser(userId);
     }
 
-    public boolean deleteReview(String username,String password){
-        return userService.deleteReview(username, password);
+    public List<Review> displayReviewsLeftByUser(String username, String password){
+        return userService.displayMadePersonalReviews(username,password);
     }
 
-    public List<Review> getReviewsLeftByUser(String username){
-        return visitorService.displayReviewsLeftByUser(username);
+
+
+
+
+
+
+    //admin
+
+
+    public boolean deleteReviewAdmin(String adminUsername, String AdminPassword,int reviewId){
+        return adminService.deleteReview(adminUsername, AdminPassword, reviewId);
     }
 
-    public boolean deleteReviewAdmin(String adminUsername, String AdminPassword,String reviewerUsername, String revieweeUsername){
-        return adminService.deleteReview(adminUsername, AdminPassword, reviewerUsername, revieweeUsername);
+    public boolean deleteUser (String adminUsername, String adminPassword, int userId){
+        return adminService.deleteUser(adminUsername, adminPassword, userId);
     }
 
-    public boolean deleteUser (String adminUsername, String adminPassword, String nameOfUser){
-        return adminService.deleteUser(adminUsername, adminPassword, nameOfUser);
-    }
-
-    public boolean deleteProduct(String adminUsername, String adminPassword, String sellerUsername){
-        return adminService.deleteProduct(adminUsername, adminPassword, sellerUsername);
+    public boolean deleteProduct(String adminUsername, String adminPassword, int productId){
+        return adminService.deleteProduct(adminUsername, adminPassword, productId);
     }
 
 
@@ -166,7 +224,7 @@ public class Controller {
         return adminService.getAllCategories();
     }
 
-    public boolean changeCategory(Product product, int categoryChoice, String adminUsername, String adminPassword) {
+    public boolean changeCategory(int productId, int categoryChoice, String adminUsername, String adminPassword) {
         Category newCategory;
 
         switch (categoryChoice) {
@@ -181,20 +239,18 @@ public class Controller {
                 return false;
             }
         }
-        User seller = product.getListedBy();
-        return adminService.updateCategory(adminUsername, adminPassword, seller, newCategory);
+
+        return adminService.updateCategory(adminUsername, adminPassword, productId, newCategory);
 
 
     }
 
-    public Product getProduct(String sellerUsername){
-        return adminService.getProductBySellerUsername(sellerUsername);
+    public Product getProduct(String adminUsername, String adminPassword,int userId){
+        return adminService.getProductBySellerId(adminUsername, adminPassword, userId);
     }
 
 
-    public boolean makeOrder() {
-        return userService.placeOrder();
-    }
+
 }
 
 
