@@ -32,7 +32,7 @@ public class UserService extends VisitorService{
             if (product!=null) {
                 User sender = findByCriteriaHelper(senderUsername, senderPassword);
                 User seller = selectedProduct.getListedBy();
-                if (seller != null && !seller.getUserName().equals(senderUsername)) {
+                if (seller != null && !seller.getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
                     Offer offer = new Offer(message, offeredPrice, selectedProduct, false, sender, seller);
                     offerRepo.create(offer);
 
@@ -50,6 +50,7 @@ public class UserService extends VisitorService{
             Offer offer=offerRepo.read(offerId);
             if (offer.getReciever().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
                 offer.setStatus(true);
+                offer.getTargetedProduct().setPrice(offer.getOfferedPrice());
                 return true;
             }
         }
@@ -319,6 +320,7 @@ public class UserService extends VisitorService{
         }
         return null;
     }
+
 
 
 

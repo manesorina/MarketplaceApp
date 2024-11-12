@@ -67,50 +67,51 @@ public class VisitorService {
 
     public List<Product> searchProductsByName(String name) {
         return productRepo.getAll().stream().filter(product -> product.getName()
-                .toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
+                .toLowerCase().contains(name.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByUsername(String username) {
         return productRepo.getAll().stream().filter(product -> product.getListedBy().getUserName()
-                .toLowerCase().contains(username.toLowerCase())).collect(Collectors.toList());
+                .toLowerCase().contains(username.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByBrand(String brand) {
         return productRepo.getAll().stream().filter(product -> product.getBrand().toLowerCase()
-                .contains(brand.toLowerCase())).collect(Collectors.toList());
+                .contains(brand.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByCategory(String category) {
         return productRepo.getAll().stream().filter(product -> product.getCategory().getName().
-                name().toLowerCase().contains(category.toLowerCase())).collect(Collectors.toList());
+                name().toLowerCase().contains(category.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByPriceRange(double minPrice, double maxPrice) {
         return productRepo.getAll().stream()
                 .filter(product -> product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
+                .peek(product -> product.setNrViews(product.getNrViews() + 1))
                 .collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByCondition(String condition) {
         return productRepo.getAll().stream().filter(product -> product.getCondition().toLowerCase()
-                .contains(condition.toLowerCase())).collect(Collectors.toList());
+                .contains(condition.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByColor(String color) {
         return productRepo.getAll().stream().filter(product -> product.getColor().toLowerCase()
-                .contains(color.toLowerCase())).collect(Collectors.toList());
+                .contains(color.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsBySizeRange(double minSize, double maxSize) {
         return productRepo.getAll().stream()
-                .filter(product -> product.getSize() >= minSize && product.getSize() <= maxSize)
-                .collect(Collectors.toList());
+                .filter(product -> product.getSize() >= minSize && product.getSize() <= maxSize).
+                peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<Product> searchProductsByViewRange(double minViews, double maxViews) {
         return productRepo.getAll().stream()
-                .filter(product -> product.getNrViews() >= minViews && product.getNrViews() <= maxViews)
-                .collect(Collectors.toList());
+                .filter(product -> product.getNrViews() >= minViews && product.getNrViews() <= maxViews).
+                peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
     public List<User> sortUsersAlphabeticallyAscending(List<User> users) {
