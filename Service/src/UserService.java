@@ -332,9 +332,14 @@ public class UserService extends VisitorService{
             User reviewer=findByCriteriaHelper(reviewerUsername,reviewerPassword);
             User reviewee=userRepo.read(revieweeId);
             if(reviewee!=null && !reviewee.getUserName().equals(reviewerUsername)){
-                Review review=new Review(grade,message,reviewer,reviewee);
-                reviewRepo.create(review);
-                return true;
+                for(Order order:displayMadeOrders(reviewerUsername,reviewerPassword)){
+                    if(order.getSeller().equals(reviewee)){
+                        Review review=new Review(grade,message,reviewer,reviewee);
+                        reviewRepo.create(review);
+                        return true;
+                    }
+                }
+
             }
         }
         return false;
@@ -388,6 +393,29 @@ public class UserService extends VisitorService{
         }
         return personalReviews;
     }
+
+    /**
+     * Displays the reviews for a user's profile based on their username and password.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return A list of reviews for the user’s profile, or an empty list if the user is not found or has no reviews.
+     */
+    public List<Review> displayProfileReviews(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        List<Review> profileReviews=new ArrayList<>();
+        if(user!=null){
+            List<Review> reviews=reviewRepo.getAll();
+            for(Review review:reviews){
+                if(review.getReviewee().equals(user)){
+                    profileReviews.add(review);
+                }
+            }
+            return profileReviews;
+        }
+        return new ArrayList<>();
+    }
+
 
 
     //Favorites
@@ -517,6 +545,22 @@ public class UserService extends VisitorService{
 
     }
 
+
+    /**
+     * Retrieves the list of products listed by a user based on their username and password.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return A list of products the user has listed, or an empty list if the user is not found or has no listed products.
+     */
+    public List<Product> getMyListedProducts(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        if(user!=null){
+            return user.getListedProducts();
+        }
+        return new ArrayList<>();
+    }
+
     /**
      * Finds a user by their username and password.
      *
@@ -557,28 +601,98 @@ public class UserService extends VisitorService{
     }
 
 
-    public List<Product> getMyListedProducts(String username, String password) {
-        User user=findByCriteriaHelper(username,password);
-        if(user!=null){
-            return user.getListedProducts();
+    /**
+     * Calculates the number of negative reviews received by a user.
+     * A review is considered negative if its grade is 3.5 or below.
+     *
+     * @param userId The ID of the user for whom the count of negative reviews is being calculated.
+     * @return The total number of negative reviews for the specified user.
+     */
+    public int getUserNegativeReviews(int userId){
+        int nrOfNegativeReviews=0;
+        User user=userRepo.read(userId);
+        for(Review review:reviewRepo.getAll()){
+            if (review.getReviewee().equals(user) && review.getGrade()<=3.5){
+                nrOfNegativeReviews++;
+            }
         }
-        return new ArrayList<>();
+        return nrOfNegativeReviews;
+
     }
 
-    public List<Review> displayProfileReviews(String username, String password) {
-        User user=findByCriteriaHelper(username,password);
-        List<Review> profileReviews=new ArrayList<>();
-        if(user!=null){
-            List<Review> reviews=reviewRepo.getAll();
-            for(Review review:reviews){
-                if(review.getReviewee().equals(user)){
-                    profileReviews.add(review);
+
+    /**
+     * Calculates the number of negative reviews received by a user.
+     * A review is considered negative if its grade is 3.5 or below.
+     *
+     * @param userId The ID of the user for whom the count of negative reviews is being calculated.
+     * @return The total number of negative reviews for the specified user.
+     */
+    public int getUserPositiveReviews(int userId){
+        int nrOfPositiveReviews=0;
+        User user=userRepo.read(userId);
+        for(Review review:reviewRepo.getAll()){
+            if (review.getReviewee().equals(user) && review.getGrade()>3.5){
+                nrOfPositiveReviews++;
+            }
+        }
+        return nrOfPositiveReviews;
+
+    }
+
+    /**
+     * Calculates the number of individual sales made by a user.
+     * Each product sold, even within the same order, counts as a separate sale.
+     *
+     * @param userId The user whose sales are being calculated.
+     * @return The total number of individual sales made by the user.
+     */
+    public int calculateNumberOfSales(int userId) {
+        int totalSales = 0;
+        User user=userRepo.read(userId);
+
+        for (Order order : orderRepo.getAll()) {
+            for (Product product : order.getProducts()) {
+                if (product.getListedBy().equals(user)) {
+                    totalSales++;
                 }
             }
-            return profileReviews;
         }
-        return new ArrayList<>();
+
+        return totalSales;
     }
+
+
+
+    /**
+     * Calculates the trust score for a user based on their activity and reputation.
+     * The score is computed using the following factors:
+     * <ul>
+     *   <li>The number of sales made by the user (each sale contributes 10 points).</li>
+     *   <li>The number of negative reviews received by the user (each negative review contributes 5 points).</li>
+     *   <li>The number of flagged actions associated with the user (each flagged action subtracts from the score).</li>
+     * </ul>
+     */
+    public int calculateUserTrustScore(int userId){
+        int score=calculateNumberOfSales(userId)*10;
+        score+=getUserNegativeReviews(userId)*5;
+        score-=getUserNegativeReviews(userId)*15;
+        score-=userRepo.read(userId).getFlaggedActions();
+        return score;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

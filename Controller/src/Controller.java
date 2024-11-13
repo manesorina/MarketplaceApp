@@ -255,6 +255,15 @@ public class Controller {
     public List<Product> getMyListings(String username, String password) {
         return userService.getMyListedProducts(username, password);
     }
+
+    public int getUserTrustScore(int userId){
+        return userService.calculateUserTrustScore(userId);
+    }
+
+    public double getUserAverageAcceptanceRate(int userId){
+        return userService.userAverageOfferAcceptanceRate(userId);
+    }
+
 }
 
 
