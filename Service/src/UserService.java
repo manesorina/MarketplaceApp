@@ -581,6 +581,12 @@ public class UserService extends VisitorService{
     }
 
 
+    public double getMyScore(String username, String password) {
+        User user=findByCriteriaHelper(username,password);
+        if (user != null)
+            return user.getScore();
+        else return 0;
+    }
 }
 
 

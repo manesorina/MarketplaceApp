@@ -203,6 +203,10 @@ public class Controller {
         return userService.displayProfileReviews(username, password);
     }
 
+    public double getProfileScore(String username, String password){
+        return userService.getMyScore(username, password);
+    }
+
 
 
     //admin

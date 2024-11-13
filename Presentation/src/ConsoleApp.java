@@ -207,7 +207,10 @@ public class ConsoleApp {
     }
 
     private void reviewsForMe(String username, String password) {
-        //adauga sa vezi propriul rating
+        System.out.println("Your rating is: ");
+        double rating = controller.getProfileScore(username, password);
+        System.out.println(rating);
+        scanner.nextLine();
         List<Review> reviews = controller.displayReviewsForMe(username, password);
         if (reviews.isEmpty()) {
             System.out.println("No reviews found. Please try again.");
