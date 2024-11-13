@@ -65,7 +65,7 @@ public class AdminService extends VisitorService {
 
 
     /**
-     * Deletes a review from the repository if the admin is authenticated.
+     * Deletes a review from the repository if the admin is authenticated, and updates the nr of flagged actions for an user
      *
      * @param adminUsername the username of the admin performing the action.
      * @param adminPassword the password of the admin performing the action.
@@ -78,6 +78,8 @@ public class AdminService extends VisitorService {
             for (Review review:reviews) {
                 if(review.getId()==reviewId){
                     reviewRepo.delete(reviewId);
+                    reviewRepo.read(reviewId).getReviewer().incrementFlaggedActions();
+
                 }
             }
         }
@@ -98,6 +100,7 @@ public class AdminService extends VisitorService {
             for(Product product:products){
                 if(product.getId()==productId){
                     productRepo.delete(productId);
+                    productRepo.read(productId).getListedBy().incrementFlaggedActions();
                 }
             }
         }
@@ -122,6 +125,7 @@ public class AdminService extends VisitorService {
                 if(product.equals(targetetdProduct)){
                     targetetdProduct.setCategory(newCategory);
                     productRepo.update(targetetdProduct);
+                    productRepo.read(productId).getListedBy().incrementFlaggedActions();
                 }
             }
 
