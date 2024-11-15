@@ -10,8 +10,6 @@ public class UserService extends VisitorService{
     IMRepository<Order> orderRepo;
     IMRepository<Offer> offerRepo;
 
-
-
     /**
      * Constructor for the UserService class. Initializes the service with the provided repositories for
      * users, products, reviews, orders, and offers.
@@ -671,25 +669,11 @@ public class UserService extends VisitorService{
      */
     public int calculateUserTrustScore(int userId){
         int score=calculateNumberOfSales(userId)*10;
-        score+=getUserNegativeReviews(userId)*5;
+        score+=getUserPositiveReviews(userId)*5;
         score-=getUserNegativeReviews(userId)*15;
         score-=userRepo.read(userId).getFlaggedActions();
         return score;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public double getMyScore(String username, String password) {
         User user=findByCriteriaHelper(username,password);
