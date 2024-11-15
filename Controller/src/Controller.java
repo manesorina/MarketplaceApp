@@ -268,6 +268,25 @@ public class Controller {
         return userService.userAverageOfferAcceptanceRate(userId);
     }
 
+
+
+    //testing
+    public int getUsersTotalNrOfSales(int userId){
+        return userService.calculateNumberOfSales(userId);
+    }
+
+    public int getUserNegativeReviews(int userId){
+        return userService.getUserNegativeReviews(userId);
+    }
+
+    public int getUserPositiveReviews(int userId){
+        return userService.getUserPositiveReviews(userId);
+    }
+
+    public int getFlaggedActions(int userId){
+        return userService.getNrOfFlaggedActions(userId);
+    }
+
 }
 
 
