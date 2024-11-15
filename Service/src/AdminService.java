@@ -100,7 +100,7 @@ public class AdminService extends VisitorService {
             for(Product product:products){
                 if(product.getId()==productId){
                     productRepo.delete(productId);
-                    productRepo.read(productId).getListedBy().incrementFlaggedActions();
+                    //productRepo.read(productId).getListedBy().incrementFlaggedActions();
                 }
             }
         }

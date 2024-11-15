@@ -10,6 +10,8 @@ public class UserService extends VisitorService{
     IMRepository<Order> orderRepo;
     IMRepository<Offer> offerRepo;
 
+
+
     /**
      * Constructor for the UserService class. Initializes the service with the provided repositories for
      * users, products, reviews, orders, and offers.
@@ -64,9 +66,9 @@ public class UserService extends VisitorService{
             Product product = productRepo.read(selectedProduct.getId());
             if (product!=null) {
                 User sender = findByCriteriaHelper(senderUsername, senderPassword);
-                User seller = selectedProduct.getListedBy();
-                if (seller != null && !seller.getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
-                    Offer offer = new Offer(message, offeredPrice, selectedProduct, false, sender, seller);
+                User offerReceiver = selectedProduct.getListedBy();
+                if (offerReceiver  != null && !offerReceiver .getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
+                    Offer offer = new Offer(message, offeredPrice, selectedProduct,  sender, offerReceiver );
                     offerRepo.create(offer);
 
                     return true;
@@ -88,7 +90,7 @@ public class UserService extends VisitorService{
     public boolean acceptOffer(String sellerUsername, String sellerPassword, int offerId) {
         if (authenticate(sellerUsername, sellerPassword)) {
             Offer offer=offerRepo.read(offerId);
-            if (offer.getReciever().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
+            if (offer.getReceiver().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
                 offer.setStatus(true);
                 offer.getTargetedProduct().setPrice(offer.getOfferedPrice());
                 return true;
@@ -109,7 +111,7 @@ public class UserService extends VisitorService{
     public boolean declineOffer(String sellerUsername, String sellerPassword, int offerId){
         if(authenticate(sellerUsername,sellerPassword)){
             Offer offer=offerRepo.read(offerId);
-            if(offer.getReciever().equals(findByCriteriaHelper(sellerUsername,sellerPassword))){
+            if(offer.getReceiver().equals(findByCriteriaHelper(sellerUsername,sellerPassword))){
                 offer.setStatus(false);
                 return true;
             }
@@ -153,7 +155,7 @@ public class UserService extends VisitorService{
         if (user != null && authenticate(username,password)) {
             List<Offer> offers = offerRepo.getAll();
             for (Offer offer : offers) {
-                if (offer.getReciever().equals(user)) {
+                if (offer.getReceiver().equals(user)) {
                     personalOffers.add(offer);
                 }
             }
@@ -175,7 +177,7 @@ public class UserService extends VisitorService{
         if (user != null && authenticate(username,password)) {
             List<Offer> offers = offerRepo.getAll();
             for (Offer offer : offers) {
-                if (offer.getReciever().equals(user) || offer.getSender().equals(user)) {
+                if (offer.getReceiver().equals(user) || offer.getSender().equals(user)) {
                     personalOffers.add(offer);
                 }
             }
@@ -544,7 +546,18 @@ public class UserService extends VisitorService{
      */
     public double userAverageOfferAcceptanceRate(int userId){
         User user=userRepo.read(userId);
-        List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
+        //List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
+        List<Offer> receivedOffers=new ArrayList<>();
+        if(user!=null){
+            List<Offer>offers=offerRepo.getAll();
+            for(Offer offer:offers){
+                if(offer.getReceiver().equals(user)){
+                    receivedOffers.add(offer);
+                }
+
+            }
+        }
+
         if (receivedOffers.isEmpty()) {
             return 0;
         }
@@ -634,6 +647,9 @@ public class UserService extends VisitorService{
         }
         return new ArrayList<>();
     }
+
+
+
     /**
      * Calculates the number of individual sales made by a user.
      * Each product sold, even within the same order, counts as a separate sale.
@@ -657,7 +673,6 @@ public class UserService extends VisitorService{
     }
 
 
-
     /**
      * Calculates the trust score for a user based on their activity and reputation.
      * The score is computed using the following factors:
@@ -669,12 +684,28 @@ public class UserService extends VisitorService{
      */
     public int calculateUserTrustScore(int userId){
         int score=calculateNumberOfSales(userId)*10;
+
         score+=getUserPositiveReviews(userId)*5;
         score-=getUserNegativeReviews(userId)*15;
         score-=userRepo.read(userId).getFlaggedActions();
         return score;
     }
 
+    public int getNrOfFlaggedActions(int userId){
+        User user= userRepo.read(userId);
+        return user.getFlaggedActions();
+    }
+
+
+    /**
+     * Retrieves the engagement score for a user based on their username and password.
+     * This method authenticates the user and returns their current score if valid.
+     *
+     * @param username The username of the user whose score is being retrieved.
+     * @param password The password of the user for authentication.
+     * @return The user's engagement score if the user is found and authenticated;
+     *         otherwise, returns 0 if the user is not found or authentication fails.
+     */
     public double getMyScore(String username, String password) {
         User user=findByCriteriaHelper(username,password);
         if (user != null)

@@ -15,6 +15,16 @@ public class Main {
         AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo, categoryRepo);
         Controller controller = new Controller(adminService, userService, visitorService);
         ConsoleApp console = new ConsoleApp(controller);
+
+
+        Category categoryTops = new Category(CategoryName.TOPS);
+        Category categoryDresses= new Category(CategoryName.DRESSES);
+        Category categoryShoes = new Category(CategoryName.FOOTWEAR);
+        Category categoryAccessories = new Category(CategoryName.ACCESSORIES);
+        Category categoryOuterwear = new Category(CategoryName.OUTERWEAR);
+        Category categoryBottoms=new Category(CategoryName.BOTTOMS);
+
+
         Admin a1=new Admin("JohnDoe","qwerty1234","johnedoe@email.com","0747896547");
         Admin a2=new Admin("JaneSmith","1234abc","janesmith@email.com","0748596321");
         Admin a3=new Admin("MikeSteel","a1b2c3d4","mikesteel@email.com","0748693214");
@@ -23,210 +33,154 @@ public class Main {
         adminRepo.create(a2);
         adminRepo.create(a3);
 
-
-
-        User u1= new User("MikeHouse","1q2w3e4r","mikehouse@gmail.com","0748996332",2.4);
+        //Users
+        User u9=new User("test","1234","test@email.com","0748596321",0.0);
+        userRepo.create(u9);
         User u2= new User("LisaTeak","xyz987","lisateak@gmail.com","0747558114",4.5);
         User u3= new User("TinaSilver","x1y2z3","tinasilver@gmail.com","0758669327",3.5);
         User u4 = new User("JohnSmith", "password123", "john.smith@gmail.com", "0711223344", 4.5);
-        User u5 = new User("AnnaTaylor", "securePass", "anna.taylor@gmail.com", "0722334455", 3.8);
         User u6 = new User("ChrisLee", "leePass789", "chris.lee@gmail.com", "0755667788", 4.1);
-        User u7 = new User("SarahYoung", "sarahY123", "sarah.young@gmail.com", "0733445566", 3.2);
-        User u8 = new User("DavidBrown", "davidB2021", "david.brown@gmail.com", "0767889900", 4.0);
 
-        userRepo.create(u1);
         userRepo.create(u2);
         userRepo.create(u3);
         userRepo.create(u4);
-        userRepo.create(u5);
         userRepo.create(u6);
-        userRepo.create(u7);
-        userRepo.create(u8);
 
 
-        //System.out.println(userRepo.getAll());
 
-        Product p1=new Product("TShirt","blue",36,8.99,"Nike","Worn",0,0,u1);
-        Product p2=new Product("Pants","black",38,10.99,"Nike","Worn",0,0,u2);
-        Product p3=new Product("Shoes","yellow",40,11.45,"Puma","New",0,0,u1);
-        Product p4=new Product("Dress","pink",40,15.23,"H&M","Good",0,0,u1);
-        Product p5=new Product("Vintage Belt","brown",40,8.56,"H&M","Good",0,0,u3);
-        Product p6=new Product("TShirt","white",36,9.64,"Zara","Worn",0,0,u3);
-        Product p7 = new Product("Hat", "red", 57, 6.49, "Adidas", "Like New", 0, 0, u4);
-        Product p8 = new Product("Jeans", "blue", 32, 12.99, "Levi's", "Good", 0, 0, u5);
-        Product p9 = new Product("Jacket", "green", 42, 25.75, "North Face", "New", 0, 0, u6);
-        Product p10 = new Product("Sneakers", "black", 41, 19.99, "Reebok", "Worn", 0, 0, u7);
-        Product p11 = new Product("Skirt", "purple", 36, 9.89, "H&M", "Good", 0, 0, u8);
-        Product p12 = new Product("Scarf", "orange", 0, 4.99, "S.Oliver", "Like New", 0, 0, u5);
-        Product p13 = new Product("TShirt", "green", 40, 8.75, "Nike", "Worn", 0, 0, u4);
-        Product p14 = new Product("Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0, u6);
-        Product p15 = new Product("Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0, u8);
-        Product p16 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, u7);
-        Product p17 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u3);
 
-        Category categoryTops = new Category(CategoryName.TOPS);
-        Category categoryDresses= new Category(CategoryName.DRESSES);
-        Category categoryShoes = new Category(CategoryName.FOOTWEAR);
-        Category categoryAccessories = new Category(CategoryName.ACCESSORIES);
-        Category categoryOuterwear = new Category(CategoryName.OUTERWEAR);
-        Category categoryBottoms=new Category(CategoryName.BOTTOMS);
-        p1.setCategory(categoryTops);
-        p2.setCategory(categoryTops);
-        p3.setCategory(categoryShoes);
-        p4.setCategory(categoryDresses);
-        p5.setCategory(categoryAccessories);
-        p7.setCategory(categoryAccessories);
-        p8.setCategory(categoryTops);
-        p9.setCategory(categoryOuterwear);
-        p10.setCategory(categoryShoes);
-        p11.setCategory(categoryDresses);
-        p12.setCategory(categoryAccessories);
-        p13.setCategory(categoryTops);
+        //Products
+
+        Product p14 = new Product("Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0, u9);
+        Product p15 = new Product("Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0, u9);
+        Product p16 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, u9);
+        Product p17 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u9);
+        Product p18 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, u9);
+        Product p19 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u9);
+        Product p20 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u9);
+        Product p21 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, u9);
+        Product p22 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u9);
+        Product p23 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u2);
+
         p14.setCategory(categoryShoes);
         p15.setCategory(categoryAccessories);
         p16.setCategory(categoryOuterwear);
         p17.setCategory(categoryBottoms);
-        productRepo.create(p1);
-        productRepo.create(p2);
-        productRepo.create(p3);
-        productRepo.create(p4);
-        productRepo.create(p5);
-        productRepo.create(p6);
-        productRepo.create(p7);
-        productRepo.create(p8);
-        productRepo.create(p9);
-        productRepo.create(p10);
-        productRepo.create(p11);
-        productRepo.create(p12);
-        productRepo.create(p13);
+        p18.setCategory(categoryOuterwear);
+        p19.setCategory(categoryBottoms);
+        p20.setCategory(categoryBottoms);
+        p21.setCategory(categoryBottoms);
+        p22.setCategory(categoryOuterwear);
+        p23.setCategory(categoryBottoms);
+
         productRepo.create(p14);
         productRepo.create(p15);
         productRepo.create(p16);
         productRepo.create(p17);
+        productRepo.create(p18);
+        productRepo.create(p19);
+        productRepo.create(p20);
+        productRepo.create(p21);
+        productRepo.create(p22);
+        productRepo.create(p23);
 
-        Review r1=new Review(4.5,"I liked the service",u3,u1);
-        Review r2=new Review(1.5,"Very bad service",u2,u3);
-        Review r3 = new Review(3.0, "Average experience, could be better", u1, u4);
-        Review r4 = new Review(5.0, "Excellent service, highly recommend!", u4, u5);
-        Review r5 = new Review(2.0, "Not satisfied with the response time", u5, u2);
-        Review r6 = new Review(4.0, "Good quality, but a bit overpriced", u6, u3);
-        Review r7 = new Review(4.8, "Fantastic experience and fast delivery", u7, u1);
-        Review r8 = new Review(3.5, "Decent service, but room for improvement", u8, u6);
-        Review r9 = new Review(4.2, "Pleasant transaction, will return", u3, u8);
-        Review r10 = new Review(2.8, "Delayed delivery but product as described", u2, u5);
-        Review r11 = new Review(5.0, "Perfect! Could not be happier with the service", u1, u7);
-        Review r12 = new Review(1.0, "Terrible communication, would not recommend", u6, u4);
 
-        reviewRepo.create(r1);
-        reviewRepo.create(r2);
-        reviewRepo.create(r3);
-        reviewRepo.create(r4);
-        reviewRepo.create(r5);
-        reviewRepo.create(r6);
-        reviewRepo.create(r7);
-        reviewRepo.create(r8);
-        reviewRepo.create(r9);
-        reviewRepo.create(r10);
-        reviewRepo.create(r11);
-        reviewRepo.create(r12);
 
-        //Category category = p2.getCategory();
-        // System.out.println(category.getName());
 
-        List<Product> orderProducts0 = Arrays.asList(p3, p4);
-        Order or1 = new Order(orderProducts0, "sent", "Strada xyz", u3, p3.getListedBy()); // Seller is the product's listedBy attribute
 
-        List<Product> orderProducts1 = Arrays.asList(p1, p5);
-        Order or2 = new Order(orderProducts1, "delivered", "Strada ABC", u2, p1.getListedBy()); // Assuming p1's listedBy is used
+        //Offers
+        Offer o1 = new Offer("Would you consider selling this for 7.00?", 14.00, p14, u6, u9);
+        Offer o2 = new Offer("Can I get this for 9.50?", 28.00, p15,  u3, u9);
+        Offer o3 = new Offer("Would you accept 10.00?", 28.00, p16, u4, u9);
+        Offer o4 = new Offer("How about 12.00 for this item?", 7.00, p17, u2, u9);
 
-        List<Product> orderProducts2 = List.of(p2);
-        Order or3 = new Order(orderProducts2, "delivered", "Strada DEF", u5, p2.getListedBy());
+        offerRepo.create(o1);
+        offerRepo.create(o2);
+        offerRepo.create(o3);
+        offerRepo.create(o4);
+        controller.userService.sendOffer(u6.getUserName(),u6.getPassword(),"Would you consider..",p14,14.00);
+        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p15,28.00);
+        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p16,28.00);
+        controller.userService.sendOffer(u2.getUserName(),u2.getPassword(),"Would you consider..",p17,7.00);
 
-        List<Product> orderProducts3 = Arrays.asList(p3, p6);
-        Order or4 = new Order(orderProducts3, "shipped", "Strada GHI", u6, p3.getListedBy());
 
-        List<Product> orderProducts4 = Arrays.asList(p1, p4);
-        Order or5 = new Order(orderProducts4, "delivered", "Strada JKL", u7, p1.getListedBy());
+        controller.userService.acceptOffer(u9.getUserName(),u9.getPassword(),o1.getId());
+        controller.userService.acceptOffer(u9.getUserName(),u9.getPassword(),o4.getId());
 
-        List<Product> orderProducts5 = Arrays.asList(p2, p5);
-        Order or6 = new Order(orderProducts5, "shipped", "Strada MNO", u8, p2.getListedBy());
 
-        List<Product> orderProducts6 = List.of(p3);
-        Order or7 = new Order(orderProducts6, "delivered", "Strada PQR", u3, p3.getListedBy());
 
-        List<Product> orderProducts7 = Arrays.asList(p4, p5);
-        Order or8 = new Order(orderProducts7, "sent", "Strada STU", u1, p4.getListedBy());
 
-        List<Product> orderProducts8 = List.of(p6);
-        Order or9 = new Order(orderProducts8, "shipped", "Strada VWX", u6, p6.getListedBy());
+        //orders
+        List<Product> orderProducts0 = List.of(p19);
+        Order or1 = new Order(orderProducts0, "sent", "Strada xyz", u3, p19.getListedBy());
+        List<Product> orderProducts1 = List.of(p18);
+        Order or2 = new Order(orderProducts1, "sent", "Strada xyz", u2, p19.getListedBy());
+        List<Product> orderProducts2 = List.of(p20);
+        Order or3 = new Order(orderProducts1, "sent", "Strada xyz", u4, p19.getListedBy());
+        List<Product> orderProducts3 = List.of(p21);
+        Order or4 = new Order(orderProducts1, "sent", "Strada xyz", u6, p19.getListedBy());
+        List<Product> orderedProducts4=List.of(p23);
+        Order or5=new Order(orderedProducts4,"sent","Strada xyz",u9,p23.getListedBy());
 
-// Adding orders to the repository
         orderRepo.create(or1);
         orderRepo.create(or2);
         orderRepo.create(or3);
         orderRepo.create(or4);
         orderRepo.create(or5);
-        orderRepo.create(or6);
-        orderRepo.create(or7);
-        orderRepo.create(or8);
-        orderRepo.create(or9);
 
-// Placing orders using the service method
-        userService.placeOrder(u3.getUserName(), u3.getPassword(), List.of(p6.getId()), "shipped", "Strada VWX", p6.getListedBy().getId());
-        userService.placeOrder(u2.getUserName(), u2.getPassword(), List.of(p2.getId()), "delivered", "Strada DEF", p2.getListedBy().getId());
-        userService.placeOrder(u1.getUserName(), u1.getPassword(), Arrays.asList(p3.getId(), p6.getId()), "shipped", "Strada GHI", p3.getListedBy().getId());
-        userService.placeOrder(u1.getUserName(), u1.getPassword(), Arrays.asList(p1.getId(), p4.getId()), "delivered", "Strada JKL", p1.getListedBy().getId());
-        userService.placeOrder(u3.getUserName(), u3.getPassword(), Arrays.asList(p2.getId(), p5.getId()), "shipped", "Strada MNO", p2.getListedBy().getId());
-        userService.placeOrder(u1.getUserName(), u1.getPassword(), List.of(p3.getId()), "delivered", "Strada PQR", p3.getListedBy().getId());
-        userService.placeOrder(u3.getUserName(), u3.getPassword(), Arrays.asList(p4.getId(), p5.getId()), "sent", "Strada STU", p4.getListedBy().getId());
-        userService.placeOrder(u3.getUserName(), u3.getPassword(), List.of(p6.getId()), "shipped", "Strada VWX", p6.getListedBy().getId());
-
-
-        //System.out.println(userService.placeOrder(u1,or1));
-        //System.out.println(or1.getTotalPrice());
-        //System.out.println(userService.writeReview(r1));
-        //System.out.println(userService.displayOrders(u3.getUserName(),u3.getPassword()));
+        userService.placeOrder(u2.getUserName(),u2.getPassword(),List.of(p18.getId()),"send","Stradax",u9.getId());
+        userService.placeOrder(u3.getUserName(),u3.getPassword(),List.of(p19.getId()),"send","Stradax",u9.getId());
+        userService.placeOrder(u4.getUserName(),u4.getPassword(),List.of(p20.getId()),"send","Stradax",u9.getId());
+        userService.placeOrder(u6.getUserName(),u6.getPassword(),List.of(p21.getId()),"send","Stradax",u9.getId());
+        userService.placeOrder(u9.getUserName(),u9.getPassword(),List.of(p21.getId()),"send","Stradax",u2.getId());
 
 
 
 
 
+        //reviews
+        Review r13=new Review(2.5,"Not good!",u2,u9);
+        Review r14=new Review(1.5,"Bad!",u4,u9);
+        Review r15=new Review(3.8,"Fairly good",u3,u9);
+        Review r16=new Review(4.2,"Good service",u6,u9);
+        Review r17=new Review(1.00,"Bla bla not good!!!!!",u9,u2);
+        Review r18=new Review(1.5,"Bad",u6,u9);
+
+        reviewRepo.create(r13);
+        reviewRepo.create(r14);
+        reviewRepo.create(r15);
+        reviewRepo.create(r16);
+        reviewRepo.create(r17);
+        reviewRepo.create(r18);
+
+        controller.writeReview(u2.getUserName(),u2.getPassword(),2.5,"Not good",u9.getId());
+        controller.writeReview(u4.getUserName(),u4.getPassword(),1.5,"Not good",u9.getId());
+        controller.writeReview(u3.getUserName(),u3.getPassword(),3.8,"Good",u9.getId());
+        controller.writeReview(u6.getUserName(),u6.getPassword(),4.5,"very good",u9.getId());
+        controller.writeReview(u6.getUserName(),u6.getPassword(),1.5,"Bad",u9.getId());
+
+        controller.writeReview(u9.getUserName(),u9.getPassword(),1.00,"Bla Blas not good!!!!!",u2.getId());
 
 
-        // System.out.println(adminService.updateCategory(a1.getId(),p2.getId(),newCategory));
-        //Category category2 = p2.getCategory();
-        //System.out.println(category2.getName());
 
 
 
-        //System.out.println(visitorService.searchProductsByUsername(u2.getUserName()));
-        Offer o1 = new Offer("Would you consider selling this for 7.00?", 7.00, p1, false, u2, u1);
-        Offer o2 = new Offer("Can I get this for 9.50?", 9.50, p2, false, u3, u2);
-        Offer o3 = new Offer("Would you accept 10.00?", 10.00, p3, false, u4, u1);
-        Offer o4 = new Offer("How about 12.00 for this item?", 12.00, p4, false, u2, u5);
-        Offer o5 = new Offer("Would you consider selling this for 7.50?", 7.50, p5, false, u3, u6);
-        Offer o6 = new Offer("Is 8.00 okay for this product?", 8.00, p6, false, u4, u3);
-        Offer o7 = new Offer("Could we settle on 8.75?", 8.75, p1, false, u7, u1);
-        Offer o8 = new Offer("I would like to offer 11.00.", 11.00, p2, false, u8, u5);
-        Offer o9 = new Offer("Is 6.50 a fair price?", 6.50, p3, false, u1, u2);
-        Offer o10 = new Offer("Can you do 13.00 for this?", 13.00, p4, false, u8, u1);
-        Offer o11 = new Offer("I can pay 7.25, would that work?", 7.25, p5, false, u2, u6);
-        Offer o12 = new Offer("Would you accept 19.99 for these sneakers?", 19.99, p10, false, u3, u7);
-// Save the offers to the repository
-        offerRepo.create(o1);
-        offerRepo.create(o2);
-        offerRepo.create(o3);
-        offerRepo.create(o4);
-        offerRepo.create(o5);
-        offerRepo.create(o6);
-        offerRepo.create(o7);
-        offerRepo.create(o8);
-        offerRepo.create(o9);
-        offerRepo.create(o10);
-        offerRepo.create(o11);
-        offerRepo.create(o12);
+        //falgged actions
+        controller.adminService.updateCategory(a1.getUserName(),a2.getPassword(),p21.getId(),categoryOuterwear);
+        controller.adminService.deleteProduct(a1.getUserName(),a1.getPassword(),p14.getId());
+        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p17.getId(),categoryOuterwear);
+        //controller.adminService.deleteReview(a1.getUserName(),a1.getPassword(),r17.getId());
 
-        Visitor v1 = new Visitor();
-        console.start();
+
+
+        //System.out.println(controller.getUserAverageAcceptanceRate(u9.getId()));
+        //System.out.println(controller.getUserAverageAcceptanceRate(u6.getId()));
+        //System.out.println(controller.getUserTrustScore(u9.getId()));
+        //System.out.println(controller.getUsersTotalNrOfSales(u9.getId())); // output 9? adauga si order ul facut de u9
+        //System.out.println(controller.getUserPositiveReviews(u9.getId())); //output 4 are trebui 2
+        //System.out.println(controller.getUserNegativeReviews(u9.getId()));  //output 6 are trebui 3
+        System.out.println(controller.getFlaggedActions(u9.getId())); //output 1 problema la metoda
+
+
     }
 }
