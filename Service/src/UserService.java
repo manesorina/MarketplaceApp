@@ -684,7 +684,7 @@ public class UserService extends VisitorService{
      */
     public int calculateUserTrustScore(int userId){
         int score=calculateNumberOfSales(userId)*10;
-        
+
         score+=getUserPositiveReviews(userId)*5;
         score-=getUserNegativeReviews(userId)*15;
         score-=userRepo.read(userId).getFlaggedActions();

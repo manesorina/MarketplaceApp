@@ -392,14 +392,66 @@ public class ConsoleApp {
         System.out.println("2. Brand");
         System.out.println("3. Color");
         System.out.println("4. Seller");
-        System.out.println("5. Views");
+        System.out.println("5. Likes");
         System.out.println("6. Condition");
         System.out.println("7. Price");
         System.out.println("8. Size");
+        System.out.println("9. Views");
         System.out.println("Choose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-        List<Product> filteredProducts = controller.filterProducts(choice);
+        List<Product> filteredProducts = new ArrayList<>();
+        switch (choice) {
+            case 1 -> {
+                System.out.println("Type a category name to filter by: ");
+                String category = scanner.nextLine();
+                filteredProducts = controller.filterProductsByCategory(category);
+            }
+            case 2 -> {
+                System.out.println("Type a brand name to filter by: ");
+                String brand = scanner.nextLine();
+                filteredProducts = controller.filterProductsByBrand(brand);
+            }
+            case 3 -> {
+                System.out.println("Type a color to filter by: ");
+                String color = scanner.nextLine();
+                filteredProducts = controller.filterProductsByColor(color);
+            }
+            case 4 -> {
+                System.out.println("Type a seller name to filter by: ");
+                String name = scanner.nextLine();
+                filteredProducts = controller.filterProductsByUserName(name);
+            }
+            case 5 -> {
+                System.out.println("Type the like count range to filter by: ");
+                int countMin = scanner.nextInt();
+                int countMax = scanner.nextInt();
+                filteredProducts = controller.filterProductsByLikes(countMin, countMax);
+            }
+            case 6 -> {
+                System.out.println("Type a condition to filter by: ");
+                String condition = scanner.nextLine();
+                filteredProducts = controller.filterProductsByCondition(condition);
+            }
+            case 7 -> {
+                System.out.println("Type a price range to filter by: ");
+                int priceMin = scanner.nextInt();
+                int priceMax = scanner.nextInt();
+                filteredProducts = controller.filterProductsByPriceRange(priceMin, priceMax);
+            }
+            case 8 -> {
+                System.out.println("Type a size range to filter by: ");
+                int minSize = scanner.nextInt();
+                int maxSize = scanner.nextInt();
+                filteredProducts = controller.filterProductsBySizeRange(minSize, maxSize);
+            }
+            case 9 -> {
+                System.out.println("Type a views range to filter by: ");
+                int viewMin = scanner.nextInt();
+                int viewMax = scanner.nextInt();
+                filteredProducts = controller.filterProductsByViewRange(viewMin, viewMax);
+            }
+        }
         filteredProducts.forEach(System.out::println);
         return filteredProducts;
     }

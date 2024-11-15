@@ -45,21 +45,22 @@ public class Controller {
         };
     }
 
-    public List<Product> filterProducts(int choice) {
-        List<Product> products = visitorService.seeAllProducts();
-        return switch (choice) {
-            case 1 -> visitorService.searchProductsByCategory("someCategory");
-            case 2 -> visitorService.searchProductsByBrand("someBrand");
-            case 3 -> visitorService.searchProductsByColor("someColor");
-            case 4 -> visitorService.searchProductsByUsername("someUsername");
-            case 5 -> visitorService.searchProductsByViewRange(100, 500);
-            case 6 -> visitorService.searchProductsByCondition("New");
-            case 7 -> visitorService.searchProductsByPriceRange(10.0, 100.0);
-            case 8 -> visitorService.searchProductsBySizeRange(10.0, 20.0);
-            default -> {
-                yield products;
-            }
-        };
+    public List<Product> filterProductsByCategory(String category) {
+        if (category != null)
+            return visitorService.searchProductsByCategory(category);
+        else return new ArrayList<>();
+    }
+
+    public List<Product> filterProductsByBrand(String brand) {
+        if (brand != null)
+            return visitorService.searchProductsByBrand(brand);
+        else return new ArrayList<>();
+    }
+
+    public List<Product> filterProductsByColor(String color) {
+        if (color != null)
+            return visitorService.searchProductsByColor(color);
+        else return new ArrayList<>();
     }
 
 
