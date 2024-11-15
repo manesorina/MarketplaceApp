@@ -166,7 +166,8 @@ public class Main {
 
 
         //falgged actions
-        controller.adminService.updateCategory(a1.getUserName(),a2.getPassword(),p21.getId(),categoryOuterwear);
+        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p21.getId(),categoryOuterwear);
+
         controller.adminService.deleteProduct(a1.getUserName(),a1.getPassword(),p14.getId());
         controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p17.getId(),categoryOuterwear);
         //controller.adminService.deleteReview(a1.getUserName(),a1.getPassword(),r17.getId());
@@ -179,7 +180,7 @@ public class Main {
         //System.out.println(controller.getUsersTotalNrOfSales(u9.getId())); // output 9? adauga si order ul facut de u9
         //System.out.println(controller.getUserPositiveReviews(u9.getId())); //output 4 are trebui 2
         //System.out.println(controller.getUserNegativeReviews(u9.getId()));  //output 6 are trebui 3
-        System.out.println(controller.getFlaggedActions(u9.getId())); //output 1 problema la metoda
+        System.out.println(controller.getFlaggedActions(u9.getId()));//output 1 problema la metoda
 
 
     }
