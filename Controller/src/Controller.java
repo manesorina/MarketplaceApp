@@ -63,6 +63,18 @@ public class Controller {
         else return new ArrayList<>();
     }
 
+    public List<Product> filterProductsByUserName(String username) {
+        if (username != null)
+            return visitorService.searchProductsByUsername(username);
+        else return new ArrayList<>();
+    }
+
+    public List<Product> filterProductsByLikes(int minLikes, int maxLikes) {
+        if (minLikes <= maxLikes)
+            return visitorService.searchProductsByLikeRange(minLikes, maxLikes);
+        else return new ArrayList<>();
+    }
+
 
     //Offers
     public List<Offer> getMadeOffers(String username, String password) {
