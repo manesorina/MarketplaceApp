@@ -203,7 +203,34 @@ public class ConsoleApp {
             for (Review review : reviews) {
                 System.out.println(review);
             }
+            System.out.println("Would you like to delete any of the reviews you have made?");
+            System.out.println("1. Yes");
+            System.out.println("2. No");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice) {
+                case 1 -> deleteMyReview(username, password, reviews);
+                case 2 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
         }
+    }
+
+    private void deleteMyReview(String username, String password, List<Review> reviews) {
+        System.out.println("Enter the ID of the review you would like to delete: ");
+        int id = scanner.nextInt();
+        if (reviews.stream().map(Review::getId).anyMatch(x -> x.equals(id))) {
+            boolean success = controller.deleteReview(username, password, id);
+            if (success) {
+                System.out.println("Review deleted successfully!");
+            }
+            else {
+                System.out.println("Something went wrong.");
+            }
+        }
+        else System.out.println("Invalid ID.");
     }
 
     private void reviewsForMe(String username, String password) {
@@ -669,7 +696,21 @@ public class ConsoleApp {
         System.out.print("Choose an option: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-        List<User> filteredUsers =controller.filterUsers(choice);
+        List<User> filteredUsers = new ArrayList<>();
+        switch (choice) {
+            case 1 -> {
+                System.out.println("Enter a Minimum Review Count: ");
+                int minReviewCount = scanner.nextInt();
+                filteredUsers = controller.filterUsersByMinimumReviewCount(minReviewCount);}
+            case 2 -> {
+                System.out.println("Enter a Name: ");
+                String name = scanner.nextLine();
+                filteredUsers = controller.filterUsersByName(name);}
+            case 3 -> {
+                System.out.println("Enter a Minimum Score: ");
+                double minScore = scanner.nextInt();
+                filteredUsers = controller.filterUsersByMinimumScore(minScore);}
+        }
         filteredUsers.forEach(System.out::println);
         return filteredUsers;
     }

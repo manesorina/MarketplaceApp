@@ -98,7 +98,7 @@ public class VisitorService {
      * @param reviewMin the minimum number of reviews.
      * @return a list of users with at least the specified number of reviews.
      */
-    public List<User> searchUsersByMinimumReviewCount(double reviewMin) {
+    public List<User> searchUsersByMinimumReviewCount(int reviewMin) {
         Map<User, Long> reviewCounts = reviewRepo.getAll().stream()
                 .collect(Collectors.groupingBy(Review::getReviewee, Collectors.counting()));
         return reviewCounts.entrySet().stream()
@@ -234,6 +234,12 @@ public class VisitorService {
     public List<Product> searchProductsByViewRange(double minViews, double maxViews) {
         return productRepo.getAll().stream()
                 .filter(product -> product.getNrViews() >= minViews && product.getNrViews() <= maxViews).
+                peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
+    }
+
+    public List<Product> searchProductsByLikeRange(int minLikes, int maxLikes) {
+        return productRepo.getAll().stream().
+                filter(product -> product.getNrLikes() >= minLikes && product.getNrViews() <= maxLikes).
                 peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 

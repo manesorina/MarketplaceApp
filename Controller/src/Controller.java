@@ -75,6 +75,33 @@ public class Controller {
         else return new ArrayList<>();
     }
 
+    public List<Product> filterProductsByViewRange(int minViews, int maxViews) {
+        if (minViews <= maxViews) {
+            return visitorService.searchProductsByViewRange(minViews, maxViews);
+        }
+        else return new ArrayList<>();
+    }
+
+    public List<Product> filterProductsByPriceRange(int minPrice, int maxPrice) {
+        if (minPrice <= maxPrice) {
+            return visitorService.searchProductsByPriceRange(minPrice, maxPrice);
+        }
+        else return new ArrayList<>();
+    }
+
+    public List<Product> filterProductsBySizeRange(int minSize, int maxSize) {
+        if (minSize <= maxSize) {
+            return visitorService.searchProductsBySizeRange(minSize, maxSize);
+        }
+        else return new ArrayList<>();
+    }
+
+    public List<Product> filterProductsByCondition(String condition) {
+        if (condition != null)
+            return visitorService.searchProductsByCondition(condition);
+        else return new ArrayList<>();
+    }
+
 
     //Offers
     public List<Offer> getMadeOffers(String username, String password) {
@@ -178,16 +205,33 @@ public class Controller {
         };
     }
 
-    public List<User> filterUsers(int choice){
-        List<User> users=visitorService.seeAllUsers();
-        return switch(choice){
-            case 1 -> visitorService.searchUsersByMinimumReviewCount(2);
-            case 2 -> visitorService.searchUsersByUsername("someUsername");
-            case 3 -> visitorService.searchUsersByMinimumScore(2.00);
-            default -> {yield users;}
-        };
+//    public List<User> filterUsers(int choice){
+//        List<User> users=visitorService.seeAllUsers();
+//        return switch(choice){
+//            case 1 -> visitorService.searchUsersByMinimumReviewCount(2);
+//            case 2 -> visitorService.searchUsersByUsername("someUsername");
+//            case 3 -> visitorService.searchUsersByMinimumScore(2.00);
+//            default -> {yield users;}
+//        };
+//
+//
+//    }
+    public List<User> filterUsersByMinimumReviewCount(int minReviewCount) {
+        if (minReviewCount >= 0)
+            return visitorService.searchUsersByMinimumReviewCount(minReviewCount);
+        else return new ArrayList<>();
+    }
 
+    public List<User> filterUsersByName(String name) {
+        if (name != null)
+            return visitorService.searchUsersByUsername(name);
+        else return new ArrayList<>();
+    }
 
+    public List<User> filterUsersByMinimumScore(double score) {
+        if (score >= 0)
+            return visitorService.searchUsersByMinimumScore(score);
+        else return new ArrayList<>();
     }
 
 
