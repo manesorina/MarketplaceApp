@@ -59,8 +59,7 @@ public abstract class FMRepository<T extends Identifiable> extends IMRepository<
         }
     }
 
-    
-    protected abstract  T createObjectFromString(String line);
 
+    protected abstract T createObjectFromString(String line);
     protected abstract String convertObjectToString(T object);
 }
