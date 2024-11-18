@@ -136,8 +136,8 @@ public class Controller {
         return userService.displayReceivedOrders(username, password);
     }
 
-    public boolean makeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId){
-        return userService.placeOrder(buyerUsername, buyerPassword, selectedProductsIds,  status, shippingAddress,  sellerId);
+    public boolean makeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress){
+        return userService.placeOrder(buyerUsername, buyerPassword, selectedProductsIds,  status, shippingAddress);
     }
 
 

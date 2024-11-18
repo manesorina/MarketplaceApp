@@ -4,10 +4,10 @@ public class Offer implements Identifiable{
     private double offeredPrice;
     private Product targetedProduct;
     private Boolean accepted;
-    private User sender;
-    private User receiver;
+    private int sender;
+    private int receiver;
 
-    public Offer(String message, double offeredPrice, Product targetedProduct, User sender,User reciever) {
+    public Offer(String message, double offeredPrice, Product targetedProduct, int sender, int reciever) {
         this.message = message;
         this.offeredPrice = offeredPrice;
         this.targetedProduct = targetedProduct;
@@ -57,19 +57,19 @@ public class Offer implements Identifiable{
         this.accepted = accepted;
     }
 
-    public User getSender() {
+    public int getSender() {
         return sender;
     }
 
-    public User getReceiver() {
+    public int getReceiver() {
         return receiver;
     }
 
-    public void setSender(User sender) {
+    public void setSender(int sender) {
         this.sender = sender;
     }
 
-    public void setReceiver(User receiver) {
+    public void setReceiver(int receiver) {
         this.receiver = receiver;
     }
 

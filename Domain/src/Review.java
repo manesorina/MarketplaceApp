@@ -3,10 +3,10 @@ public class Review implements Identifiable {
     private int id;
     private double grade;
     private String message;
-    private User reviewer;
-    private User reviewee;
+    private int reviewer;
+    private int reviewee;
 
-    public Review(double grade, String message, User reviewer, User reviewee) {
+    public Review(double grade, String message, int reviewer, int reviewee) {
         this.grade = grade;
         this.message = message;
         this.reviewer = reviewer;
@@ -38,19 +38,19 @@ public class Review implements Identifiable {
         this.message = message;
     }
 
-    public User getReviewer() {
+    public int getReviewer() {
         return reviewer;
     }
 
-    public void setReviewer(User reviewer) {
+    public void setReviewer(int reviewer) {
         this.reviewer = reviewer;
     }
 
-    public User getReviewee() {
+    public int getReviewee() {
         return reviewee;
     }
 
-    public void setReviewee(User reviewee) {
+    public void setReviewee(int reviewee) {
         this.reviewee = reviewee;
     }
 

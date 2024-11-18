@@ -61,14 +61,14 @@ public class UserService extends VisitorService{
      * @return {@code true} if the offer is created and sent successfully; {@code false} otherwise.
      */
 
-    public boolean sendOffer( String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice) {
+    public boolean sendOffer(String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice) {
         if (authenticate(senderUsername, senderPassword)) {
             Product product = productRepo.read(selectedProduct.getId());
             if (product!=null) {
                 User sender = findByCriteriaHelper(senderUsername, senderPassword);
-                User offerReceiver = selectedProduct.getListedBy();
+                User offerReceiver = userRepo.read(selectedProduct.getListedBy());
                 if (offerReceiver  != null && !offerReceiver .getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
-                    Offer offer = new Offer(message, offeredPrice, selectedProduct,  sender, offerReceiver );
+                    Offer offer = new Offer(message, offeredPrice, selectedProduct,  sender.getId(), offerReceiver.getId());
                     offerRepo.create(offer);
 
                     return true;
@@ -90,7 +90,7 @@ public class UserService extends VisitorService{
     public boolean acceptOffer(String sellerUsername, String sellerPassword, int offerId) {
         if (authenticate(sellerUsername, sellerPassword)) {
             Offer offer=offerRepo.read(offerId);
-            if (offer.getReceiver().equals(findByCriteriaHelper(sellerUsername, sellerPassword))) {
+            if (offer.getReceiver() == findByCriteriaHelper(sellerUsername, sellerPassword).getId()) {
                 offer.setStatus(true);
                 offer.getTargetedProduct().setPrice(offer.getOfferedPrice());
                 return true;
@@ -111,7 +111,7 @@ public class UserService extends VisitorService{
     public boolean declineOffer(String sellerUsername, String sellerPassword, int offerId){
         if(authenticate(sellerUsername,sellerPassword)){
             Offer offer=offerRepo.read(offerId);
-            if(offer.getReceiver().equals(findByCriteriaHelper(sellerUsername,sellerPassword))){
+            if(offer.getReceiver() == findByCriteriaHelper(sellerUsername, sellerPassword).getId()){
                 offer.setStatus(false);
                 return true;
             }
@@ -133,7 +133,7 @@ public class UserService extends VisitorService{
         if (user != null && authenticate(username,password)) {
             List<Offer> offers = offerRepo.getAll();
             for (Offer offer : offers) {
-                if (offer.getSender().equals(user)){
+                if (offer.getSender() == user.getId()){
                     personalOffers.add(offer);
                 }
             }
@@ -155,7 +155,7 @@ public class UserService extends VisitorService{
         if (user != null && authenticate(username,password)) {
             List<Offer> offers = offerRepo.getAll();
             for (Offer offer : offers) {
-                if (offer.getReceiver().equals(user)) {
+                if (offer.getSender() == user.getId()) {
                     personalOffers.add(offer);
                 }
             }
@@ -177,7 +177,7 @@ public class UserService extends VisitorService{
         if (user != null && authenticate(username,password)) {
             List<Offer> offers = offerRepo.getAll();
             for (Offer offer : offers) {
-                if (offer.getReceiver().equals(user) || offer.getSender().equals(user)) {
+                if (offer.getReceiver() == user.getId() || offer.getSender() == user.getId()) {
                     personalOffers.add(offer);
                 }
             }
@@ -198,25 +198,29 @@ public class UserService extends VisitorService{
      * @param selectedProductsIds a list of product IDs for the order.
      * @param status the status of the order.
      * @param shippingAddress the shipping address for the order.
-     * @param sellerId the ID of the seller.
      * @return {@code true} if the order is placed successfully; {@code false} otherwise.
      */
 
-    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId) {
+    public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress) {
         if(authenticate(buyerUsername,buyerPassword)){
             User buyer=findByCriteriaHelper(buyerUsername,buyerPassword);
-            Map<User, List<Integer>> productsBySeller=new HashMap<>();
+            Map<Integer, List<Integer>> productsBySeller=new HashMap<>();
             for (Integer selectedProductsId : selectedProductsIds) {
                 Product product = productRepo.read(selectedProductsId);
                 product.setAvailable(false);
                 productsBySeller.computeIfAbsent(product.getListedBy(), k -> new ArrayList<>()).add(selectedProductsId);
             }
 
-            for (Map.Entry<User, List<Integer>> entry : productsBySeller.entrySet()) {
-                User seller = entry.getKey();
+            for (Map.Entry<Integer, List<Integer>> entry : productsBySeller.entrySet()) {
+                Integer seller = entry.getKey();
                 List<Integer> productsForSeller = entry.getValue();
-
-                Order order = new Order(productsForSeller, status, shippingAddress, buyer, seller);
+                double totalAmount=0;
+                for (Integer integer : productsForSeller) {
+                    Product product = productRepo.read(integer);
+                    totalAmount += product.getPrice();
+                }
+                Order order = new Order(productsForSeller, status, shippingAddress, buyer.getId(), seller);
+                order.setTotalPrice(totalAmount);
                 orderRepo.create(order);
             }
             return true;
@@ -240,7 +244,7 @@ public class UserService extends VisitorService{
         if(user!=null){
             List<Order>orders=orderRepo.getAll();
             for(Order order:orders){
-                if(order.getBuyer().equals(user)){
+                if(order.getBuyer() == user.getId()){
                     personalOrders.add(order);
                 }
             }
@@ -262,7 +266,7 @@ public class UserService extends VisitorService{
         if(user!=null){
             List<Order>orders=orderRepo.getAll();
             for(Order order:orders){
-                if(order.getSeller().equals(user)){
+                if(order.getSeller() == user.getId()){
                     personalOrders.add(order);
                 }
             }
@@ -285,7 +289,7 @@ public class UserService extends VisitorService{
         if(user!=null){
             List<Order>orders=orderRepo.getAll();
             for(Order order:orders){
-                if(order.getSeller().equals(user) || order.getBuyer().equals(user)){
+                if(order.getSeller() == user.getId() || order.getBuyer() == user.getId()){
                     personalOrders.add(order);
                 }
             }
@@ -313,8 +317,8 @@ public class UserService extends VisitorService{
             User reviewee=userRepo.read(revieweeId);
             if(reviewee!=null && !reviewee.getUserName().equals(reviewerUsername)){
                 for(Order order:displayMadeOrders(reviewerUsername,reviewerPassword)){
-                    if(order.getSeller().equals(reviewee)){
-                        Review review=new Review(grade,message,reviewer,reviewee);
+                    if(order.getSeller() == reviewee.getId()){
+                        Review review=new Review(grade,message,reviewer.getId(),reviewee.getId());
                         reviewRepo.create(review);
                         return true;
                     }
@@ -366,7 +370,7 @@ public class UserService extends VisitorService{
         if(user!=null){
             List<Review>reviews=reviewRepo.getAll();
             for(Review review:reviews){
-                if(review.getReviewer().equals(user)){
+                if(review.getReviewer() == user.getId()){
                     personalReviews.add(review);
                 }
             }
@@ -471,7 +475,7 @@ public class UserService extends VisitorService{
     public boolean listProduct(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
         if(authenticate(userName,password)){
             User seller=findByCriteriaHelper(userName,password);
-            Product product=new Product(name,color,size,price,brand,condition,nrOfViews,nrOfLikes,seller);
+            Product product=new Product(name,color,size,price,brand,condition,nrOfViews,nrOfLikes,seller.getId());
             product.setCategory(category);
             productRepo.create(product);
             seller.listedProducts.add(product.getId());
@@ -533,7 +537,7 @@ public class UserService extends VisitorService{
         if(user!=null){
             List<Offer>offers=offerRepo.getAll();
             for(Offer offer:offers){
-                if(offer.getReceiver().equals(user)){
+                if(offer.getReceiver() == user.getId()){
                     receivedOffers.add(offer);
                 }
 
@@ -585,7 +589,7 @@ public class UserService extends VisitorService{
         int nrOfNegativeReviews=0;
         User user=userRepo.read(userId);
         for(Review review:reviewRepo.getAll()){
-            if (review.getReviewee().equals(user) && review.getGrade()<=3.5){
+            if (review.getReviewee() == user.getId() && review.getGrade()<=3.5){
                 nrOfNegativeReviews++;
             }
         }
@@ -604,7 +608,7 @@ public class UserService extends VisitorService{
         int nrOfPositiveReviews=0;
         User user=userRepo.read(userId);
         for(Review review:reviewRepo.getAll()){
-            if (review.getReviewee().equals(user) && review.getGrade()>3.5){
+            if (review.getReviewee() == user.getId() && review.getGrade()>3.5){
                 nrOfPositiveReviews++;
             }
         }
@@ -625,7 +629,7 @@ public class UserService extends VisitorService{
         if(user!=null){
             List<Review> reviews=reviewRepo.getAll();
             for(Review review:reviews){
-                if(review.getReviewee().equals(user)){
+                if(review.getReviewee() == user.getId()){
                     profileReviews.add(review);
                 }
             }
@@ -650,7 +654,7 @@ public class UserService extends VisitorService{
         for (Order order : orderRepo.getAll()) {
             for (int i = 0; i < order.getProducts().size(); i++) {
                 Product product=productRepo.read(order.getProducts().get(i));
-                if (product.getListedBy().equals(user)) {
+                if (product.getListedBy() == user.getId()) {
                     totalSales++;
                 }
             }

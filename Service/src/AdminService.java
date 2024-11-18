@@ -77,9 +77,9 @@ public class AdminService extends VisitorService {
             List<Review> reviews = reviewRepo.getAll();
             for (Review review:reviews) {
                 if(review.getId()==reviewId){
-                    reviewRepo.read(reviewId).getReviewer().incrementFlaggedActions();
+                    User user = userRepo.read(reviewRepo.read(reviewId).getReviewer());
+                    user.incrementFlaggedActions();
                     reviewRepo.delete(reviewId);
-
                 }
             }
         }
@@ -99,7 +99,8 @@ public class AdminService extends VisitorService {
             List<Product> products=productRepo.getAll();
             for(Product product:products){
                 if(product.getId()==productId){
-                    productRepo.read(productId).getListedBy().incrementFlaggedActions();
+                    User user = userRepo.read(productRepo.read(productId).getListedBy());
+                    user.incrementFlaggedActions();
                     productRepo.delete(productId);
                 }
             }
@@ -124,7 +125,9 @@ public class AdminService extends VisitorService {
             for(Product product:products){
                 if(product.equals(targetetdProduct)){
                     targetetdProduct.setCategory(newCategory);
-                    productRepo.read(productId).getListedBy().incrementFlaggedActions();
+                    int userId = productRepo.read(productId).getListedBy();
+                    User user = userRepo.read(userId);
+                    user.incrementFlaggedActions();
                     productRepo.update(targetetdProduct);
                 }
             }

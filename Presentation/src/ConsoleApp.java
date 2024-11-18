@@ -533,11 +533,11 @@ public class ConsoleApp {
             if(products.stream().map(Product::getId).anyMatch(x -> x.equals(finalOption))) {
                 for (Product product : products) {
                     if (product.getId() == finalOption && product.isAvailable()) {
-                        if (!orderedProducts.containsKey(product.getListedBy().getId())) {
-                            orderedProducts.put(product.getListedBy().getId(), new ArrayList<>());
+                        if (!orderedProducts.containsKey(product.getListedBy())) {
+                            orderedProducts.put(product.getListedBy(), new ArrayList<>());
                         }
-                        if (!orderedProducts.get(product.getListedBy().getId()).contains(finalOption)) {
-                            orderedProducts.get(product.getListedBy().getId()).add(finalOption);
+                        if (!orderedProducts.get(product.getListedBy()).contains(finalOption)) {
+                            orderedProducts.get(product.getListedBy()).add(finalOption);
                         }
                     }
                 }
@@ -550,7 +550,7 @@ public class ConsoleApp {
             String address = scanner.nextLine();
             for (int sellerId : orderedProducts.keySet()) {
                 boolean success = controller.makeOrder(username, password, orderedProducts.get(sellerId),
-                        "processing", address, sellerId);
+                        "processing", address);
                 if (success) {
                     System.out.println("Order placed successfully!");
                 } else {

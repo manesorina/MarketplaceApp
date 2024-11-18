@@ -10,10 +10,10 @@ public class Product implements Identifiable{
     private String condition;
     private int nrViews;
     private int nrLikes;
-    private User listedBy;
+    private int listedBy;
     private boolean available = true;
 
-    public Product(String name,String color, int size, double price, String brand, String condition, int nrViews, int nrLikes, User listedBy) {
+    public Product(String name,String color, int size, double price, String brand, String condition, int nrViews, int nrLikes, int listedBy) {
         this.name=name;
         this.color = color;
         this.size = size;
@@ -25,11 +25,11 @@ public class Product implements Identifiable{
         this.nrLikes = nrLikes;
     }
 
-    public User getListedBy() {
+    public int getListedBy() {
         return listedBy;
     }
 
-    public void setListedBy(User listedBy) {
+    public void setListedBy(int listedBy) {
         this.listedBy = listedBy;
     }
 

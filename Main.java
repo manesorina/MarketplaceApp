@@ -45,10 +45,10 @@ public class Main {
         User u3 = new User("JohnSmith", "password123", "john.smith@gmail.com", "0711223344", 4.5);
         User u4 = new User("ChrisLee", "leePass789", "chris.lee@gmail.com", "0755667788", 4.1);
 
+        userRepo.create(u1);
         userRepo.create(u2);
         userRepo.create(u3);
         userRepo.create(u4);
-        userRepo.create(u1);
 
         List<User> users = userRepo.getAll();
         for (User user: users) {
@@ -59,13 +59,13 @@ public class Main {
 
         //Products
 
-        Product p1 = new Product("Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0, u1);
-        Product p2 = new Product("Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0, u1);
-        Product p3 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, u2);
-        Product p4 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, u2);
-        Product p5 = new Product("Coat", "black", 44, 40.00, "Carhartt", "Bad", 0, 0, u2);
-        Product p6 = new Product("Skirt", "pink", 36, 15.00, "Orsay", "New", 0, 0, u2);
-        Product p7 = new Product("Dress", "purple", 38, 50.00, "C&A", "Worn", 0, 0, u2);
+        Product p1 = new Product("Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0, 1);
+        Product p2 = new Product("Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0, 1);
+        Product p3 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, 2);
+        Product p4 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, 2);
+        Product p5 = new Product("Coat", "black", 44, 40.00, "Carhartt", "Bad", 0, 0, 2);
+        Product p6 = new Product("Skirt", "pink", 36, 15.00, "Orsay", "New", 0, 0, 2);
+        Product p7 = new Product("Dress", "purple", 38, 50.00, "C&A", "Worn", 0, 0, 2);
 
         p1.setCategory(categoryShoes);
         p2.setCategory(categoryAccessories);
@@ -73,6 +73,7 @@ public class Main {
         p4.setCategory(categoryBottoms);
         p5.setCategory(categoryTops);
         p6.setCategory(categoryAccessories);
+        p7.setCategory(categoryOuterwear);
 
         productRepo.create(p1);
         productRepo.create(p2);
@@ -109,9 +110,9 @@ public class Main {
 
         //orders
 
-        controller.userService.placeOrder(u3.getUserName(),u3.getPassword(), List.of(p1.getId()), "sent", "StradaX", u1.getId());
-        controller.userService.placeOrder(u4.getUserName(),u4.getPassword(), List.of(p3.getId(), p4.getId()), "sent", "StradaY", u2.getId());
-        controller.userService.placeOrder(u2.getUserName(),u2.getPassword(), List.of(p2.getId()), "sent", "StradaX", u1.getId());
+        controller.userService.placeOrder(u3.getUserName(),u3.getPassword(), List.of(p1.getId()), "sent", "StradaX");
+        controller.userService.placeOrder(u4.getUserName(),u4.getPassword(), List.of(p3.getId(), p4.getId()), "sent", "StradaY");
+        controller.userService.placeOrder(u2.getUserName(),u2.getPassword(), List.of(p2.getId()), "sent", "StradaX");
 
         List<Order> orders = orderRepo.getAll();
         for (Order order: orders) {

@@ -99,11 +99,12 @@ public class VisitorService {
      * @return a list of users with at least the specified number of reviews.
      */
     public List<User> searchUsersByMinimumReviewCount(int reviewMin) {
-        Map<User, Long> reviewCounts = reviewRepo.getAll().stream()
+        Map<Integer, Long> reviewCounts = reviewRepo.getAll().stream()
                 .collect(Collectors.groupingBy(Review::getReviewee, Collectors.counting()));
         return reviewCounts.entrySet().stream()
                 .filter(entry -> entry.getValue() >= reviewMin)
-                .map(Map.Entry::getKey)
+                .map(entry -> userRepo.read(entry.getKey()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -127,7 +128,7 @@ public class VisitorService {
      * @return a list of products listed by the specified user.
      */
     public List<Product> searchProductsByUsername(String username) {
-        return productRepo.getAll().stream().filter(product -> product.getListedBy().getUserName()
+        return productRepo.getAll().stream().filter(product -> userRepo.read(product.getListedBy()).getUserName()
                 .toLowerCase().contains(username.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
     }
 
@@ -283,10 +284,10 @@ public class VisitorService {
      * @return a sorted list of users.
      */
     public List<User> sortUsersAscendingByReviewCount(List<User> users) {
-        Map<User, Integer> reviewCounts = reviewRepo.getAll().stream()
+        Map<Integer, Integer> reviewCounts = reviewRepo.getAll().stream()
                 .collect(Collectors.groupingBy(Review::getReviewee, Collectors.summingInt(review -> 1)));
         return users.stream()
-                .sorted(Comparator.comparingInt(user -> reviewCounts.getOrDefault(user, 0))) // Default to 0 if no reviews
+                .sorted(Comparator.comparingInt(user -> reviewCounts.getOrDefault(user.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
@@ -298,10 +299,10 @@ public class VisitorService {
      * @return a sorted list of users.
      */
     public List<User> sortUsersDescendingByReviewCount(List<User> users) {
-        Map<User, Integer> reviewCounts = reviewRepo.getAll().stream()
+        Map<Integer, Integer> reviewCounts = reviewRepo.getAll().stream()
                 .collect(Collectors.groupingBy(Review::getReviewee, Collectors.summingInt(review -> 1)));
         return users.stream()
-                .sorted(Comparator.comparingInt(user -> reviewCounts.getOrDefault(user, 0)).reversed()) // Default to 0 if no reviews
+                .sorted(Comparator.comparingInt((User user) -> reviewCounts.getOrDefault(user.getId(), 0)).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -425,7 +426,7 @@ public class VisitorService {
         if(user != null){
             List<Review> reviews=reviewRepo.getAll();
             for(Review review:reviews){
-                if (review.getReviewee().equals(user)){
+                if (review.getReviewee() == user.getId()){
                     receivedReviews.add(review);
                 }
             }
