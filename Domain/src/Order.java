@@ -74,6 +74,18 @@ public class Order implements Identifiable{
         this.seller = seller;
     }
 
+//    @Override
+//    public String toString() {
+//        return "Order{" +
+//                "id=" + id +
+//                ", products=" + products +
+//                ", status='" + status + '\'' +
+//                ", totalPrice=" + totalPrice +
+//                ", shippingAddress='" + shippingAddress + '\'' +
+//                ", buyer=" + buyer +
+//                '}';
+//    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -83,6 +95,7 @@ public class Order implements Identifiable{
                 ", totalPrice=" + totalPrice +
                 ", shippingAddress='" + shippingAddress + '\'' +
                 ", buyer=" + buyer +
+                ", seller=" + seller +
                 '}';
     }
 }

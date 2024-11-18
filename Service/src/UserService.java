@@ -70,7 +70,6 @@ public class UserService extends VisitorService{
                 if (offerReceiver  != null && !offerReceiver .getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
                     Offer offer = new Offer(message, offeredPrice, selectedProduct,  sender, offerReceiver );
                     offerRepo.create(offer);
-
                     return true;
                 }
             }
@@ -229,6 +228,7 @@ public class UserService extends VisitorService{
             List<Product> orderedProducts = selectProductsForOrder(selectedProductsIds);
             Map<User, List<Product>> productsBySeller=new HashMap<>();
             for(Product product:orderedProducts){
+                product.setAvailable(false);
                 productsBySeller.computeIfAbsent(product.getListedBy(),k -> new ArrayList<>()).add(product);
             }
 
@@ -546,8 +546,8 @@ public class UserService extends VisitorService{
      */
     public double userAverageOfferAcceptanceRate(int userId){
         User user=userRepo.read(userId);
-        //List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
-        List<Offer> receivedOffers=new ArrayList<>();
+        List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
+        //List<Offer> receivedOffers=new ArrayList<>();
         if(user!=null){
             List<Offer>offers=offerRepo.getAll();
             for(Offer offer:offers){
@@ -568,7 +568,7 @@ public class UserService extends VisitorService{
                 nrOfAcceptedOffers++;
             }
         }
-        return (double) (nrOfAcceptedOffers/receivedOffers.size())*100;
+        return ((double) nrOfAcceptedOffers/receivedOffers.size())*100;
 
 
     }
