@@ -15,7 +15,7 @@ public class Order implements Identifiable{
         this.shippingAddress = shippingAddress;
         this.buyer=buyer;
         this.seller=seller;
-        this.totalPrice = calculateTotalPrice();
+        //this.totalPrice = calculateTotalPrice();
     }
 
     @Override
@@ -62,9 +62,9 @@ public class Order implements Identifiable{
 
     public User getBuyer(){return buyer;}
 
-    private double calculateTotalPrice() {
-        return products.stream().mapToDouble(Product::getPrice).sum();
-    }
+   // private double calculateTotalPrice() {
+   //     return products.stream().mapToDouble(Product::getPrice).sum();
+   // }
 
     public User getSeller() {
         return seller;
