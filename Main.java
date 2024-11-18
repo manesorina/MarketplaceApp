@@ -106,6 +106,8 @@ public class Main {
 
         controller.userService.acceptOffer(u9.getUserName(),u9.getPassword(),o1.getId());
         controller.userService.acceptOffer(u9.getUserName(),u9.getPassword(),o4.getId());
+        controller.userService.acceptOffer(u9.getUserName(),u9.getPassword(),o3.getId());
+        controller.userService.acceptOffer(u9.getUserName(),u9.getPassword(),o2.getId());
 
 
 
@@ -174,7 +176,7 @@ public class Main {
 
 
 
-        //System.out.println(controller.getUserAverageAcceptanceRate(u9.getId()));
+        System.out.println(controller.getUserAverageAcceptanceRate(u9.getId()));
         //System.out.println(controller.getUserAverageAcceptanceRate(u6.getId()));
         //System.out.println(controller.getUserTrustScore(u9.getId()));
         //System.out.println(controller.getUsersTotalNrOfSales(u9.getId())); // output 9? adauga si order ul facut de u9

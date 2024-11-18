@@ -568,7 +568,9 @@ public class UserService extends VisitorService{
                 nrOfAcceptedOffers++;
             }
         }
-        return (double) (nrOfAcceptedOffers/receivedOffers.size())*100;
+
+
+        return ((double) nrOfAcceptedOffers /receivedOffers.size())*100;
 
 
     }
@@ -682,6 +684,9 @@ public class UserService extends VisitorService{
      *   <li>The number of flagged actions associated with the user (each flagged action subtracts from the score).</li>
      * </ul>
      */
+
+    //Realist?? sau mia bine calculam doar nr de revuew uri pozitive scadem pe cele negative si scadem si flagged actions
+    //fara sa mai luam si nr de sales in calcul?
     public int calculateUserTrustScore(int userId){
         int score=calculateNumberOfSales(userId)*10;
 
@@ -712,6 +717,12 @@ public class UserService extends VisitorService{
             return user.getScore();
         else return 0;
     }
+
+    
+
+
+
+
 }
 
 
