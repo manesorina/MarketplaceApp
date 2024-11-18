@@ -113,14 +113,9 @@ public class Controller {
         return userService.displayReceivedOffers(username,password);
     }
 
-    public List<Offer> getOffers(String username, String password){
-        return userService.displayAllUserOffers(username, password);
-    }
-
     public boolean sendOffer(String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice){
         return userService.sendOffer(senderUsername, senderPassword, message, selectedProduct, offeredPrice);
     }
-
 
 
     //Orders
@@ -139,14 +134,6 @@ public class Controller {
 
     public List<Order> getReceivedOrders(String username, String password){
         return userService.displayReceivedOrders(username, password);
-    }
-
-    public List<Order> getOrders(String username, String password){
-        return userService.displayReceivedOrders(username,password);
-    }
-
-    public List<Product> selectProductsForOrder(List<Integer> productIds){
-        return userService.selectProductsForOrder(productIds);
     }
 
     public boolean makeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId){
@@ -205,17 +192,6 @@ public class Controller {
         };
     }
 
-//    public List<User> filterUsers(int choice){
-//        List<User> users=visitorService.seeAllUsers();
-//        return switch(choice){
-//            case 1 -> visitorService.searchUsersByMinimumReviewCount(2);
-//            case 2 -> visitorService.searchUsersByUsername("someUsername");
-//            case 3 -> visitorService.searchUsersByMinimumScore(2.00);
-//            default -> {yield users;}
-//        };
-//
-//
-//    }
     public List<User> filterUsersByMinimumReviewCount(int minReviewCount) {
         if (minReviewCount >= 0)
             return visitorService.searchUsersByMinimumReviewCount(minReviewCount);
@@ -307,11 +283,6 @@ public class Controller {
 
 
     }
-
-    public Product getProduct(String adminUsername, String adminPassword,int userId){
-        return adminService.getProductBySellerId(adminUsername, adminPassword, userId);
-    }
-
 
     public List<Product> getMyListings(String username, String password) {
         return userService.getMyListedProducts(username, password);

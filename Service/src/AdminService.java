@@ -144,29 +144,6 @@ public class AdminService extends VisitorService {
         return categoryRepo.getAll();
     }
 
-    /**
-     * Retrieves a product listed by a specific seller if the admin is authenticated.
-     *
-     * @param adminUsername the username of the admin performing the action.
-     * @param adminPassword the password of the admin performing the action.
-     * @param userId the ID of the seller whose product is to be retrieved.
-     * @return the product listed by the seller, or {@code null} if not found.
-     */
-    public Product getProductBySellerId(String adminUsername, String adminPassword,int userId){
-        if(authenticate(adminUsername,adminPassword)){
-            List<Product> products = productRepo.getAll();
-            for(Product product:products){
-                if(product.getListedBy().equals(userRepo.read(userId))){
-                    return product;
-                }
-            }
-        }
-
-
-        return null;
-
-    }
-
 
 
 

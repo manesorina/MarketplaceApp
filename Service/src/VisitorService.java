@@ -108,21 +108,6 @@ public class VisitorService {
     }
 
 
-
-
-    /**
-     * Searches for reviews left by a user by their name.
-     *
-     * @param name the name of the user.
-     * @return a list of reviews left by the user with the specified name.
-     */
-
-    public List<Review> searchReviewsLeftByUser(String name) {
-        return reviewRepo.getAll().stream().filter(review -> review.getReviewer().getUserName().contains(name))
-                .collect(Collectors.toList());
-    }
-
-
     /**
      * Searches for products by their name.
      *
@@ -320,79 +305,6 @@ public class VisitorService {
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Sorts products by name alphabetically in ascending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByNameAlphabeticallyAscending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts products by category alphabetically in ascending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByNameAlphabeticallyDescending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getName).
-                reversed()).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts products by category alphabetically in descending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByCategoryAlphabeticallyAscending(List<Product> products) {
-        return products.stream()
-                .sorted(Comparator.comparing(product -> product.getCategory().getName().name()))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts products by brand in ascending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByCategoryAlphabeticallyDescending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing((Product product) -> product.getCategory()
-                .getName().name()).reversed()).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts products by brand in descending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByBrandAscending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getBrand))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts products by brand in descending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByBrandDescending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getBrand).reversed())
-                .collect(Collectors.toList());
-    }
-
-
     /**
      * Sorts products by size in ascending order.
      *
@@ -416,55 +328,6 @@ public class VisitorService {
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Sorts products by the username of the lister in ascending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByUsernameAscending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(product -> product.getListedBy().getUserName()))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts products by the username of the lister in descending order.
-     *
-     * @param products the list of products to sort.
-     * @return a sorted list of products.
-     */
-    public List<Product> sortProductsByUsernameDescending(List<Product> products) {
-        return products.stream().sorted((p1, p2) -> p2.getListedBy().getUserName().compareTo(p1.getListedBy()
-                .getUserName())).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts a list of products by their color in ascending order.
-     *
-     * @param products the list of products to be sorted
-     * @return a sorted list of products, ordered by color in ascending order
-     */
-    public List<Product> sortProductsByColorAscending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getColor))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts a list of products by their color in descending order.
-     *
-     * @param products the list of products to be sorted
-     * @return a sorted list of products, ordered by color in descending order
-     */
-    public List<Product> sortProductsByColorDescending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getColor).reversed())
-                .collect(Collectors.toList());
-    }
-
-
     /**
      * Sorts a list of products by the number of views in ascending order.
      *
@@ -487,31 +350,6 @@ public class VisitorService {
         return products.stream().sorted(Comparator.comparingInt(Product::getNrViews).reversed())
                 .collect(Collectors.toList());
     }
-
-
-    /**
-     * Sorts a list of products by their condition in ascending order.
-     *
-     * @param products the list of products to be sorted
-     * @return a sorted list of products, ordered by condition in ascending order
-     */
-    public List<Product> sortProductsByConditionAscending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getCondition))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts a list of products by their condition in descending order.
-     *
-     * @param products the list of products to be sorted
-     * @return a sorted list of products, ordered by condition in descending order
-     */
-    public List<Product> sortProductsByConditionDescending(List<Product> products) {
-        return products.stream().sorted(Comparator.comparing(Product::getCondition).reversed())
-                .collect(Collectors.toList());
-    }
-
 
     /**
      * Sorts a list of products by price in ascending order.
@@ -560,62 +398,17 @@ public class VisitorService {
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Sorts the reviews left for a user by grade in ascending order.
-     *
-     * @param name the username of the reviewee whose reviews will be sorted
-     * @return a sorted list of reviews, ordered by grade in ascending order
-     */
-    public List<Review> sortUserReviewsAscending(String name) {
-        return reviewRepo.getAll().stream().filter(review -> review.getReviewee().getUserName().contains(name))
-                .sorted(Comparator.comparing(Review::getGrade)).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts the reviews left for a user by grade in descending order.
-     *
-     * @param name the username of the reviewee whose reviews will be sorted
-     * @return a sorted list of reviews, ordered by grade in descending order
-     */
-    public List<Review> sortUserReviewsDescending(String name) {
-        return reviewRepo.getAll().stream().filter(review -> review.getReviewee().getUserName().contains(name))
-                .sorted(Comparator.comparing(Review::getGrade).reversed()).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts the reviews left by a user by grade in ascending order.
-     *
-     * @param name the username of the reviewer whose reviews will be sorted
-     * @return a sorted list of reviews, ordered by grade in ascending order
-     */
-    public List<Review> sortReviewsLeftByUserAscending(String name) {
-        return reviewRepo.getAll().stream().filter(review -> review.getReviewer().getUserName().contains(name))
-                .sorted(Comparator.comparing(Review::getGrade)).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Sorts the reviews left by a user by grade in descending order.
-     *
-     * @param name the username of the reviewer whose reviews will be sorted
-     * @return a sorted list of reviews, ordered by grade in descending order
-     */
-    public List<Review> sortReviewsLeftByUserDescending(String name) {
-        return reviewRepo.getAll().stream().filter(review -> review.getReviewer().getUserName().contains(name))
-                .sorted(Comparator.comparing(Review::getGrade).reversed()).collect(Collectors.toList());
-    }
-
-
-
     public List<Product> displayUserListings(int userId) {
         User user=userRepo.read(userId);
+        List<Product> products = new ArrayList<>();
         if (user != null) {
-            return user.getListedProducts();
+            List<Integer> listedProducts = user.getListedProducts();
+            for (int i = 0; i < listedProducts.size(); i++) {
+                Product product=productRepo.read(listedProducts.get(i));
+                products.add(product);
+            }
         }
-        return new ArrayList<>();
+        return products;
 
     }
 

@@ -190,26 +190,6 @@ public class UserService extends VisitorService{
 
     //Order
 
-
-    /**
-     * Selects products for an order based on provided product IDs.
-     *
-     * @param productIds a list of product IDs to be selected.
-     * @return a list of selected products.
-     */
-    public List<Product> selectProductsForOrder(List<Integer> productIds) {
-        List<Product> selectedProducts = new ArrayList<>();
-        for (int productId : productIds) {
-            Product product = productRepo.read(productId);
-            if (product != null) {
-                selectedProducts.add(product);
-            }
-        }
-        return selectedProducts;
-    }
-
-
-
     /**
      * Places an order for a list of selected products.
      *
@@ -225,17 +205,16 @@ public class UserService extends VisitorService{
     public boolean placeOrder(String buyerUsername, String buyerPassword, List<Integer> selectedProductsIds, String status, String shippingAddress, int sellerId) {
         if(authenticate(buyerUsername,buyerPassword)){
             User buyer=findByCriteriaHelper(buyerUsername,buyerPassword);
-
-            List<Product> orderedProducts = selectProductsForOrder(selectedProductsIds);
-            Map<User, List<Product>> productsBySeller=new HashMap<>();
-            for(Product product:orderedProducts){
+            Map<User, List<Integer>> productsBySeller=new HashMap<>();
+            for (Integer selectedProductsId : selectedProductsIds) {
+                Product product = productRepo.read(selectedProductsId);
                 product.setAvailable(false);
-                productsBySeller.computeIfAbsent(product.getListedBy(),k -> new ArrayList<>()).add(product);
+                productsBySeller.computeIfAbsent(product.getListedBy(), k -> new ArrayList<>()).add(selectedProductsId);
             }
 
-            for (Map.Entry<User, List<Product>> entry : productsBySeller.entrySet()) {
+            for (Map.Entry<User, List<Integer>> entry : productsBySeller.entrySet()) {
                 User seller = entry.getKey();
-                List<Product> productsForSeller = entry.getValue();
+                List<Integer> productsForSeller = entry.getValue();
 
                 Order order = new Order(productsForSeller, status, shippingAddress, buyer, seller);
                 orderRepo.create(order);
@@ -412,8 +391,8 @@ public class UserService extends VisitorService{
         if(authenticate(userName,password)){
             User user=findByCriteriaHelper(userName,password);
             Product product=productRepo.read(productId);
-            if(product!=null && !user.favourites.contains(product)){
-                user.favourites.add(product);
+            if(product!=null && !user.favourites.contains(productId)){
+                user.favourites.add(productId);
                 int newNrOfLikes= product.getNrLikes()+1;
                 product.setNrLikes(newNrOfLikes);
                 return true;
@@ -437,8 +416,8 @@ public class UserService extends VisitorService{
         if(authenticate(userName,password)){
             User user=findByCriteriaHelper(userName,password);
             Product product=productRepo.read(productId);
-            if(product!=null && user.favourites.contains(product)){
-                user.favourites.remove(product);
+            if(product!=null && user.favourites.contains(productId)){
+                user.favourites.remove(productId);
                 return true;
             }
 
@@ -458,10 +437,14 @@ public class UserService extends VisitorService{
      */
     public List<Product> displayFavourites(String userName, String password){
         User user=findByCriteriaHelper(userName,password);
+        List<Product> favourites = new ArrayList<>();
         if(user!=null){
-            return user.getFavourites();
+            for (int i = 0; i < user.getFavourites().size(); i++) {
+                Product product=productRepo.read(user.getFavourites().get(i));
+                favourites.add(product);
+            }
         }
-        return new ArrayList<>();
+        return favourites;
     }
 
 
@@ -491,7 +474,7 @@ public class UserService extends VisitorService{
             Product product=new Product(name,color,size,price,brand,condition,nrOfViews,nrOfLikes,seller);
             product.setCategory(category);
             productRepo.create(product);
-            seller.listedProducts.add(product);
+            seller.listedProducts.add(product.getId());
             return true;
         }
         return false;
@@ -510,14 +493,13 @@ public class UserService extends VisitorService{
     public boolean deleteListedProduct(String username,String password,int productId){
         if(authenticate(username,password)){
             User user=findByCriteriaHelper(username,password);
-            for(Product product:user.listedProducts){
-                if(product.getId()==productId){
-                    user.listedProducts.remove(productRepo.read(productId));
+            for (int i = 0; i < user.getListedProducts().size(); i++) {
+                if (user.getListedProducts().get(i) == productId) {
+                    user.getListedProducts().remove(i);
                     productRepo.delete(productId);
                     return true;
                 }
             }
-
         }
         return false;
 
@@ -582,10 +564,14 @@ public class UserService extends VisitorService{
      */
     public List<Product> getMyListedProducts(String username, String password) {
         User user=findByCriteriaHelper(username,password);
+        List<Product> listedProducts = new ArrayList<>();
         if(user!=null){
-            return user.getListedProducts();
+            for (int i = 0; i < user.getListedProducts().size(); i++) {
+                Product product=productRepo.read(user.getListedProducts().get(i));
+                listedProducts.add(product);
+            }
         }
-        return new ArrayList<>();
+        return listedProducts;
     }
 
     /**
@@ -662,13 +648,13 @@ public class UserService extends VisitorService{
         User user=userRepo.read(userId);
 
         for (Order order : orderRepo.getAll()) {
-            for (Product product : order.getProducts()) {
+            for (int i = 0; i < order.getProducts().size(); i++) {
+                Product product=productRepo.read(order.getProducts().get(i));
                 if (product.getListedBy().equals(user)) {
                     totalSales++;
                 }
             }
         }
-
         return totalSales;
     }
 

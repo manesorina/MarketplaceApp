@@ -2,14 +2,14 @@ import java.util.List;
 
 public class Order implements Identifiable{
     private int id;
-    private List<Product> products;
+    private List<Integer> products;
     private String status;
     private double totalPrice;
     private String shippingAddress;
     private User buyer;
     private User seller;
 
-    public Order(List<Product> products, String status, String shippingAddress, User buyer, User seller) {
+    public Order(List<Integer> products, String status, String shippingAddress, User buyer, User seller) {
         this.products = products;
         this.status = status;
         this.shippingAddress = shippingAddress;
@@ -26,11 +26,11 @@ public class Order implements Identifiable{
         this.id = id;
     }
 
-    public List<Product> getProducts() {
+    public List<Integer> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<Integer> products) {
         this.products = products;
     }
 
@@ -73,18 +73,6 @@ public class Order implements Identifiable{
     public void setSeller(User seller) {
         this.seller = seller;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Order{" +
-//                "id=" + id +
-//                ", products=" + products +
-//                ", status='" + status + '\'' +
-//                ", totalPrice=" + totalPrice +
-//                ", shippingAddress='" + shippingAddress + '\'' +
-//                ", buyer=" + buyer +
-//                '}';
-//    }
 
     @Override
     public String toString() {

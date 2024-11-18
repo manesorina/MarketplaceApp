@@ -4,8 +4,8 @@ import java.util.List;
 public class User extends Account implements Identifiable {
     private int id;
     private double score;
-    protected List<Product> favourites;
-    protected List<Product> listedProducts;
+    protected List<Integer> favourites;
+    protected List<Integer> listedProducts;
     protected int nrOfFlaggedActions;
 
     public User(String userName, String password, String email, String phone, double score){
@@ -33,11 +33,11 @@ public class User extends Account implements Identifiable {
         this.score = score;
     }
 
-    public List<Product> getFavourites() {
+    public List<Integer> getFavourites() {
         return favourites;
     }
 
-    public List<Product> getListedProducts(){
+    public List<Integer> getListedProducts(){
         return listedProducts;
     }
 
