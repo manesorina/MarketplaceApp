@@ -11,6 +11,9 @@ public class IMRepository<T extends Identifiable> implements IRepository<T> {
 
     @Override
     public void create(T object) {
+        if (storage.values().stream().anyMatch(existing -> existing.equals(object))) {
+            throw new IllegalArgumentException("Duplicate object detected");
+        }
         object.setId(currentId);
         storage.put(currentId++, object);
     }

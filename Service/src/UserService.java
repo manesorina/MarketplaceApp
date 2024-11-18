@@ -229,6 +229,7 @@ public class UserService extends VisitorService{
             List<Product> orderedProducts = selectProductsForOrder(selectedProductsIds);
             Map<User, List<Product>> productsBySeller=new HashMap<>();
             for(Product product:orderedProducts){
+                product.setAvailable(false);
                 productsBySeller.computeIfAbsent(product.getListedBy(),k -> new ArrayList<>()).add(product);
             }
 
@@ -546,7 +547,6 @@ public class UserService extends VisitorService{
      */
     public double userAverageOfferAcceptanceRate(int userId){
         User user=userRepo.read(userId);
-        //List<Offer> receivedOffers=displayReceivedOffers(user.getUserName(),user.getPassword());
         List<Offer> receivedOffers=new ArrayList<>();
         if(user!=null){
             List<Offer>offers=offerRepo.getAll();
@@ -568,9 +568,7 @@ public class UserService extends VisitorService{
                 nrOfAcceptedOffers++;
             }
         }
-
-
-        return ((double) nrOfAcceptedOffers /receivedOffers.size())*100;
+        return ((double) nrOfAcceptedOffers/receivedOffers.size())*100;
 
 
     }
@@ -684,9 +682,6 @@ public class UserService extends VisitorService{
      *   <li>The number of flagged actions associated with the user (each flagged action subtracts from the score).</li>
      * </ul>
      */
-
-    //Realist?? sau mia bine calculam doar nr de revuew uri pozitive scadem pe cele negative si scadem si flagged actions
-    //fara sa mai luam si nr de sales in calcul?
     public int calculateUserTrustScore(int userId){
         int score=calculateNumberOfSales(userId)*10;
 
@@ -717,12 +712,6 @@ public class UserService extends VisitorService{
             return user.getScore();
         else return 0;
     }
-
-    
-
-
-
-
 }
 
 

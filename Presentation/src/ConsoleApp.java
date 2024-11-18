@@ -532,7 +532,7 @@ public class ConsoleApp {
             int finalOption = option;
             if(products.stream().map(Product::getId).anyMatch(x -> x.equals(finalOption))) {
                 for (Product product : products) {
-                    if (product.getId() == finalOption) {
+                    if (product.getId() == finalOption && product.isAvailable()) {
                         if (!orderedProducts.containsKey(product.getListedBy().getId())) {
                             orderedProducts.put(product.getListedBy().getId(), new ArrayList<>());
                         }
@@ -545,15 +545,17 @@ public class ConsoleApp {
             option = scanner.nextInt();
         }
         scanner.nextLine();
-        System.out.println("Enter your address: ");
-        String address = scanner.nextLine();
-        for (int sellerId : orderedProducts.keySet()) {
-            boolean success = controller.makeOrder(username, password, orderedProducts.get(sellerId),
-                    "processing", address, sellerId);
-            if (success) {
-                System.out.println("Order placed successfully!");
-            } else {
-                System.out.println("Could not place order. Please try again.");
+        if (!orderedProducts.isEmpty()) {
+            System.out.println("Enter your address: ");
+            String address = scanner.nextLine();
+            for (int sellerId : orderedProducts.keySet()) {
+                boolean success = controller.makeOrder(username, password, orderedProducts.get(sellerId),
+                        "processing", address, sellerId);
+                if (success) {
+                    System.out.println("Order placed successfully!");
+                } else {
+                    System.out.println("Could not place order. Please try again.");
+                }
             }
         }
 
@@ -724,10 +726,13 @@ public class ConsoleApp {
         int userId = scanner.nextInt();
         scanner.nextLine();
         List<Review> reviews = controller.displayReviewsLeftForUser(userId);
-        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId)))
+        if(displayedUsers.stream().map(User::getId).anyMatch(x -> x.equals(userId))) {
+            System.out.println("Users trust score is: ");
+            System.out.println(controller.getUserTrustScore(userId));
             for (Review review : reviews) {
                 System.out.println(review);
             }
+        }
         else System.out.println("Invalid ID.");
     }
 

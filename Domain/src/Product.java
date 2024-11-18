@@ -11,6 +11,7 @@ public class Product implements Identifiable{
     private int nrViews;
     private int nrLikes;
     private User listedBy;
+    private boolean available = true;
 
     public Product(String name,String color, int size, double price, String brand, String condition, int nrViews, int nrLikes, User listedBy) {
         this.name=name;
@@ -113,6 +114,14 @@ public class Product implements Identifiable{
         this.nrLikes = nrLikes;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -127,6 +136,7 @@ public class Product implements Identifiable{
                 ", nrViews=" + nrViews +
                 ", nrLikes=" + nrLikes +
                 ", listedBy=" + listedBy +
+                ", available=" + available +
                 '}';
     }
 }
