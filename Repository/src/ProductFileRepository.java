@@ -24,8 +24,7 @@ public class ProductFileRepository extends FMRepository<Product>{
     protected Product createObjectFromString(String line){
         String[] parts=line.split(",");
         int id=Integer.parseInt(parts[0]);
-        CategoryName categoryName=CategoryName.valueOf(parts[1].toUpperCase());
-        Category category=new Category(categoryName);
+        int category=Integer.parseInt(parts[1]);
         String name=parts[2];
         String color=parts[3];
         int size=Integer.parseInt(parts[4]);
@@ -38,7 +37,7 @@ public class ProductFileRepository extends FMRepository<Product>{
         boolean isAvailable=Boolean.parseBoolean(parts[11]);
 
         Product product= new Product(name,color,size,price,brand,condition,nrViews,nrLikes,listedBy);
-        product.setCategory(category.getId());
+        product.setCategory(category);
         return product;
 
     }
