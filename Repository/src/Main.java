@@ -25,12 +25,7 @@ public class Main {
         Product product4 = new Product( "Users 2 jean", "Blue", 32, 39.99, "BrandB", "Used", 150, 25, user2.getId());
 
 
-        Category categoryTops = new Category(CategoryName.TOPS);
-        Category categoryBottoms=new Category(CategoryName.BOTTOMS);
-        product1.setCategory(categoryTops);
-        product3.setCategory(categoryTops);
-        product2.setCategory(categoryBottoms);
-        product4.setCategory(categoryBottoms);
+
 
 
 
@@ -55,13 +50,13 @@ public class Main {
 
 
 
-        System.out.println("Before Deletion:");
-        System.out.println("User 1: " + fileUserRepo.read(user1.getId()));
-        System.out.println("User 2: " + fileUserRepo.read(user2.getId()));
+       // System.out.println("Before Deletion:");
+       // System.out.println("User 1: " + fileUserRepo.read(user1.getId()));
+       // System.out.println("User 2: " + fileUserRepo.read(user2.getId()));
 
 
-        //System.out.println("\nDeleting User 1...");
-        //fileUserRepo.delete(user1.getId());
+        System.out.println("\nDeleting User 1...");
+        fileUserRepo.delete(user1.getId());
 
         // Print users after deletion
         //System.out.println("\nAfter Deletion:");

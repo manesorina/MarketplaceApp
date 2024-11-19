@@ -46,9 +46,9 @@ public class Controller {
     }
 
     public List<Product> filterProductsByCategory(String category) {
-        if (category != null)
-            return visitorService.searchProductsByCategory(category);
-        else return new ArrayList<>();
+       if (category != null)
+           return visitorService.searchProductsByCategory(category);
+       else return new ArrayList<>();
     }
 
     public List<Product> filterProductsByBrand(String brand) {
@@ -113,7 +113,7 @@ public class Controller {
         return userService.displayReceivedOffers(username,password);
     }
 
-    public boolean sendOffer(String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice){
+    public boolean sendOffer(String senderUsername,String senderPassword, String message, int selectedProduct, double offeredPrice){
         return userService.sendOffer(senderUsername, senderPassword, message, selectedProduct, offeredPrice);
     }
 

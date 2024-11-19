@@ -151,10 +151,10 @@ public class VisitorService {
      * @param category the category name to search for.
      * @return a list of products within the specified category.
      */
-    public List<Product> searchProductsByCategory(String category) {
-        return productRepo.getAll().stream().filter(product -> product.getCategory().getName().
-                name().toLowerCase().contains(category.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
-    }
+   // public List<Product> searchProductsByCategory(int category) {
+   //     return productRepo.getAll().stream().filter(product -> product.getCategory().getName().
+   //             name().toLowerCase().contains(category.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
+   // }
 
 
     /**

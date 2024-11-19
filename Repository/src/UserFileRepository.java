@@ -9,7 +9,7 @@ public class UserFileRepository extends FMRepository<User> {
 
     @Override
     protected String convertObjectToString(User user) {
-        return user.getId() + "," +
+        return user.getId() + "," +   //product.getCategory() + "," +
                 user.getUserName() + "," +
                 user.getPassword() + "," +
                 user.getEmail() + "," +
@@ -36,6 +36,11 @@ public class UserFileRepository extends FMRepository<User> {
     protected User createObjectFromString(String line) {
         String[] parts = line.split(",");
         int id = Integer.parseInt(parts[0]);
+
+        // CategoryName categoryName = CategoryName.valueOf(parts[1].toUpperCase());
+        // Category category = new Category(categoryName);
+        //
+
         String username = parts[1];
         String password = parts[2];
         String email = parts[3];
