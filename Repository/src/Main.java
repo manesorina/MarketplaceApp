@@ -26,6 +26,7 @@ public class Main {
 
         Category categoryTops = new Category(CategoryName.TOPS);
         Category categoryBottoms=new Category(CategoryName.BOTTOMS);
+
         product1.setCategory(categoryTops.getId());
         product3.setCategory(categoryTops.getId());
         product2.setCategory(categoryBottoms.getId());
