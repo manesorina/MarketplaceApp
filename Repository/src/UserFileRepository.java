@@ -16,8 +16,8 @@ public class UserFileRepository extends FMRepository<User> {
                 user.getPhone() + "," +
                 user.getScore() + "," +
                 user.getFlaggedActions() + "," +
-                convertIdListToString(user.getFavourites()) + "," +
-                convertIdListToString(user.getListedProducts());
+                (user.getFavourites().isEmpty() ? "" : convertIdListToString(user.getFavourites())) + "," +
+                (user.getListedProducts().isEmpty() ? "" : convertIdListToString(user.getListedProducts()));
     }
 
     private String convertIdListToString(List<Integer> ids) {
@@ -48,8 +48,8 @@ public class UserFileRepository extends FMRepository<User> {
         double score = Double.parseDouble(parts[5]);
         int flaggedActions = Integer.parseInt(parts[6]);
 
-        List<Integer> favourites = parseIdList(parts[7]);
-        List<Integer> listedProducts = parseIdList(parts[8]);
+        List<Integer> favourites = (parts.length > 7 && !parts[7].isEmpty()) ? parseIdList(parts[7]) : new ArrayList<>();
+        List<Integer> listedProducts = (parts.length > 8 && !parts[8].isEmpty()) ? parseIdList(parts[8]) : new ArrayList<>();
 
         User user = new User(username, password, email, phone, score);
         user.getFavourites().addAll(favourites);

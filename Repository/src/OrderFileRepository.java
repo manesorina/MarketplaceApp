@@ -20,14 +20,15 @@ public class OrderFileRepository extends FMRepository<Order> {
     public Order createObjectFromString(String line){
         String[] parts=line.split(",");
         int id=Integer.parseInt(parts[0]);
-        List<Integer> orderedProducts=parseIdList(parts[1]);
+        List<Integer> orderedProducts = parseIdList(parts[1]);
         String status=parts[2];
         String shippingAddress=parts[3];
         int buyer=Integer.parseInt(parts[4]);
         int seller=Integer.parseInt(parts[5]);
 
-        return new Order(orderedProducts,status,shippingAddress,buyer,seller);
-
+        Order order= new Order(orderedProducts,status,shippingAddress,buyer,seller);
+        order.getProducts().addAll(orderedProducts);
+        return order;
     }
 
 
