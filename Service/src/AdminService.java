@@ -1,9 +1,10 @@
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AdminService extends VisitorService {
     private final IMRepository<Admin> adminRepo;
     private final IMRepository<Category> categoryRepo;
+    private final IMRepository<Order> orderRepo;
 
 
 
@@ -17,11 +18,11 @@ public class AdminService extends VisitorService {
      * @param adminRepo the repository to handle admin-related operations
      * @param categoryRepo the repository to handle category-related operations
      */
-    public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo, IMRepository<Category> categoryRepo) {
+    public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo, IMRepository<Category> categoryRepo, IMRepository<Order> orderRepo) {
         super(userRepo, productRepo, reviewRepo);
         this.adminRepo = adminRepo;
         this.categoryRepo=categoryRepo;
-
+        this.orderRepo = orderRepo;
     }
 
     /**
@@ -145,6 +146,32 @@ public class AdminService extends VisitorService {
      */
     public List<Category> getAllCategories(){
         return categoryRepo.getAll();
+    }
+
+    public Map<String, Double> sortCategoriesByIncome() {
+        List<Order> allOrders = orderRepo.getAll();
+        if (allOrders.isEmpty()) {
+            return Map.of();
+        }
+        Map<String, Double> incomeByCategory = new HashMap<>();
+        for (Order order:allOrders) {
+            for (int productId: order.getProducts()) {
+                Product product = productRepo.read(productId);
+                if (product != null) {
+                    String categoryName = String.valueOf(product.getCategory().getName());
+                    double productPrice = product.getPrice();
+                    incomeByCategory.merge(categoryName, productPrice, Double::sum);
+                }
+            }
+        }
+        List<Map.Entry<String, Double>> sortedEntries = new ArrayList<>(incomeByCategory.entrySet());
+        sortedEntries.sort(Map.Entry.<String, Double>comparingByValue().reversed());
+        Map<String, Double> sortedIncomeByCategory = new LinkedHashMap<>();
+        for (Map.Entry<String, Double> entry : sortedEntries) {
+            sortedIncomeByCategory.put(entry.getKey(), entry.getValue());
+        }
+        return sortedIncomeByCategory;
+
     }
 
 

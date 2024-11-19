@@ -305,7 +305,7 @@ public class ConsoleApp {
         }
     }
 
-    private void sendOffer(String username, String password, Product selectedProduct) {
+    private void sendOffer(String username, String password, int selectedProduct) {
         System.out.print("Enter your offer amount: ");
         double offerAmount = scanner.nextDouble();
         scanner.nextLine();
@@ -313,7 +313,7 @@ public class ConsoleApp {
         String message = scanner.nextLine();
         boolean success = controller.sendOffer(username, password, message, selectedProduct, offerAmount);
         if (success) {
-            System.out.println("Offer sent for product: " + selectedProduct.getName() + " with amount " + offerAmount);
+            System.out.println("Offer sent successfully!");
         } else {
             System.out.println("Could not send offer. Please try again.");
         }
@@ -503,7 +503,7 @@ public class ConsoleApp {
                     scanner.nextLine();
                     switch (actionChoice) {
                         case 1 -> likeProducts(username, password, product);
-                        case 2 -> sendOffer(username, password, product);
+                        case 2 -> sendOffer(username, password, product.getId());
                         default -> System.out.println("Invalid action choice. Please try again.");
                     }
                 }
@@ -952,6 +952,7 @@ public class ConsoleApp {
             System.out.println("1. Sort Products");
             System.out.println("2. Filter Products");
             System.out.println("3. Select Product for Action (change category/delete product)");
+            System.out.println("4. See Category Sales Ranking");
             System.out.println("0. Go Back to Main Menu");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
@@ -960,6 +961,7 @@ public class ConsoleApp {
                 case 1 -> products = sortProducts();
                 case 2 -> products = filterProducts();
                 case 3 -> selectProductActionAdmin(products, username, password);
+                case 4 -> System.out.println(controller.seeCategorySales());
                 case 0 -> browsing = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }

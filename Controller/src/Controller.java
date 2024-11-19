@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
     protected final AdminService adminService;
@@ -294,6 +295,10 @@ public class Controller {
 
     public double getUserAverageAcceptanceRate(int userId){
         return userService.userAverageOfferAcceptanceRate(userId);
+    }
+
+    public Map<String, Double> seeCategorySales() {
+        return adminService.sortCategoriesByIncome();
     }
 
 
