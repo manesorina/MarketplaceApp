@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class UserFileRepository extends FMRepository<User> {
         for (Integer id : ids) {
             sb.append(id).append(";");
         }
-        // Remove the trailing semicolon
+
         if (!sb.isEmpty()) {
             sb.setLength(sb.length() - 1);
         }
@@ -37,7 +36,7 @@ public class UserFileRepository extends FMRepository<User> {
     protected User createObjectFromString(String line) {
         String[] parts = line.split(",");
         int id = Integer.parseInt(parts[0]);
-        String userName = parts[1];
+        String username = parts[1];
         String password = parts[2];
         String email = parts[3];
         String phone = parts[4];
@@ -47,8 +46,7 @@ public class UserFileRepository extends FMRepository<User> {
         List<Integer> favourites = parseIdList(parts[7]);
         List<Integer> listedProducts = parseIdList(parts[8]);
 
-        User user = new User(userName, password, email, phone, score);
-        user.setId(id);
+        User user = new User(username, password, email, phone, score);
         user.getFavourites().addAll(favourites);
         user.getListedProducts().addAll(listedProducts);
         user.nrOfFlaggedActions = flaggedActions;

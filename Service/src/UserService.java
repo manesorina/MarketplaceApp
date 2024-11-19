@@ -56,19 +56,19 @@ public class UserService extends VisitorService{
      * @param senderUsername the username of the sender making the offer.
      * @param senderPassword the password of the sender for authentication.
      * @param message a message included with the offer.
-     * @param selectedProduct the product for which the offer is being made.
+     * @param selectedProductID the id of the  product for which the offer is being made.
      * @param offeredPrice the price offered by the sender.
      * @return {@code true} if the offer is created and sent successfully; {@code false} otherwise.
      */
 
-    public boolean sendOffer(String senderUsername,String senderPassword, String message, Product selectedProduct, double offeredPrice) {
+    public boolean sendOffer(String senderUsername,String senderPassword, String message, int selectedProductID, double offeredPrice) {
         if (authenticate(senderUsername, senderPassword)) {
-            Product product = productRepo.read(selectedProduct.getId());
+            Product product = productRepo.read(selectedProductID);
             if (product!=null) {
                 User sender = findByCriteriaHelper(senderUsername, senderPassword);
-                User offerReceiver = userRepo.read(selectedProduct.getListedBy());
-                if (offerReceiver  != null && !offerReceiver .getUserName().equals(senderUsername) && offeredPrice>=selectedProduct.getPrice()/2) {
-                    Offer offer = new Offer(message, offeredPrice, selectedProduct,  sender.getId(), offerReceiver.getId());
+                User offerReceiver = userRepo.read(product.getListedBy());
+                if (offerReceiver  != null && !offerReceiver .getUserName().equals(senderUsername) && offeredPrice>=product.getPrice()/2) {
+                    Offer offer = new Offer(message, offeredPrice, selectedProductID,  sender.getId(), offerReceiver.getId());
                     offerRepo.create(offer);
 
                     return true;
@@ -92,7 +92,8 @@ public class UserService extends VisitorService{
             Offer offer=offerRepo.read(offerId);
             if (offer.getReceiver() == findByCriteriaHelper(sellerUsername, sellerPassword).getId()) {
                 offer.setStatus(true);
-                offer.getTargetedProduct().setPrice(offer.getOfferedPrice());
+                Product targetedProduct=productRepo.read(offer.getTargetedProduct());
+                targetedProduct.setPrice(offer.getOfferedPrice());
                 return true;
             }
         }

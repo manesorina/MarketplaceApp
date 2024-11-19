@@ -1,0 +1,4 @@
+1,Category{id=0, name=TOPS},T-shirt,Red,42,19.99,BrandA,New,100,10,0,true
+2,Category{id=0, name=TOPS},Users 2 thsirt,Blue,32,39.99,BrandB,Used,150,25,0,true
+3,Category{id=0, name=BOTTOMS},Users 2 jean,Blue,32,39.99,BrandB,Used,150,25,0,true
+4,Category{id=0, name=BOTTOMS},Jeans,Blue,32,39.99,BrandB,Used,150,25,0,true

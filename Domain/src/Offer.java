@@ -2,12 +2,12 @@ public class Offer implements Identifiable{
     private int id;
     private String message;
     private double offeredPrice;
-    private Product targetedProduct;
+    private int targetedProduct;
     private Boolean accepted;
     private int sender;
     private int receiver;
 
-    public Offer(String message, double offeredPrice, Product targetedProduct, int sender, int reciever) {
+    public Offer(String message, double offeredPrice, int targetedProduct, int sender, int reciever) {
         this.message = message;
         this.offeredPrice = offeredPrice;
         this.targetedProduct = targetedProduct;
@@ -41,11 +41,11 @@ public class Offer implements Identifiable{
         this.offeredPrice = offeredPrice;
     }
 
-    public Product getTargetedProduct() {
+    public int getTargetedProduct() {
         return targetedProduct;
     }
 
-    public void setTargetedProduct(Product targetedProduct) {
+    public void setTargetedProduct(int targetedProduct) {
         this.targetedProduct = targetedProduct;
     }
 
