@@ -23,8 +23,8 @@ public class UserService extends VisitorService{
      * @param offerRepo the repository to handle offer-related operations
      */
     public UserService(IMRepository<User> userRepo, IMRepository<Product> productRepo,
-                       IMRepository<Review> reviewRepo, IMRepository<Order> orderRepo,IMRepository<Offer> offerRepo) {
-        super(userRepo, productRepo, reviewRepo);
+                       IMRepository<Review> reviewRepo, IMRepository<Category> categoryRepo, IMRepository<Order> orderRepo,IMRepository<Offer> offerRepo) {
+        super(userRepo, productRepo, reviewRepo, categoryRepo);
         this.orderRepo=orderRepo;
         this.offerRepo=offerRepo;
 
@@ -473,7 +473,7 @@ public class UserService extends VisitorService{
      * @param nrOfLikes the number of likes the product has.
      * @return {@code true} if the product is listed successfully; {@code false} otherwise.
      */
-    public boolean listProduct(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
+    public boolean listProduct(String userName,String password, int category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
         if(authenticate(userName,password)){
             User seller=findByCriteriaHelper(userName,password);
             Product product=new Product(name,color,size,price,brand,condition,nrOfViews,nrOfLikes,seller.getId());

@@ -430,9 +430,13 @@ public class ConsoleApp {
         List<Product> filteredProducts = new ArrayList<>();
         switch (choice) {
             case 1 -> {
-                System.out.println("Type a category name to filter by: ");
-                String category = scanner.nextLine();
-                filteredProducts = controller.filterProductsByCategory(category);
+                List<Category> categories = controller.getCategories();
+                categories.forEach(System.out::println);
+                System.out.println("Type a category ID to filter by: ");
+                int category = scanner.nextInt();
+                if (categories.stream().map(Category::getId).anyMatch(x -> x.equals(category)))
+                    filteredProducts = controller.filterProductsByCategory(category);
+                else System.out.println("Invalid category ID. Please try again.");
             }
             case 2 -> {
                 System.out.println("Type a brand name to filter by: ");
@@ -591,35 +595,36 @@ public class ConsoleApp {
     private void addProductToMyListings(String username, String password) {
         System.out.println("Enter product details to add to your listings:");
         List<Category> categories = controller.getCategories();
-        System.out.println("Choose a category: ");
+        System.out.println("Choose a category ID: ");
         for (int i = 0; i < categories.size(); i++) {
-            System.out.println((i+1) + "." + categories.get(i).getName());
+            System.out.println(categories.get(i));
         }
-        int choice = scanner.nextInt();
-        Category category = categories.get(choice);
-        System.out.print("Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Color: ");
-        String color = scanner.nextLine();
-        System.out.print("Size: ");
-        int size = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("Price: ");
-        double price = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.print("Brand: ");
-        String brand = scanner.nextLine();
-        System.out.print("Condition (e.g., New, Used): ");
-        String condition = scanner.nextLine();
+        int category = scanner.nextInt();
+        if (categories.stream().map(Category::getId).anyMatch(x -> x.equals(category))){
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+            System.out.print("Color: ");
+            String color = scanner.nextLine();
+            System.out.print("Size: ");
+            int size = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("Price: ");
+            double price = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.print("Brand: ");
+            String brand = scanner.nextLine();
+            System.out.print("Condition (e.g., New, Used): ");
+            String condition = scanner.nextLine();
 
-        boolean success = controller.addToUserListings(username, password, category, name, color, size, price,
-                brand, condition, 0, 0);
-        if (success) {
-            System.out.println("Product added to your listings successfully!");
+            boolean success = controller.addToUserListings(username, password, category, name, color, size, price,
+                    brand, condition, 0, 0);
+            if (success) {
+                System.out.println("Product added to your listings successfully!");
+            } else {
+                System.out.println("Could not add product to your listings. Please try again.");
+            }
         }
-        else {
-            System.out.println("Could not add product to your listings. Please try again.");
-        }
+        else System.out.println("Invalid category choice. Please choose a valid category ID.");
 
     }
 
@@ -1012,7 +1017,7 @@ public class ConsoleApp {
         System.out.println("Available Categories:");
         List<Category> categories = controller.getCategories();
         for (int i = 0; i < categories.size(); i++) {
-            System.out.println((i + 1) + ". " + categories.get(i));
+            System.out.println(categories.get(i));
         }
         System.out.print("Choose a new category for the product: ");
         int categoryChoice = scanner.nextInt();

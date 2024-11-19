@@ -1,7 +1,7 @@
 public class Product implements Identifiable{
 
     private int id;
-    private Category category;
+    private int category;
     private String name;
     private String color;
     private int size;
@@ -33,11 +33,11 @@ public class Product implements Identifiable{
         this.listedBy = listedBy;
     }
 
-    public Category getCategory() {
+    public int getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(int category) {
         this.category = category;
     }
 

@@ -46,8 +46,8 @@ public class Controller {
         };
     }
 
-    public List<Product> filterProductsByCategory(String category) {
-       if (category != null)
+    public List<Product> filterProductsByCategory(int category) {
+       if (category > 0)
            return visitorService.searchProductsByCategory(category);
        else return new ArrayList<>();
     }
@@ -165,7 +165,7 @@ public class Controller {
 
 
 
-    public boolean addToUserListings(String userName,String password, Category category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
+    public boolean addToUserListings(String userName,String password, int category,String name,String color, int size, double price, String brand, String condition, int nrOfViews, int nrOfLikes){
         return userService.listProduct(userName, password, category, name, color, size, price, brand, condition, nrOfViews, nrOfLikes);
     }
 
@@ -265,24 +265,7 @@ public class Controller {
     }
 
     public boolean changeCategory(int productId, int categoryChoice, String adminUsername, String adminPassword) {
-        Category newCategory;
-
-        switch (categoryChoice) {
-            case 1 -> newCategory = new Category(CategoryName.TOPS);
-            case 2 -> newCategory = new Category(CategoryName.BOTTOMS);
-            case 3 -> newCategory = new Category(CategoryName.DRESSES);
-            case 4 -> newCategory = new Category(CategoryName.OUTERWEAR);
-            case 5 -> newCategory = new Category(CategoryName.FOOTWEAR);
-            case 6 -> newCategory = new Category(CategoryName.ACCESSORIES);
-            case 7 -> newCategory = new Category(CategoryName.SWIMWEAR);
-            default -> {
-                return false;
-            }
-        }
-
-        return adminService.updateCategory(adminUsername, adminPassword, productId, newCategory);
-
-
+        return adminService.updateCategory(adminUsername, adminPassword, productId, categoryChoice);
     }
 
     public List<Product> getMyListings(String username, String password) {

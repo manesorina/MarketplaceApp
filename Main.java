@@ -10,8 +10,8 @@ public class Main {
         IMRepository<Offer> offerRepo = new IMRepository<Offer>();
         IMRepository<Order> orderRepo = new IMRepository<Order>();
         IMRepository<Category> categoryRepo = new IMRepository<>();
-        VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo);
-        UserService userService = new UserService(userRepo, productRepo, reviewRepo, orderRepo, offerRepo);
+        VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo, categoryRepo);
+        UserService userService = new UserService(userRepo, productRepo, reviewRepo, categoryRepo, orderRepo, offerRepo);
         AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo, categoryRepo, orderRepo);
         Controller controller = new Controller(adminService, userService, visitorService);
         ConsoleApp console = new ConsoleApp(controller);
@@ -23,6 +23,13 @@ public class Main {
         Category categoryAccessories = new Category(CategoryName.ACCESSORIES);
         Category categoryOuterwear = new Category(CategoryName.OUTERWEAR);
         Category categoryBottoms=new Category(CategoryName.BOTTOMS);
+
+        categoryRepo.create(categoryTops);
+        categoryRepo.create(categoryDresses);
+        categoryRepo.create(categoryShoes);
+        categoryRepo.create(categoryAccessories);
+        categoryRepo.create(categoryOuterwear);
+        categoryRepo.create(categoryBottoms);
 
 
         Admin a1=new Admin("JohnDoe","qwerty1234","johnedoe@email.com","0747896547");
@@ -67,13 +74,13 @@ public class Main {
         Product p6 = new Product("Skirt", "pink", 36, 15.00, "Orsay", "New", 0, 0, 2);
         Product p7 = new Product("Dress", "purple", 38, 50.00, "C&A", "Worn", 0, 0, 2);
 
-        p1.setCategory(categoryShoes);
-        p2.setCategory(categoryAccessories);
-        p3.setCategory(categoryOuterwear);
-        p4.setCategory(categoryBottoms);
-        p5.setCategory(categoryTops);
-        p6.setCategory(categoryAccessories);
-        p7.setCategory(categoryOuterwear);
+        p1.setCategory(categoryShoes.getId());
+        p2.setCategory(categoryAccessories.getId());
+        p3.setCategory(categoryOuterwear.getId());
+        p4.setCategory(categoryBottoms.getId());
+        p5.setCategory(categoryTops.getId());
+        p6.setCategory(categoryAccessories.getId());
+        p7.setCategory(categoryOuterwear.getId());
 
         productRepo.create(p1);
         productRepo.create(p2);
@@ -133,9 +140,9 @@ public class Main {
         System.out.println();
 
         //falgged actions
-        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p5.getId(),categoryOuterwear);
+        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p5.getId(),categoryOuterwear.getId());
         controller.adminService.deleteProduct(a1.getUserName(),a1.getPassword(),p7.getId());
-        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p6.getId(),categoryBottoms);
+        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p6.getId(),categoryBottoms.getId());
         controller.adminService.deleteReview(a1.getUserName(),a1.getPassword(),3);
 
         System.out.println("Products after deletion and category modification: ");
@@ -166,9 +173,6 @@ public class Main {
         System.out.println(controller.getFlaggedActions(u2.getId()));
 
         System.out.println(adminService.sortCategoriesByIncome());
-
-
-
 
 
 

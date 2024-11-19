@@ -5,16 +5,17 @@ public class VisitorService {
     protected final IMRepository<User> userRepo;
     protected final IMRepository<Product> productRepo;
     protected final IMRepository<Review> reviewRepo;
+    protected final IMRepository<Category> categoryRepo;
 
     /**
      * Service for managing visitor interactions, such as user, product, and review searches,
      * sorting, and account creation.
      */
-    public VisitorService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo) {
+    public VisitorService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Category> categoryRepo) {
         this.userRepo = userRepo;
         this.productRepo = productRepo;
         this.reviewRepo = reviewRepo;
-
+        this.categoryRepo = categoryRepo;
     }
 
 
@@ -151,10 +152,12 @@ public class VisitorService {
      * @param category the category name to search for.
      * @return a list of products within the specified category.
      */
-   // public List<Product> searchProductsByCategory(int category) {
-   //     return productRepo.getAll().stream().filter(product -> product.getCategory().getName().
-   //             name().toLowerCase().contains(category.toLowerCase())).peek(product -> product.setNrViews(product.getNrViews() + 1)).collect(Collectors.toList());
-   // }
+    public List<Product> searchProductsByCategory(int category) {
+        return productRepo.getAll().stream()
+                .filter(product -> product.getCategory() == category)
+                .peek(product -> product.setNrViews(product.getNrViews() + 1))
+                .collect(Collectors.toList());
+    }
 
 
     /**

@@ -19,7 +19,7 @@ public class AdminService extends VisitorService {
      * @param categoryRepo the repository to handle category-related operations
      */
     public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo, IMRepository<Category> categoryRepo, IMRepository<Order> orderRepo) {
-        super(userRepo, productRepo, reviewRepo);
+        super(userRepo, productRepo, reviewRepo, categoryRepo);
         this.adminRepo = adminRepo;
         this.categoryRepo=categoryRepo;
         this.orderRepo = orderRepo;
@@ -119,7 +119,7 @@ public class AdminService extends VisitorService {
      * @param newCategory the new category to set for the product.
      * @return {@code true} if the category is successfully updated; {@code false} otherwise.
      */
-    public boolean updateCategory(String adminUsername,String adminPassword, int productId, Category newCategory){
+    public boolean updateCategory(String adminUsername,String adminPassword, int productId, int newCategory){
         if (authenticate(adminUsername,adminPassword)) {
             List<Product> products=productRepo.getAll();
             Product targetetdProduct=productRepo.read(productId);
@@ -158,7 +158,7 @@ public class AdminService extends VisitorService {
             for (int productId: order.getProducts()) {
                 Product product = productRepo.read(productId);
                 if (product != null) {
-                    String categoryName = String.valueOf(product.getCategory().getName());
+                    String categoryName = String.valueOf(categoryRepo.read(product.getCategory()).getName());
                     double productPrice = product.getPrice();
                     incomeByCategory.merge(categoryName, productPrice, Double::sum);
                 }
