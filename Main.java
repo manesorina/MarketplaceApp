@@ -12,7 +12,7 @@ public class Main {
         IMRepository<Category> categoryRepo = new IMRepository<>();
         VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo);
         UserService userService = new UserService(userRepo, productRepo, reviewRepo, orderRepo, offerRepo);
-        AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo, categoryRepo);
+        AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo, categoryRepo, orderRepo);
         Controller controller = new Controller(adminService, userService, visitorService);
         ConsoleApp console = new ConsoleApp(controller);
 
@@ -93,10 +93,10 @@ public class Main {
 
         //Offers
 
-        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p1,14.00);
-        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p2,28.00);
-        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p3,28.00);
-        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p4,7.00);
+        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p1.getId(),14.00);
+        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p2.getId(),28.00);
+        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p3.getId(),28.00);
+        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p4.getId(),7.00);
 
 
         controller.userService.declineOffer(u1.getUserName(),u1.getPassword(),1);
@@ -164,6 +164,8 @@ public class Main {
         System.out.println(controller.getUserPositiveReviews(u2.getId()));
         System.out.println(controller.getUserNegativeReviews(u2.getId()));
         System.out.println(controller.getFlaggedActions(u2.getId()));
+
+        System.out.println(adminService.sortCategoriesByIncome());
 
 
 
