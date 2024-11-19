@@ -1,5 +1,0 @@
-1,John Doe,1234,johndoe@gmail.com,0724578967,3.5,2,101;102;103,201;202
-2,John Doe,1234,johndoe@gmail.com,0724578967,3.5,2,101;102;103,201;202
-3,John Doe,1234,johndoe@gmail.com,0724578967,3.5,2,101;102;103,201;202
-4,John Doe,1234,johndoe@gmail.com,0724578967,3.5,2,101;102;103,201;202
-5,John Doe,1234,johndoe@gmail.com,0724578967,3.5,2,101;102;103,201;202
