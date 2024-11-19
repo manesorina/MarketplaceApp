@@ -24,7 +24,12 @@ public class Main {
         Product product3 = new Product( "Users 2 thsirt", "Blue", 32, 39.99, "BrandB", "Used", 150, 25, user2.getId());
         Product product4 = new Product( "Users 2 jean", "Blue", 32, 39.99, "BrandB", "Used", 150, 25, user2.getId());
 
-
+        Category categoryTops = new Category(CategoryName.TOPS);
+        Category categoryBottoms=new Category(CategoryName.BOTTOMS);
+        product1.setCategory(categoryTops.getId());
+        product3.setCategory(categoryTops.getId());
+        product2.setCategory(categoryBottoms.getId());
+        product4.setCategory(categoryBottoms.getId());
 
 
 
@@ -55,7 +60,7 @@ public class Main {
        // System.out.println("User 2: " + fileUserRepo.read(user2.getId()));
 
 
-        System.out.println("\nDeleting User 1...");
+        //System.out.println("\nDeleting User 1...");
         fileUserRepo.delete(user1.getId());
 
         // Print users after deletion
