@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Controller {
-    protected final AdminService adminService;
-    protected final UserService userService;
+    public final AdminService adminService;
+    public final UserService userService;
     protected final VisitorService visitorService;
 
     public Controller(AdminService adminService, UserService userService, VisitorService visitorService) {
