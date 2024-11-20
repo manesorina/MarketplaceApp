@@ -11,17 +11,18 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        String userFilename = "Repository/ObjectFiles/users.json";
-        String productFilename = "Repository/ObjectFiles/products.json";
-        String categoriesFilename = "Repository/ObjectFiles/categories.json";
-        String offersFilename = "Repository/ObjectFiles/offers.json";
-        String orderFilename = "Repository/ObjectFiles/orders.json";
-        String reviewsFilename = "Repository/ObjectFiles/reviews.json";
-        String adminsFilename = "Repository/ObjectFiles/admins.json";
-        String visitorsFilename = "Repository/ObjectFiles/visitors.json";
-        String likedProducts = "Repository/ObjectFiles/likedProducts.json";
-        String listedProducts = "Repository/ObjectFiles/listedProducts.json";
-        String orderedProducts = "Repository/ObjectFiles/orderedProducts.json";
+        String userFilename = "Repository/ObjectFiles/users.txt";
+        String productFilename = "Repository/ObjectFiles/products.txt";
+        String categoriesFilename = "Repository/ObjectFiles/categories.txt";
+        String offersFilename = "Repository/ObjectFiles/offers.txt";
+        String orderFilename = "Repository/ObjectFiles/orders.txt";
+        String reviewsFilename = "Repository/ObjectFiles/reviews.txt";
+        String adminsFilename = "Repository/ObjectFiles/admins.txt";
+        String visitorsFilename = "Repository/ObjectFiles/visitors.txt";
+        String likedProducts = "Repository/ObjectFiles/likedProducts.txt";
+        String listedProducts = "Repository/ObjectFiles/listedProducts.txt";
+        String orderedProducts = "Repository/ObjectFiles/orderedProducts.txt";
+        VisitorFileRepository visitorRepo = new VisitorFileRepository(visitorsFilename);
         UserFileRepository userRepo = new UserFileRepository(userFilename, listedProducts, likedProducts);
         ProductFileRepository productRepo = new ProductFileRepository(productFilename);
         CategoryFileRepository categoryRepo = new CategoryFileRepository(categoriesFilename);

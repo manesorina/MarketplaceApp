@@ -13,7 +13,7 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
     public FileRepository(String filename) {
         super();
         this.filename = filename;
-        loadDataFromFile();
+        //loadDataFromFile();
     }
 
     @Override

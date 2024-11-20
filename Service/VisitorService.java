@@ -7,19 +7,21 @@ import Domain.Category;
 import Domain.Product;
 import Domain.Review;
 import Domain.User;
+import Repository.FileRepository;
 import Repository.IMRepository;
 
 public class VisitorService {
-    protected final IMRepository<User> userRepo;
-    protected final IMRepository<Product> productRepo;
-    protected final IMRepository<Review> reviewRepo;
-    protected final IMRepository<Category> categoryRepo;
+    protected final FileRepository<User> userRepo;
+    protected final FileRepository<Product> productRepo;
+    protected final FileRepository<Review> reviewRepo;
+    protected final FileRepository<Category> categoryRepo;
 
     /**
      * Service for managing visitor interactions, such as user, product, and review searches,
      * sorting, and account creation.
      */
-    public VisitorService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Category> categoryRepo) {
+    public VisitorService(FileRepository<User> userRepo, FileRepository<Product> productRepo,
+                          FileRepository<Review> reviewRepo, FileRepository<Category> categoryRepo) {
         this.userRepo = userRepo;
         this.productRepo = productRepo;
         this.reviewRepo = reviewRepo;

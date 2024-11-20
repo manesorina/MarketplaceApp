@@ -3,12 +3,13 @@ package Service;
 import java.util.*;
 
 import Domain.*;
+import Repository.FileRepository;
 import Repository.IMRepository;
 
 public class AdminService extends VisitorService {
-    private final IMRepository<Admin> adminRepo;
-    private final IMRepository<Category> categoryRepo;
-    private final IMRepository<Order> orderRepo;
+    private final FileRepository<Admin> adminRepo;
+    private final FileRepository<Category> categoryRepo;
+    private final FileRepository<Order> orderRepo;
 
 
 
@@ -22,7 +23,9 @@ public class AdminService extends VisitorService {
      * @param adminRepo the repository to handle admin-related operations
      * @param categoryRepo the repository to handle category-related operations
      */
-    public AdminService(IMRepository<User> userRepo, IMRepository<Product> productRepo, IMRepository<Review> reviewRepo, IMRepository<Admin> adminRepo, IMRepository<Category> categoryRepo, IMRepository<Order> orderRepo) {
+    public AdminService(FileRepository<User> userRepo, FileRepository<Product> productRepo,
+                        FileRepository<Review> reviewRepo, FileRepository<Admin> adminRepo,
+                        FileRepository<Category> categoryRepo, FileRepository<Order> orderRepo) {
         super(userRepo, productRepo, reviewRepo, categoryRepo);
         this.adminRepo = adminRepo;
         this.categoryRepo=categoryRepo;

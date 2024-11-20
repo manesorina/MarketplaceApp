@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import Domain.*;
+import Repository.FileRepository;
 import Repository.IMRepository;
 
 public class UserService extends VisitorService {
 
-    IMRepository<Order> orderRepo;
-    IMRepository<Offer> offerRepo;
+    FileRepository<Order> orderRepo;
+    FileRepository<Offer> offerRepo;
 
 
 
@@ -26,8 +27,9 @@ public class UserService extends VisitorService {
      * @param orderRepo the repository to handle order-related operations
      * @param offerRepo the repository to handle offer-related operations
      */
-    public UserService(IMRepository<User> userRepo, IMRepository<Product> productRepo,
-                       IMRepository<Review> reviewRepo, IMRepository<Category> categoryRepo, IMRepository<Order> orderRepo, IMRepository<Offer> offerRepo) {
+    public UserService(FileRepository<User> userRepo, FileRepository<Product> productRepo,
+                       FileRepository<Review> reviewRepo, FileRepository<Category> categoryRepo,
+                       FileRepository<Order> orderRepo, FileRepository<Offer> offerRepo) {
         super(userRepo, productRepo, reviewRepo, categoryRepo);
         this.orderRepo=orderRepo;
         this.offerRepo=offerRepo;
