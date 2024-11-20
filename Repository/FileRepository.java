@@ -5,6 +5,7 @@ import Domain.Identifiable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class FileRepository<T extends Identifiable> extends IMRepository<T> {
     public final String filename;
@@ -18,7 +19,7 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
 
     @Override
     public void create(T object) {
-
+        System.out.println("Creating object: " + object);
         if (exists(object)) {
             throw new IllegalArgumentException("Duplicate object detected");
         }
@@ -46,7 +47,7 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
 
     @Override
     public void update(T object) {
-        List<T> allObjects = readAllObjects();
+        List<T> allObjects = getAll();
         boolean updated = false;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -71,7 +72,7 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
 
     @Override
     public T delete(int id) {
-        List<T> allObjects = readAllObjects();
+        List<T> allObjects = getAll();
         T removedObject = null;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -133,7 +134,8 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
         }
     }
 
-    private List<T> readAllObjects() {
+    @Override
+    public List<T> getAll() {
         List<T> objects = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -145,6 +147,23 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
             System.err.println("Error reading from file: " + e.getMessage());
         }
         return objects;
+    }
+
+
+    public List<T> findByCriteria(Predicate<T> predicate) {
+        List<T> matchingObjects = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                T object = createObjectFromString(line);
+                if (predicate.test(object)) {
+                    matchingObjects.add(object);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading from file: " + e.getMessage());
+        }
+        return matchingObjects;
     }
 
     protected abstract String convertObjectToString(T object);

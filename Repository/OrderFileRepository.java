@@ -14,7 +14,7 @@ public class OrderFileRepository extends FileRepository<Order> {
     public String orderedProductsFilename;
     public OrderFileRepository(String filename, String orderedProducts){
         super(filename);
-        this.orderedProductsFilename = orderedProductsFilename;
+        this.orderedProductsFilename = orderedProducts;
     }
 
     @Override

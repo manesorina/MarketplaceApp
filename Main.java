@@ -60,6 +60,12 @@ public class Main {
         adminRepo.create(a2);
         adminRepo.create(a3);
 
+        Visitor v1=new Visitor();
+        Visitor v2=new Visitor();
+
+        visitorRepo.create(v1);
+        visitorRepo.create(v2);
+
         List<Admin> admins = adminRepo.getAll();
         for (Admin admin: admins) {
             System.out.println(admin);
