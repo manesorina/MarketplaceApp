@@ -1,4 +1,11 @@
-import java.util.Arrays;
+import Controller.Controller;
+import Domain.*;
+import Presentation.ConsoleApp;
+import Repository.IMRepository;
+import Service.AdminService;
+import Service.UserService;
+import Service.VisitorService;
+
 import java.util.List;
 
 public class Main {
@@ -56,6 +63,8 @@ public class Main {
         userRepo.create(u2);
         userRepo.create(u3);
         userRepo.create(u4);
+
+
 
         List<User> users = userRepo.getAll();
         for (User user: users) {

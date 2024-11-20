@@ -6,7 +6,7 @@ The application is an online marketplace, where users can buy, sell, and review 
  
    ○ Reviewable User: A registered user who can list products for sale, make purchases, leave reviews, and receive notifications.
  
-   ○ Admin: Has higher privileges, including the ability to remove products, reviews, or other users.
+   ○ Domain.Admin: Has higher privileges, including the ability to remove products, reviews, or other users.
 
 2. Core functionalities include:
 
