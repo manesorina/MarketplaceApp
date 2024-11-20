@@ -1,5 +1,7 @@
 package Domain;
 
+import java.util.Objects;
+
 public class Offer implements Identifiable{
     private int id;
     private String message;
@@ -84,5 +86,18 @@ public class Offer implements Identifiable{
                 ", targetedProduct=" + targetedProduct +
                 ", accepted=" + accepted +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return Double.compare(offeredPrice, offer.offeredPrice) == 0 && targetedProduct == offer.targetedProduct && sender == offer.sender && receiver == offer.receiver && Objects.equals(message, offer.message) && Objects.equals(accepted, offer.accepted);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, offeredPrice, targetedProduct, accepted, sender, receiver);
     }
 }

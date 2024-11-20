@@ -5,7 +5,6 @@ import Domain.Product;
 public class ProductFileRepository extends FileRepository<Product> {
     public ProductFileRepository(String filepath){
         super(filepath);
-
     }
 
     protected String convertObjectToString(Product product){
@@ -45,7 +44,9 @@ public class ProductFileRepository extends FileRepository<Product> {
         Product product= new Product(name,color,size,price,brand,condition,nrViews,nrLikes,listedBy);
         product.setCategory(category);
         product.setId(id);
+        product.setAvailable(isAvailable);
         return product;
 
     }
+
 }

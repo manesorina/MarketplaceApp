@@ -160,11 +160,11 @@ public class ConsoleApp {
         System.out.println("1. Yes");
         System.out.println("2. No");
         int choice = scanner.nextInt();
-        while (true) {
+        while (choice != 0) {
             switch (choice) {
                 case 1 -> removeLike(liked, username, password);
                 case 2 -> {
-                    return;
+                    System.out.println(controller.userService.findByCriteriaHelper(username, password).getFavourites());
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }

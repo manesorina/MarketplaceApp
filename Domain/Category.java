@@ -1,5 +1,7 @@
 package Domain;
 
+import java.util.Objects;
+
 public class Category implements Identifiable {
     private int id;
     private CategoryName name;
@@ -31,5 +33,18 @@ public class Category implements Identifiable {
                 "id=" + id +
                 ", name=" + name +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return name == category.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }

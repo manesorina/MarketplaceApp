@@ -118,6 +118,9 @@ public class Main {
         productRepo.create(p6);
         productRepo.create(p7);
 
+        controller.addToUserListings("LisaTeak","xyz987", 1,
+                "Blouse", "blue", 34, 12.50, "Gucci", "worn", 0, 0);
+
         List<Product> products = productRepo.getAll();
         for (Product product: products) {
             System.out.println(product);

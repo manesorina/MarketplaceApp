@@ -1,5 +1,7 @@
 package Domain;
 
+import java.util.Objects;
+
 public class Product implements Identifiable{
 
     private int id;
@@ -140,6 +142,19 @@ public class Product implements Identifiable{
                 ", listedBy=" + listedBy +
                 ", available=" + available +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return size == product.size && Double.compare(price, product.price) == 0 && nrViews == product.nrViews && nrLikes == product.nrLikes && listedBy == product.listedBy && available == product.available && Objects.equals(name, product.name) && Objects.equals(color, product.color) && Objects.equals(brand, product.brand) && Objects.equals(condition, product.condition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, color, size, price, brand, condition, nrViews, nrLikes, listedBy, available);
     }
 }
 

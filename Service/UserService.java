@@ -100,6 +100,8 @@ public class UserService extends VisitorService {
                 offer.setStatus(true);
                 Product targetedProduct=productRepo.read(offer.getTargetedProduct());
                 targetedProduct.setPrice(offer.getOfferedPrice());
+                offerRepo.update(offer);
+                productRepo.update(targetedProduct);
                 return true;
             }
         }
@@ -120,6 +122,7 @@ public class UserService extends VisitorService {
             Offer offer=offerRepo.read(offerId);
             if(offer.getReceiver() == findByCriteriaHelper(sellerUsername, sellerPassword).getId()){
                 offer.setStatus(false);
+                offerRepo.update(offer);
                 return true;
             }
         }
@@ -213,6 +216,8 @@ public class UserService extends VisitorService {
             User buyer=findByCriteriaHelper(buyerUsername,buyerPassword);
             Map<Integer, List<Integer>> productsBySeller=new HashMap<>();
             for (Integer selectedProductsId : selectedProductsIds) {
+                System.out.println(selectedProductsId);
+                System.out.flush();
                 Product product = productRepo.read(selectedProductsId);
                 product.setAvailable(false);
                 productsBySeller.computeIfAbsent(product.getListedBy(), k -> new ArrayList<>()).add(selectedProductsId);
@@ -404,8 +409,10 @@ public class UserService extends VisitorService {
             Product product=productRepo.read(productId);
             if(product!=null && !user.getFavourites().contains(productId)){
                 user.getFavourites().add(productId);
+                userRepo.update(user);
                 int newNrOfLikes= product.getNrLikes()+1;
                 product.setNrLikes(newNrOfLikes);
+                productRepo.update(product);
                 return true;
             }
         }
@@ -429,6 +436,7 @@ public class UserService extends VisitorService {
             Product product=productRepo.read(productId);
             if(product!=null && user.getFavourites().contains(productId)){
                 user.getFavourites().remove(productId);
+                userRepo.update(user);
                 return true;
             }
 
@@ -486,6 +494,7 @@ public class UserService extends VisitorService {
             product.setCategory(category);
             productRepo.create(product);
             seller.getListedProducts().add(product.getId());
+            userRepo.update(seller);
             return true;
         }
         return false;

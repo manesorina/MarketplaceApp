@@ -1,6 +1,7 @@
 package Domain;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Order implements Identifiable{
     private int id;
@@ -82,5 +83,18 @@ public class Order implements Identifiable{
                 ", buyer=" + buyer +
                 ", seller=" + seller +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Double.compare(totalPrice, order.totalPrice) == 0 && buyer == order.buyer && seller == order.seller && Objects.equals(products, order.products) && Objects.equals(status, order.status) && Objects.equals(shippingAddress, order.shippingAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(products, status, totalPrice, shippingAddress, buyer, seller);
     }
 }

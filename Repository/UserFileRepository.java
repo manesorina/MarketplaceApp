@@ -6,7 +6,9 @@ import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class UserFileRepository extends FileRepository<User> {
@@ -50,13 +52,26 @@ public class UserFileRepository extends FileRepository<User> {
     @Override
     public void loadDataFromFile() {
         super.loadDataFromFile();
-        loadLikedProducts();
-        loadListedProducts();
+
+        loadLikedProducts().forEach((key, value) -> {
+            User u = super.read(key);
+            u.getFavourites().clear();
+            u.getFavourites().addAll(value);
+        });
+        loadListedProducts().forEach((key, value) -> {
+            User u = super.read(key);
+            u.getListedProducts().clear();
+            u.getListedProducts().addAll(value);
+        });
     }
 
-    private void loadLikedProducts() {
+    private Map<Integer, List<Integer>> loadLikedProducts() {
         try (BufferedReader reader = new BufferedReader(new FileReader(productsLikedByUserFilename))) {
             String line;
+            Map<Integer, List<Integer>>  likedProducts = new HashMap<>();
+            super.getAll().forEach(user -> {
+                likedProducts.put(user.getId(), new ArrayList<>());
+            });
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 int userId = Integer.parseInt(parts[0]);
@@ -64,17 +79,23 @@ public class UserFileRepository extends FileRepository<User> {
 
                 User user = super.read(userId);
                 if (user != null) {
-                    user.getFavourites().add(productId);
+                    likedProducts.get(userId).add(productId);
                 }
             }
+            return likedProducts;
         } catch (IOException e) {
             System.err.println("Error reading liked products: " + e.getMessage());
         }
+        return new HashMap<>();
     }
 
-    private void loadListedProducts() {
+    private Map<Integer, List<Integer>>  loadListedProducts() {
         try (BufferedReader reader = new BufferedReader(new FileReader(productsListedByUserFilename))) {
             String line;
+            Map<Integer, List<Integer>> listedProducts = new HashMap<>();
+            super.getAll().forEach(user -> {
+                listedProducts.put(user.getId(), new ArrayList<>());
+            });
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 int userId = Integer.parseInt(parts[0]);
@@ -82,11 +103,39 @@ public class UserFileRepository extends FileRepository<User> {
 
                 User user = super.read(userId);
                 if (user != null) {
-                    user.getListedProducts().add(productId);
+                    listedProducts.get(userId).add(productId);
+                }
+            }
+            return listedProducts;
+        } catch (IOException e) {
+            System.err.println("Error reading listed products: " + e.getMessage());
+        }
+        return new HashMap<>();
+    }
+
+    private void writeLikedProducts(Map<Integer, List<Integer>> likedProducts) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productsLikedByUserFilename))) {
+            for(Map.Entry<Integer, List<Integer>> entry : likedProducts.entrySet()) {
+                for(Integer productId : entry.getValue()) {
+                    writer.write(entry.getKey() + "," + productId);
+                    writer.newLine();
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading listed products: " + e.getMessage());
+            System.err.println("Error saving listed products: " + e.getMessage());
+        }
+    }
+
+    private void writeListedProducts(Map<Integer, List<Integer>> listedProducts) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productsListedByUserFilename))) {
+            for(Map.Entry<Integer, List<Integer>> entry : listedProducts.entrySet()) {
+                for(Integer productId : entry.getValue()) {
+                    writer.write(entry.getKey() + "," + productId);
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving listed products: " + e.getMessage());
         }
     }
 
@@ -105,26 +154,20 @@ public class UserFileRepository extends FileRepository<User> {
     }
 
     private void saveLikedProducts(User user) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productsLikedByUserFilename, true))) {
-            for (Integer productId : user.getFavourites()) {
-                writer.write(user.getId() + "," + productId);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving liked products: " + e.getMessage());
-        }
+
+        Map<Integer, List<Integer>> likedProducts = loadLikedProducts();
+        likedProducts.put(user.getId(), user.getFavourites());
+        writeLikedProducts(likedProducts);
     }
 
     private void saveListedProducts(User user) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productsListedByUserFilename, true))) {
-            for (Integer productId : user.getListedProducts()) {
-                writer.write(user.getId() + "," + productId);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving listed products: " + e.getMessage());
-        }
+
+        Map<Integer, List<Integer>> listedProducts = loadListedProducts();
+        listedProducts.put(user.getId(), user.getListedProducts());
+        writeListedProducts(listedProducts);
     }
+
+
 
     @Override
     public List<User> findByCriteria(Predicate<User> predicate) {
@@ -140,6 +183,32 @@ public class UserFileRepository extends FileRepository<User> {
         } catch (IOException e) {
             System.err.println("Error reading users for criteria search: " + e.getMessage());
         }
+
+        Map<Integer, List<Integer>> liked = loadLikedProducts();
+        Map<Integer, List<Integer>> listed = loadListedProducts();
+
+        matchingUsers.forEach(u->{
+            u.getFavourites().clear();
+            u.getFavourites().addAll(liked.get(u.getId()));
+            u.getListedProducts().clear();
+            u.getListedProducts().addAll(listed.get(u.getId()));
+        });
+
         return matchingUsers;
+    }
+
+    @Override
+    public List<User> getAll(){
+        List<User> users = super.getAll();
+        Map<Integer, List<Integer>> likedProducts = loadLikedProducts();
+        Map<Integer, List<Integer>> listedProducts = loadListedProducts();
+
+        users.forEach(user -> {
+            user.getFavourites().clear();
+            user.getFavourites().addAll(likedProducts.get(user.getId()));
+            user.getListedProducts().clear();
+            user.getListedProducts().addAll(listedProducts.get(user.getId()));
+        });
+        return users;
     }
 }

@@ -1,5 +1,7 @@
 package Domain;
 
+import java.util.Objects;
+
 public class Review implements Identifiable {
 
     private int id;
@@ -65,5 +67,18 @@ public class Review implements Identifiable {
                 ", reviewer=" + reviewer +
                 ", reviewee=" + reviewee +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Review review = (Review) o;
+        return Double.compare(grade, review.grade) == 0 && reviewer == review.reviewer && reviewee == review.reviewee && Objects.equals(message, review.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grade, message, reviewer, reviewee);
     }
 }

@@ -4,7 +4,9 @@ import Domain.Identifiable;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public abstract class FileRepository<T extends Identifiable> extends IMRepository<T> {
@@ -14,35 +16,38 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
     public FileRepository(String filename) {
         super();
         this.filename = filename;
-        //loadDataFromFile();
     }
 
     @Override
     public void create(T object) {
         System.out.println("Creating object: " + object);
-        if (exists(object)) {
-            throw new IllegalArgumentException("Duplicate object detected");
-        }
 
-        object.setId(currentId);
-        saveObjectToFile(object);
-        currentId++;
+        int existing_id = exists(object);
+
+        if (existing_id == 0) {
+            object.setId(currentId);
+            saveObjectToFile(object);
+            currentId++;
+        }
+        else
+            object.setId(existing_id);
+
     }
 
-    private boolean exists(T object) {
+    private int exists(T object) {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 T existingObject = createObjectFromString(line);
                 if (existingObject.equals(object)) {
-                    return true;
+                    return existingObject.getId();
                 }
             }
         } catch (IOException e) {
             System.err.println("Error reading from file: " + e.getMessage());
         }
-        return false;
+        return 0;
     }
 
     @Override
