@@ -7,11 +7,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class UserFileRepository extends FileRepository<User> {
     public String productsListedByUserFilename;
     public String productsLikedByUserFilename;
-    public UserFileRepository(String filename, String productsListedByUserFilename, String productsLikedByUserFilename) {
+    public UserFileRepository(String filename, String productsListedByUserFilename,
+                              String productsLikedByUserFilename) {
         super(filename);
         this.productsListedByUserFilename = productsListedByUserFilename;
         this.productsLikedByUserFilename = productsLikedByUserFilename;
@@ -122,5 +124,22 @@ public class UserFileRepository extends FileRepository<User> {
         } catch (IOException e) {
             System.err.println("Error saving listed products: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<User> findByCriteria(Predicate<User> predicate) {
+        List<User> matchingUsers = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(super.filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                User user = createObjectFromString(line);
+                if (predicate.test(user)) {
+                    matchingUsers.add(user);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading users for criteria search: " + e.getMessage());
+        }
+        return matchingUsers;
     }
 }

@@ -76,7 +76,7 @@ public class OrderFileRepository extends FileRepository<Order> {
         saveOrderedProducts(order);
     }
 
-    private void saveOrderedProducts(Order order) {
+    public void saveOrderedProducts(Order order) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderedProductsFilename, true))) {
             for (Integer productId : order.getProducts()) {
                 writer.write(order.getId() + "," + productId);
