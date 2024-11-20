@@ -60,6 +60,18 @@ public class Main {
         adminRepo.create(a2);
         adminRepo.create(a3);
 
+        Visitor v1=new Visitor();
+        Visitor v2=new Visitor();
+
+        visitorRepo.create(v1);
+        visitorRepo.create(v2);
+
+        List<Admin> admins = adminRepo.getAll();
+        for (Admin admin: admins) {
+            System.out.println(admin);
+        }
+        System.out.println();
+
         //Users
         User u1= new User("LisaTeak","xyz987","lisateak@gmail.com","0747558114",4.5);
         User u2= new User("TinaSilver","x1y2z3","tinasilver@gmail.com","0758669327",3.5);
@@ -70,6 +82,14 @@ public class Main {
         userRepo.create(u2);
         userRepo.create(u3);
         userRepo.create(u4);
+
+
+
+        List<User> users = userRepo.getAll();
+        for (User user: users) {
+            System.out.println(user);
+        }
+        System.out.println();
 
 
         //Products
@@ -97,6 +117,13 @@ public class Main {
         productRepo.create(p5);
         productRepo.create(p6);
         productRepo.create(p7);
+
+        List<Product> products = productRepo.getAll();
+        for (Product product: products) {
+            System.out.println(product);
+        }
+
+        System.out.println();
 
 
         //Offers
