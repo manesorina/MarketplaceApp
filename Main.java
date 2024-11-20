@@ -1,7 +1,7 @@
 import Controller.Controller;
 import Domain.*;
 import Presentation.ConsoleApp;
-import Repository.IMRepository;
+import Repository.*;
 import Service.AdminService;
 import Service.UserService;
 import Service.VisitorService;
@@ -11,13 +11,24 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        IMRepository<User> userRepo = new IMRepository<User>();
-        IMRepository<Admin> adminRepo = new IMRepository<Admin>();
-        IMRepository<Product> productRepo = new IMRepository<Product>();
-        IMRepository<Review> reviewRepo = new IMRepository<Review>();
-        IMRepository<Offer> offerRepo = new IMRepository<Offer>();
-        IMRepository<Order> orderRepo = new IMRepository<Order>();
-        IMRepository<Category> categoryRepo = new IMRepository<>();
+        String userFilename = "Repository/ObjectFiles/users.json";
+        String productFilename = "Repository/ObjectFiles/products.json";
+        String categoriesFilename = "Repository/ObjectFiles/categories.json";
+        String offersFilename = "Repository/ObjectFiles/offers.json";
+        String orderFilename = "Repository/ObjectFiles/orders.json";
+        String reviewsFilename = "Repository/ObjectFiles/reviews.json";
+        String adminsFilename = "Repository/ObjectFiles/admins.json";
+        String visitorsFilename = "Repository/ObjectFiles/visitors.json";
+        String likedProducts = "Repository/ObjectFiles/likedProducts.json";
+        String listedProducts = "Repository/ObjectFiles/listedProducts.json";
+        String orderedProducts = "Repository/ObjectFiles/orderedProducts.json";
+        UserFileRepository userRepo = new UserFileRepository(userFilename, listedProducts, likedProducts);
+        ProductFileRepository productRepo = new ProductFileRepository(productFilename);
+        CategoryFileRepository categoryRepo = new CategoryFileRepository(categoriesFilename);
+        OfferFileRepository offerRepo = new OfferFileRepository(offersFilename);
+        OrderFileRepository orderRepo = new OrderFileRepository(orderFilename, orderedProducts);
+        ReviewFileRepository reviewRepo = new ReviewFileRepository(reviewsFilename);
+        AdminFileRepository adminRepo = new AdminFileRepository(adminsFilename);
         VisitorService visitorService = new VisitorService(userRepo, productRepo, reviewRepo, categoryRepo);
         UserService userService = new UserService(userRepo, productRepo, reviewRepo, categoryRepo, orderRepo, offerRepo);
         AdminService adminService = new AdminService(userRepo, productRepo, reviewRepo, adminRepo, categoryRepo, orderRepo);
@@ -143,65 +154,67 @@ public class Main {
         controller.writeReview(u4.getUserName(),u4.getPassword(),4.5,"Very good",u2.getId());
         controller.writeReview(u2.getUserName(),u2.getPassword(), 1.0, "Terrible", u1.getId());
 
-        List<Review> reviews = reviewRepo.getAll();
-        for (Review review: reviews) {
-            System.out.println(review);
-        }
-        System.out.println();
+//        List<Review> reviews = reviewRepo.getAll();
+//        for (Review review: reviews) {
+//            System.out.println(review);
+//        }
+//        System.out.println();
+//
+//        //flagged actions
+//        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p5.getId(),categoryOuterwear.getId());
+//        controller.adminService.deleteProduct(a1.getUserName(),a1.getPassword(),p7.getId());
+//        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p6.getId(),categoryBottoms.getId());
+//        controller.adminService.deleteReview(a1.getUserName(),a1.getPassword(),3);
+//
+//        System.out.println("Products after deletion and category modification: ");
+//        List<Product> products2=productRepo.getAll();
+//        for (Product product: products2) {
+//            System.out.println(product);
+//        }
+//        System.out.println();
+//
+//        System.out.println("Reviews after deletion: ");
+//        List<Review> reviews2 = reviewRepo.getAll();
+//        for (Review review: reviews2) {
+//            System.out.println(review);
+//        }
+//        System.out.println();
+//
+//        System.out.println("Average acceptance rate: ");
+//        System.out.println("User1: ");
+//        System.out.println(controller.getUserAverageAcceptanceRate(u1.getId()));
+//        System.out.println("User2: ");
+//        System.out.println(controller.getUserAverageAcceptanceRate(u2.getId()));
+//
+//        System.out.println();
+//        System.out.println(controller.getUserTrustScore(u2.getId()));
+//        System.out.println(controller.getUsersTotalNrOfSales(u2.getId()));
+//        System.out.println(controller.getUserPositiveReviews(u2.getId()));
+//        System.out.println(controller.getUserNegativeReviews(u2.getId()));
+//        System.out.println(controller.getFlaggedActions(u2.getId()));
+//        System.out.println();
+//
+//        System.out.println("Complex method that entails three entities(Product, Order, Category)");
+//        System.out.println(adminService.sortCategoriesByIncome());
+//        System.out.println();
+//
+//        System.out.println("Filter users by name: ");
+//        System.out.println(controller.filterUsersByName("lisa"));
+//        System.out.println();
+//
+//        System.out.println("Filter products by color: ");
+//        System.out.println(controller.filterProductsByColor("black"));
+//        System.out.println();
+//
+//        System.out.println("Sort products by price descending: ");
+//        System.out.println(controller.sortProducts(1,2));
+//        System.out.println();
+//
+//        System.out.println("Sort products by size ascending: ");
+//        System.out.println(controller.sortProducts(3,1));
+//        System.out.println();
 
-        //flagged actions
-        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p5.getId(),categoryOuterwear.getId());
-        controller.adminService.deleteProduct(a1.getUserName(),a1.getPassword(),p7.getId());
-        controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p6.getId(),categoryBottoms.getId());
-        controller.adminService.deleteReview(a1.getUserName(),a1.getPassword(),3);
-
-        System.out.println("Products after deletion and category modification: ");
-        List<Product> products2=productRepo.getAll();
-        for (Product product: products2) {
-            System.out.println(product);
-        }
-        System.out.println();
-
-        System.out.println("Reviews after deletion: ");
-        List<Review> reviews2 = reviewRepo.getAll();
-        for (Review review: reviews2) {
-            System.out.println(review);
-        }
-        System.out.println();
-
-        System.out.println("Average acceptance rate: ");
-        System.out.println("User1: ");
-        System.out.println(controller.getUserAverageAcceptanceRate(u1.getId()));
-        System.out.println("User2: ");
-        System.out.println(controller.getUserAverageAcceptanceRate(u2.getId()));
-
-        System.out.println();
-        System.out.println(controller.getUserTrustScore(u2.getId()));
-        System.out.println(controller.getUsersTotalNrOfSales(u2.getId()));
-        System.out.println(controller.getUserPositiveReviews(u2.getId()));
-        System.out.println(controller.getUserNegativeReviews(u2.getId()));
-        System.out.println(controller.getFlaggedActions(u2.getId()));
-        System.out.println();
-
-        System.out.println("Complex method that entails three entities(Product, Order, Category)");
-        System.out.println(adminService.sortCategoriesByIncome());
-        System.out.println();
-
-        System.out.println("Filter users by name: ");
-        System.out.println(controller.filterUsersByName("lisa"));
-        System.out.println();
-
-        System.out.println("Filter products by color: ");
-        System.out.println(controller.filterProductsByColor("black"));
-        System.out.println();
-
-        System.out.println("Sort products by price descending: ");
-        System.out.println(controller.sortProducts(1,2));
-        System.out.println();
-
-        System.out.println("Sort products by size ascending: ");
-        System.out.println(controller.sortProducts(3,1));
-        System.out.println();
+        console.start();
 
 
     }

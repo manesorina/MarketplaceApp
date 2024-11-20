@@ -2,115 +2,125 @@ package Repository;
 
 import Domain.User;
 
-import java.io.BufferedReader;
+import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserFileRepository extends FileRepository<User> {
-
-    public UserFileRepository(String filename) {
+    public String productsListedByUserFilename;
+    public String productsLikedByUserFilename;
+    public UserFileRepository(String filename, String productsListedByUserFilename, String productsLikedByUserFilename) {
         super(filename);
+        this.productsListedByUserFilename = productsListedByUserFilename;
+        this.productsLikedByUserFilename = productsLikedByUserFilename;
     }
 
     @Override
     protected String convertObjectToString(User user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(user.getId()).append(",")
-                .append(user.getUserName()).append(",")
-                .append(user.getPassword()).append(",")
-                .append(user.getEmail()).append(",")
-                .append(user.getPhone()).append(",")
-                .append(user.getScore()).append(",")
-                .append(user.nrOfFlaggedActions).append("\n");
-
-        for (Integer favourite : user.getFavourites()) {
-            sb.append(user.getId()).append(",FAV,").append(favourite).append("\n");
-        }
-
-        for (Integer listedProduct : user.getListedProducts()) {
-            sb.append(user.getId()).append(",LISTED,").append(listedProduct).append("\n");
-        }
-
-        return sb.toString().trim();
+        return user.getId() + "," +
+                user.getUserName() + "," +
+                user.getPassword() + "," +
+                user.getEmail() + "," +
+                user.getPhone() + "," +
+                user.getScore() + "," +
+                user.nrOfFlaggedActions;
     }
 
     @Override
     protected User createObjectFromString(String line) {
         String[] parts = line.split(",");
         int id = Integer.parseInt(parts[0]);
+        String username = parts[1];
+        String password = parts[2];
+        String email = parts[3];
+        String phone = parts[4];
+        double score = Double.parseDouble(parts[5]);
+        int flaggedActions = Integer.parseInt(parts[6]);
 
-        if (parts.length == 3 && "FAV".equals(parts[1])) {
-            int productId = Integer.parseInt(parts[2]);
-            User user = new User("", "", "", "", 0.0);
-            user.setId(id);
-            user.getFavourites().add(productId);
-            return user;
-        } else if (parts.length == 3 && "LISTED".equals(parts[1])) {
-            int productId = Integer.parseInt(parts[2]);
-            User user = new User("", "", "", "", 0.0);
-            user.setId(id);
-            user.getListedProducts().add(productId);
-            return user;
-        } else {
-            String username = parts[1];
-            String password = parts[2];
-            String email = parts[3];
-            String phone = parts[4];
-            double score = Double.parseDouble(parts[5]);
-            int flaggedActions = Integer.parseInt(parts[6]);
-
-            User user = new User(username, password, email, phone, score);
-            user.setId(id);
-            user.nrOfFlaggedActions = flaggedActions;
-            return user;
-        }
+        User user = new User(username, password, email, phone, score);
+        user.setId(id);
+        user.nrOfFlaggedActions = flaggedActions;
+        return user;
     }
 
     @Override
     public void loadDataFromFile() {
-        List<String> lines = readAllLines();
-        List<User> users = new ArrayList<>();
-
-        for (String line : lines) {
-            User partialUser = createObjectFromString(line);
-
-            User existingUser = findUserById(users, partialUser.getId());
-            if (existingUser == null) {
-                users.add(partialUser);
-            } else {
-                existingUser.getFavourites().addAll(partialUser.getFavourites());
-                existingUser.getListedProducts().addAll(partialUser.getListedProducts());
-            }
-        }
-        for (User user : users) {
-            if (user.getId() >= currentId) {
-                currentId = user.getId() + 1;
-            }
-            super.create(user);
-        }
+        super.loadDataFromFile();
+        loadLikedProducts();
+        loadListedProducts();
     }
 
-    private List<String> readAllLines() {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+    private void loadLikedProducts() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(productsLikedByUserFilename))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                lines.add(line);
+                String[] parts = line.split(",");
+                int userId = Integer.parseInt(parts[0]);
+                int productId = Integer.parseInt(parts[1]);
+
+                User user = super.read(userId);
+                if (user != null) {
+                    user.getFavourites().add(productId);
+                }
             }
         } catch (IOException e) {
-            System.err.println("Error reading from file: " + e.getMessage());
+            System.err.println("Error reading liked products: " + e.getMessage());
         }
-        return lines;
     }
 
-    private User findUserById(List<User> users, int userId) {
-        for (User user : users) {
-            if (user.getId() == userId) {
-                return user;
+    private void loadListedProducts() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(productsListedByUserFilename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                int userId = Integer.parseInt(parts[0]);
+                int productId = Integer.parseInt(parts[1]);
+
+                User user = super.read(userId);
+                if (user != null) {
+                    user.getListedProducts().add(productId);
+                }
             }
+        } catch (IOException e) {
+            System.err.println("Error reading listed products: " + e.getMessage());
         }
-        return null;
+    }
+
+    @Override
+    public void create(User user) {
+        super.create(user);
+        saveLikedProducts(user);
+        saveListedProducts(user);
+    }
+
+    @Override
+    public void update(User user) {
+        super.update(user);
+        saveLikedProducts(user);
+        saveListedProducts(user);
+    }
+
+    private void saveLikedProducts(User user) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productsLikedByUserFilename, true))) {
+            for (Integer productId : user.getFavourites()) {
+                writer.write(user.getId() + "," + productId);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving liked products: " + e.getMessage());
+        }
+    }
+
+    private void saveListedProducts(User user) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productsListedByUserFilename, true))) {
+            for (Integer productId : user.getListedProducts()) {
+                writer.write(user.getId() + "," + productId);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving listed products: " + e.getMessage());
+        }
     }
 }

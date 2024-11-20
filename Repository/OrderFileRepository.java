@@ -2,7 +2,7 @@ package Repository;
 
 import Domain.Order;
 
-import java.io.BufferedReader;
+import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,87 +11,80 @@ import java.util.List;
 import static java.nio.file.Files.readAllLines;
 
 public class OrderFileRepository extends FileRepository<Order> {
-
-    public OrderFileRepository(String filename){
+    public String orderedProductsFilename;
+    public OrderFileRepository(String filename, String orderedProducts){
         super(filename);
+        this.orderedProductsFilename = orderedProductsFilename;
     }
 
-    public String convertObjectToString(Order order){
-        StringBuilder sb = new StringBuilder();
-        for (Integer productId : order.getProducts()) {
-            sb.append(order.getId()).append(",")
-                    .append(productId).append(",")
-                    .append(order.getStatus()).append(",")
-                    .append(order.getTotalPrice()).append(",")
-                    .append(order.getShippingAddress()).append(",")
-                    .append(order.getBuyer()).append(",")
-                    .append(order.getSeller()).append("\n");
-        }
-        return sb.toString().trim();
-
+    @Override
+    protected String convertObjectToString(Order order) {
+        return order.getId() + "," +
+                order.getStatus() + "," +
+                order.getTotalPrice() + "," +
+                order.getShippingAddress() + "," +
+                order.getBuyer() + "," +
+                order.getSeller();
     }
 
-    public Order createObjectFromString(String line){
+    @Override
+    protected Order createObjectFromString(String line) {
         String[] parts = line.split(",");
         int orderId = Integer.parseInt(parts[0]);
-        int productId = Integer.parseInt(parts[1]);
-        String status = parts[2];
-        double totalPrice = Double.parseDouble(parts[3]);
-        String shippingAddress = parts[4];
-        int buyer = Integer.parseInt(parts[5]);
-        int seller = Integer.parseInt(parts[6]);
+        String status = parts[1];
+        double totalPrice = Double.parseDouble(parts[2]);
+        String shippingAddress = parts[3];
+        int buyer = Integer.parseInt(parts[4]);
+        int seller = Integer.parseInt(parts[5]);
 
-        Order order = new Order(new ArrayList<>(), status, shippingAddress, buyer, seller);
-        order.setId(orderId);
-        order.setTotalPrice(totalPrice);
-        order.getProducts().add(productId);
-        return order;
+        return new Order(new ArrayList<>(), status, shippingAddress, buyer, seller);
     }
 
     @Override
     public void loadDataFromFile() {
-        List<String> lines = readAllLines();
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders = super.getAll();
+        loadOrderedProducts(orders);
+    }
 
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            int orderId = Integer.parseInt(parts[0]);
-            int productId = Integer.parseInt(parts[1]);
-            String status = parts[2];
-            double totalPrice = Double.parseDouble(parts[3]);
-            String shippingAddress = parts[4];
-            int buyer = Integer.parseInt(parts[5]);
-            int seller = Integer.parseInt(parts[6]);
+    private void loadOrderedProducts(List<Order> orders) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(orderedProductsFilename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                int orderId = Integer.parseInt(parts[0]);
+                int productId = Integer.parseInt(parts[1]);
 
-            Order existingOrder = findOrderById(orders, orderId);
-            if (existingOrder == null) {
-                existingOrder = new Order(new ArrayList<>(), status, shippingAddress, buyer, seller);
-                existingOrder.setId(orderId);
-                existingOrder.setTotalPrice(totalPrice);
-                orders.add(existingOrder);
+                Order order = findOrderById(orders, orderId);
+                if (order != null) {
+                    order.getProducts().add(productId);
+                }
             }
-            existingOrder.getProducts().add(productId);
-        }
-
-        for (Order order : orders) {
-            if (order.getId() >= currentId) {
-                currentId = order.getId() + 1;
-            }
-            super.create(order);
+        } catch (IOException e) {
+            System.err.println("Error reading ordered products: " + e.getMessage());
         }
     }
 
-    private List<String> readAllLines() {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
+    @Override
+    public void create(Order order) {
+        super.create(order);
+        saveOrderedProducts(order);
+    }
+
+    @Override
+    public void update(Order order) {
+        super.update(order);
+        saveOrderedProducts(order);
+    }
+
+    private void saveOrderedProducts(Order order) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderedProductsFilename, true))) {
+            for (Integer productId : order.getProducts()) {
+                writer.write(order.getId() + "," + productId);
+                writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Error reading from file: " + e.getMessage());
+            System.err.println("Error saving ordered products: " + e.getMessage());
         }
-        return lines;
     }
 
     private Order findOrderById(List<Order> orders, int orderId) {
