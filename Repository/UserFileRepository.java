@@ -5,7 +5,7 @@ import Domain.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserFileRepository extends FMRepository<User> {
+public class UserFileRepository extends FileRepository<User> {
 
     public UserFileRepository(String filename) {
         super(filename);

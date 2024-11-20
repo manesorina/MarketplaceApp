@@ -2,7 +2,7 @@ package Repository;
 
 import Domain.Offer;
 
-public class OfferFileRepository extends FMRepository<Offer>{
+public class OfferFileRepository extends FileRepository<Offer> {
 
     public OfferFileRepository(String filename){
         super(filename);

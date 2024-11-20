@@ -2,7 +2,7 @@ package Repository;
 
 import Domain.Product;
 
-public class ProductFileRepository extends FMRepository<Product>{
+public class ProductFileRepository extends FileRepository<Product> {
 
     public ProductFileRepository(String filepath){
         super(filepath);

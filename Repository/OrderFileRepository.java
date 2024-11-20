@@ -5,7 +5,7 @@ import Domain.Order;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderFileRepository extends FMRepository<Order> {
+public class OrderFileRepository extends FileRepository<Order> {
 
     public OrderFileRepository(String filename){
         super(filename);

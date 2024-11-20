@@ -14,14 +14,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String userFilename = "Repository/users.json";
-        String productFilename = "Repository/products.json";
-        String categoriesFilename= "Repository/categories.json";
-        String offersFilename= "Repository/offers.json";
-        String orderFilename= "Repository/orders.json";
-        String reviewsFilename= "Repository/reviews.json";
-        String adminsFilename= "Repository/admins.json";
-        String visitorsFilename= "Repository/visitors.json";
+        String userFilename = "Repository/ObjectFiles/users.json";
+        String productFilename = "Repository/ObjectFiles/products.json";
+        String categoriesFilename= "Repository/ObjectFiles/categories.json";
+        String offersFilename= "Repository/ObjectFiles/offers.json";
+        String orderFilename= "Repository/ObjectFiles/orders.json";
+        String reviewsFilename= "Repository/ObjectFiles/reviews.json";
+        String adminsFilename= "Repository/ObjectFiles/admins.json";
+        String visitorsFilename= "Repository/ObjectFiles/visitors.json";
 
 
         IMRepository<User> userRepo = new IMRepository<User>();

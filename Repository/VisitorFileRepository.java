@@ -2,7 +2,7 @@ package Repository;
 
 import Domain.Visitor;
 
-public class VisitorFileRepository extends FMRepository<Visitor>{
+public class VisitorFileRepository extends FileRepository<Visitor> {
 
     public VisitorFileRepository(String filename){
         super(filename);

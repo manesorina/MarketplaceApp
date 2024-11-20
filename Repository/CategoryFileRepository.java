@@ -3,7 +3,7 @@ package Repository;
 import Domain.Category;
 import Domain.CategoryName;
 
-public class CategoryFileRepository extends FMRepository<Category>{
+public class CategoryFileRepository extends FileRepository<Category> {
 
     public CategoryFileRepository(String filename){
         super(filename);

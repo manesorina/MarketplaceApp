@@ -2,7 +2,7 @@ package Repository;
 
 import Domain.Review;
 
-public class ReviewFileRepository extends FMRepository<Review>{
+public class ReviewFileRepository extends FileRepository<Review> {
 
     public ReviewFileRepository(String filename){
         super(filename);
