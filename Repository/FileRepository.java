@@ -6,11 +6,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FileRepository<T extends Identifiable> extends IMRepository<T> {
-    private final String filename;
+public abstract class FMRepository<T extends Identifiable> extends IMRepository<T> {
+    public final String filename;
 
 
-    public FileRepository(String filename) {
+    public FMRepository(String filename) {
         super();
         this.filename = filename;
         loadDataFromFile();
@@ -110,7 +110,7 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
         return null;
     }
 
-    private void loadDataFromFile() {
+    public void loadDataFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
