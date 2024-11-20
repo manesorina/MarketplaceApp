@@ -2,6 +2,7 @@ package Repository;
 
 import Domain.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -34,8 +35,8 @@ public class Main {
 
         Visitor visitor1=new Visitor();
         Visitor visitor2=new Visitor();
-        //fileVisitorRepo.create(visitor1);
-        //fileVisitorRepo.create(visitor2);
+        fileVisitorRepo.create(visitor1);
+        fileVisitorRepo.create(visitor2);
 
 
 
@@ -43,8 +44,8 @@ public class Main {
         Admin admin1=new Admin("Jack Black","qwert","jackblack@email.com","0789663221");
         Admin admin2=new Admin("Emma Steel","azsxdc","emmastee@email.com","0784557441");
 
-        //fileAdminRepo.create(admin1);
-        //fileAdminRepo.create(admin2);
+        fileAdminRepo.create(admin1);
+        fileAdminRepo.create(admin2);
 
 
 
@@ -84,31 +85,31 @@ public class Main {
         fileCategoryRepo.create(categoryBottoms);
 
 
-        //product1.setCategory(categoryTops.getId());
-        //product3.setCategory(categoryTops.getId());
-        //product2.setCategory(categoryBottoms.getId());
-        //product4.setCategory(categoryBottoms.getId());
-        //product5.setCategory(categoryTops.getId());
+        product1.setCategory(categoryTops.getId());
+        product3.setCategory(categoryTops.getId());
+        product2.setCategory(categoryBottoms.getId());
+        product4.setCategory(categoryBottoms.getId());
+        product5.setCategory(categoryTops.getId());
 
 
 
 
-       // user1.getFavourites().add(product3.getId());
-       // user1.getListedProducts().addAll(Arrays.asList(product1.getId(),product2.getId()));
+        user1.getFavourites().add(product3.getId());
+        user1.getListedProducts().addAll(Arrays.asList(product1.getId(),product2.getId()));
 
-       // user2.getFavourites().add(product1.getId());
-       // user2.getListedProducts().addAll(Arrays.asList(product3.getId(),product4.getId()));
+        user2.getFavourites().add(product1.getId());
+        user2.getListedProducts().addAll(Arrays.asList(product3.getId(),product4.getId()));
 
-        //fileProductRepo.create(product1);
-        //fileProductRepo.create(product2);
-        //fileProductRepo.create(product3);
-        //fileProductRepo.create(product4);
-        //fileProductRepo.create(product5);
-        //fileUserRepo.create(user1);
+        fileProductRepo.create(product1);
+        fileProductRepo.create(product2);
+        fileProductRepo.create(product3);
+        fileProductRepo.create(product4);
+        fileProductRepo.create(product5);
+        fileUserRepo.create(user1);
 
-        //fileUserRepo.create(user2);
-        //fileUserRepo.create(user3);
-        //fileUserRepo.create(user4);
+        fileUserRepo.create(user2);
+        fileUserRepo.create(user3);
+        fileUserRepo.create(user4);
 
         System.out.println("User  1 ID: " + user1.getId());
 
@@ -123,8 +124,8 @@ public class Main {
         Offer offer1=new Offer("Would you consider 18.00 for this?",18.00,product1.getId(),user4.getId(),user1.getId());
         Offer offer2=new Offer("Would you take 7.50 for this?",7.50,product3.getId(),user3.getId(),user2.getId());
 
-        //fileOfferRepo.create(offer1);
-        //fileOfferRepo.create(offer2);
+        fileOfferRepo.create(offer1);
+        fileOfferRepo.create(offer2);
 
 
         List<Integer> orderedProducts1 = List.of(product3.getId());
@@ -135,27 +136,27 @@ public class Main {
         Order order2=new Order(orderedProducts2,"shipped","Strada xyz",user4.getId(),user2.getId());
 
 
-        //fileOrderRepo.create(order1);
-        //fileOrderRepo.create(order2);
+        fileOrderRepo.create(order1);
+        fileOrderRepo.create(order2);
 
 
         Review review1=new Review(3.6,"Acceptable service",user3.getId(),user2.getId());
         Review review2=new Review(4.0,"Good service",user4.getId(),user2.getId());
 
-        //fileReviewRepo.create(review1);
-        //fileReviewRepo.create(review2);
+        fileReviewRepo.create(review1);
+        fileReviewRepo.create(review2);
 
 
-        //fileProductRepo.delete(product4.getId());
+        fileProductRepo.delete(product4.getId());
 
         //fileProductRepo.update(user1.getListedProducts().getFirst());
        // user1.getFavourites().add(product3.getId());
         //fileUserRepo.update(user1.getListedProducts().addAll(Arrays.asList(product1.getId(),product2.getId()));
 
-        Product product6 = new Product( "Winter Top", "Blue", 32, 10.99, "BrandB", "Used", 150, 25, user2.getId());
-        product6.setCategory(categoryTops.getId());
-        fileProductRepo.create(product6);
-        System.out.println(product6.getListedBy());
+        //Product product6 = new Product( "Winter Top", "Blue", 32, 10.99, "BrandB", "Used", 150, 25, user2.getId());
+        //product6.setCategory(categoryTops.getId());
+        //fileProductRepo.create(product6);
+        //System.out.println(product6.getListedBy());
 
 
 
