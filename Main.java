@@ -148,7 +148,7 @@ public class Main {
         }
         System.out.println();
 
-        //falgged actions
+        //flagged actions
         controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p5.getId(),categoryOuterwear.getId());
         controller.adminService.deleteProduct(a1.getUserName(),a1.getPassword(),p7.getId());
         controller.adminService.updateCategory(a1.getUserName(),a1.getPassword(),p6.getId(),categoryBottoms.getId());
@@ -180,10 +180,27 @@ public class Main {
         System.out.println(controller.getUserPositiveReviews(u2.getId()));
         System.out.println(controller.getUserNegativeReviews(u2.getId()));
         System.out.println(controller.getFlaggedActions(u2.getId()));
+        System.out.println();
 
+        System.out.println("Complex method that entails three entities(Product, Order, Category)");
         System.out.println(adminService.sortCategoriesByIncome());
+        System.out.println();
 
+        System.out.println("Filter users by name: ");
+        System.out.println(controller.filterUsersByName("lisa"));
+        System.out.println();
 
+        System.out.println("Filter products by color: ");
+        System.out.println(controller.filterProductsByColor("black"));
+        System.out.println();
+
+        System.out.println("Sort products by price descending: ");
+        System.out.println(controller.sortProducts(1,2));
+        System.out.println();
+
+        System.out.println("Sort products by size ascending: ");
+        System.out.println(controller.sortProducts(3,1));
+        System.out.println();
 
 
     }
