@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class FMRepository<T extends Identifiable> extends IMRepository<T> {
     private final String filename;
-    private int currentId;
+
 
     public FMRepository(String filename) {
         super();

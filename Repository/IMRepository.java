@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class IMRepository<T extends Identifiable> implements IRepository<T> {
     private final Map<Integer, T> storage = new HashMap<>();
-    private int currentId = 1;
+    public int currentId = 1;
 
     @Override
     public void create(T object) {

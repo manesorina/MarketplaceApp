@@ -13,7 +13,7 @@ public class UserFileRepository extends FMRepository<User> {
 
     @Override
     protected String convertObjectToString(User user) {
-        String serialized= user.getId() + "," +   //product.getCategory() + "," +
+        String serialized= user.getId() + "," +
                 user.getUserName() + "," +
                 user.getPassword() + "," +
                 user.getEmail() + "," +
@@ -66,7 +66,7 @@ public class UserFileRepository extends FMRepository<User> {
         List<Integer> ids = new ArrayList<>();
         for (String id : idArray) {
             if (!id.trim().isEmpty()) {
-                ids.add(Integer.parseInt(id.trim()));
+                ids.add(Integer.parseInt(id));
             }
         }
         System.out.println("Parsed IDs: " + ids);
