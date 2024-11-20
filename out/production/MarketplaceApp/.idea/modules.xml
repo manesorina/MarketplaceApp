@@ -2,17 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Controller/Controller.iml" filepath="$PROJECT_DIR$/Controller/Controller.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Domain/Domain.iml" filepath="$PROJECT_DIR$/Domain/Domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Account/Domain_Account.iml" filepath="$PROJECT_DIR$/Domain_Account/Domain_Account.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Admin/Domain_Admin.iml" filepath="$PROJECT_DIR$/Domain_Admin/Domain_Admin.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Object/Domain_Object.iml" filepath="$PROJECT_DIR$/Domain_Object/Domain_Object.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Review/Domain_Review.iml" filepath="$PROJECT_DIR$/Domain_Review/Domain_Review.iml" />
       <module fileurl="file://$PROJECT_DIR$/Domain_Visitor/Domain_Visitor.iml" filepath="$PROJECT_DIR$/Domain_Visitor/Domain_Visitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MarketplaceApp.iml" filepath="$PROJECT_DIR$/.idea/MarketplaceApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Presentation/Presentation.iml" filepath="$PROJECT_DIR$/Presentation/Presentation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Repository/Repository.iml" filepath="$PROJECT_DIR$/Repository/Repository.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Service/Service.iml" filepath="$PROJECT_DIR$/Service/Service.iml" />
     </modules>
   </component>
 </project>

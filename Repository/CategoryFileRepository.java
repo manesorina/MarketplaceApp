@@ -1,6 +1,7 @@
 package Repository;
 
 import Domain.Category;
+import Domain.CategoryName;
 
 public class CategoryFileRepository extends FMRepository<Category>{
 
