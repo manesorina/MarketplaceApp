@@ -10,7 +10,7 @@ import java.util.List;
 
 import static java.nio.file.Files.readAllLines;
 
-public class OrderFileRepository extends FMRepository<Order> {
+public class OrderFileRepository extends FileRepository<Order> {
 
     public OrderFileRepository(String filename){
         super(filename);

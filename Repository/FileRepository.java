@@ -6,11 +6,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FMRepository<T extends Identifiable> extends IMRepository<T> {
+public abstract class FileRepository<T extends Identifiable> extends IMRepository<T> {
     public final String filename;
 
 
-    public FMRepository(String filename) {
+    public FileRepository(String filename) {
         super();
         this.filename = filename;
         loadDataFromFile();
