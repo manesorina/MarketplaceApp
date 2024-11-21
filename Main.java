@@ -7,6 +7,7 @@ import Service.UserService;
 import Service.VisitorService;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -94,32 +95,25 @@ public class Main {
 
         //Products
 
-        Product p1 = new Product("Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0, 1);
-        Product p2 = new Product("Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0, 1);
-        Product p3 = new Product("Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0, 2);
-        Product p4 = new Product("Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0, 2);
-        Product p5 = new Product("Coat", "black", 44, 40.00, "Carhartt", "Bad", 0, 0, 2);
-        Product p6 = new Product("Skirt", "pink", 36, 15.00, "Orsay", "New", 0, 0, 2);
-        Product p7 = new Product("Dress", "purple", 38, 50.00, "C&A", "Worn", 0, 0, 2);
 
-        p1.setCategory(categoryShoes.getId());
-        p2.setCategory(categoryAccessories.getId());
-        p3.setCategory(categoryOuterwear.getId());
-        p4.setCategory(categoryBottoms.getId());
-        p5.setCategory(categoryTops.getId());
-        p6.setCategory(categoryAccessories.getId());
-        p7.setCategory(categoryOuterwear.getId());
+        userService.listProduct(u1.getUserName(),u1.getPassword(),categoryShoes.getId(),"Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0);
+        userService.listProduct(u1.getUserName(),u1.getPassword(),categoryAccessories.getId(),"Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0);
+        userService.listProduct(u2.getUserName(),u2.getPassword(),categoryOuterwear.getId(),"Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0);
+        userService.listProduct(u2.getUserName(),u2.getPassword(),categoryBottoms.getId(),"Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0);
+        userService.listProduct(u2.getUserName(),u2.getPassword(),categoryTops.getId(),"Coat", "black", 44, 40.00, "Carhartt", "Bad", 0, 0);
+        userService.listProduct(u2.getUserName(),u2.getPassword(),categoryAccessories.getId(),"Skirt", "pink", 36, 15.00, "Orsay", "New", 0, 0);
+        userService.listProduct(u2.getUserName(),u2.getPassword(),categoryOuterwear.getId(),"Dress", "purple", 38, 50.00, "C&A", "Worn", 0, 0);
 
-        productRepo.create(p1);
-        productRepo.create(p2);
-        productRepo.create(p3);
-        productRepo.create(p4);
-        productRepo.create(p5);
-        productRepo.create(p6);
-        productRepo.create(p7);
 
-        controller.addToUserListings("LisaTeak","xyz987", 1,
-                "Blouse", "blue", 34, 12.50, "Gucci", "worn", 0, 0);
+
+        controller.addToUserListings(u1.getUserName(),u1.getPassword(),categoryShoes.getId(),"Sandals", "white", 39, 14.35, "Birkenstock", "New", 0, 0);
+        controller.addToUserListings(u1.getUserName(),u1.getPassword(),categoryAccessories.getId(),"Sunglasses", "black", 0, 29.99, "Ray-Ban", "New", 0, 0);
+        controller.addToUserListings(u2.getUserName(),u2.getPassword(),categoryOuterwear.getId(),"Blazer", "navy", 44, 30.00, "Zara", "Good", 0, 0);
+        controller.addToUserListings(u2.getUserName(),u2.getPassword(),categoryBottoms.getId(),"Shorts", "beige", 34, 7.49, "Nike", "Good", 0, 0);
+        controller.addToUserListings(u2.getUserName(),u2.getPassword(),categoryTops.getId(),"Coat", "black", 44, 40.00, "Carhartt", "Bad", 0, 0);
+        controller.addToUserListings(u2.getUserName(),u2.getPassword(),categoryAccessories.getId(),"Skirt", "pink", 36, 15.00, "Orsay", "New", 0, 0);
+        controller.addToUserListings(u2.getUserName(),u2.getPassword(),categoryOuterwear.getId(),"Dress", "purple", 38, 50.00, "C&A", "Worn", 0, 0);
+
 
         List<Product> products = productRepo.getAll();
         for (Product product: products) {
@@ -131,10 +125,10 @@ public class Main {
 
         //Offers
 
-        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p1.getId(),14.00);
-        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",p2.getId(),28.00);
-        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p3.getId(),28.00);
-        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",p4.getId(),7.00);
+        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",1,14.00);
+        controller.userService.sendOffer(u3.getUserName(),u3.getPassword(),"Would you consider..",2,28.00);
+        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",3,28.00);
+        controller.userService.sendOffer(u4.getUserName(),u4.getPassword(),"Would you consider..",4,7.00);
 
 
         controller.userService.declineOffer(u1.getUserName(),u1.getPassword(),1);
@@ -148,9 +142,13 @@ public class Main {
 
         //orders
 
-        controller.userService.placeOrder(u3.getUserName(),u3.getPassword(), List.of(p1.getId()), "sent", "StradaX");
-        controller.userService.placeOrder(u4.getUserName(),u4.getPassword(), List.of(p3.getId(), p4.getId()), "sent", "StradaY");
-        controller.userService.placeOrder(u2.getUserName(),u2.getPassword(), List.of(p2.getId()), "sent", "StradaX");
+        controller.userService.placeOrder(u3.getUserName(),u3.getPassword(), List.of(1), "sent", "StradaX");
+
+        List<Integer> orderedProducts4=new ArrayList<>();
+        orderedProducts4.add(3);
+        orderedProducts4.add(4);
+        controller.userService.placeOrder(u4.getUserName(),u4.getPassword(), orderedProducts4, "sent", "StradaY");
+        controller.userService.placeOrder(u2.getUserName(),u2.getPassword(), List.of(2), "sent", "StradaX");
 
         List<Order> orders = orderRepo.getAll();
         for (Order order: orders) {
@@ -164,10 +162,14 @@ public class Main {
         controller.writeReview(u4.getUserName(),u4.getPassword(),4.5,"Very good",u2.getId());
         controller.writeReview(u2.getUserName(),u2.getPassword(), 1.0, "Terrible", u1.getId());
 
-//        List<Review> reviews = reviewRepo.getAll();
-//        for (Review review: reviews) {
-//            System.out.println(review);
-//        }
+        List<Review> reviews = reviewRepo.getAll();
+        for (Review review: reviews) {
+            System.out.println(review);
+        }
+
+
+        controller.userService.addToFavorites(u3.getUserName(),u3.getPassword(),6);
+        controller.userService.addToFavorites(u4.getUserName(),u4.getPassword(),7);
 //        System.out.println();
 //
 //        //flagged actions
