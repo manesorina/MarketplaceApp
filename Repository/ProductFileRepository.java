@@ -8,6 +8,11 @@ public class ProductFileRepository extends FileRepository<Product> {
     }
 
     protected String convertObjectToString(Product product){
+
+        if(product==null){
+            throw new IllegalArgumentException("Product object cannot be null");
+        }
+
         String serialized= product.getId()+ "," +
                 product.getCategory()+ "," +
                 product.getName()+ "," +
@@ -27,6 +32,14 @@ public class ProductFileRepository extends FileRepository<Product> {
 
 
     protected Product createObjectFromString(String line){
+
+
+        if(line==null || line.trim().isEmpty()){
+            throw new IllegalArgumentException("Line to parse cannot be null or empty");
+        }
+
+
+        try{
         String[] parts=line.split(",");
         int id=Integer.parseInt(parts[0]);
         int category=Integer.parseInt(parts[1]);
@@ -46,6 +59,9 @@ public class ProductFileRepository extends FileRepository<Product> {
         product.setId(id);
         product.setAvailable(isAvailable);
         return product;
+        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Error parsing user data: " + line, e);
+        }
 
     }
 

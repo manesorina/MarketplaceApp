@@ -23,6 +23,10 @@ public class UserFileRepository extends FileRepository<User> {
 
     @Override
     protected String convertObjectToString(User user) {
+
+        if(user==null){
+            throw new IllegalArgumentException("User object cannot be null");
+        }
         return user.getId() + "," +
                 user.getUserName() + "," +
                 user.getPassword() + "," +
@@ -34,35 +38,48 @@ public class UserFileRepository extends FileRepository<User> {
 
     @Override
     protected User createObjectFromString(String line) {
-        String[] parts = line.split(",");
-        int id = Integer.parseInt(parts[0]);
-        String username = parts[1];
-        String password = parts[2];
-        String email = parts[3];
-        String phone = parts[4];
-        double score = Double.parseDouble(parts[5]);
-        int flaggedActions = Integer.parseInt(parts[6]);
 
-        User user = new User(username, password, email, phone, score);
-        user.setId(id);
-        user.nrOfFlaggedActions = flaggedActions;
-        return user;
+        if(line==null || line.trim().isEmpty()){
+            throw new IllegalArgumentException("Line to parse cannot be null or empty");
+        }
+
+        try {
+            String[] parts = line.split(",");
+            int id = Integer.parseInt(parts[0]);
+            String username = parts[1];
+            String password = parts[2];
+            String email = parts[3];
+            String phone = parts[4];
+            double score = Double.parseDouble(parts[5]);
+            int flaggedActions = Integer.parseInt(parts[6]);
+
+            User user = new User(username, password, email, phone, score);
+            user.setId(id);
+            user.nrOfFlaggedActions = flaggedActions;
+            return user;
+        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){
+            throw new IllegalArgumentException("Error parsing user data: " + line, e);
+        }
     }
 
     @Override
     public void loadDataFromFile() {
-        super.loadDataFromFile();
+        try {
+            super.loadDataFromFile();
 
-        loadLikedProducts().forEach((key, value) -> {
-            User u = super.read(key);
-            u.getFavourites().clear();
-            u.getFavourites().addAll(value);
-        });
-        loadListedProducts().forEach((key, value) -> {
-            User u = super.read(key);
-            u.getListedProducts().clear();
-            u.getListedProducts().addAll(value);
-        });
+            loadLikedProducts().forEach((key, value) -> {
+                User u = super.read(key);
+                u.getFavourites().clear();
+                u.getFavourites().addAll(value);
+            });
+            loadListedProducts().forEach((key, value) -> {
+                User u = super.read(key);
+                u.getListedProducts().clear();
+                u.getListedProducts().addAll(value);
+            });
+        }catch(RuntimeException e){
+            System.err.println("Error loading data from file: " + e.getMessage());
+        }
     }
 
     private Map<Integer, List<Integer>> loadLikedProducts() {

@@ -21,6 +21,11 @@ public class OrderFileRepository extends FileRepository<Order> {
 
     @Override
     protected String convertObjectToString(Order order) {
+
+        if(order==null){
+            throw new IllegalArgumentException("Order object cannot be null");
+        }
+
         return order.getId() + "," +
                 order.getStatus() + "," +
                 order.getTotalPrice() + "," +
@@ -31,28 +36,37 @@ public class OrderFileRepository extends FileRepository<Order> {
 
     @Override
     protected Order createObjectFromString(String line) {
-        String[] parts = line.split(",");
-        int orderId = Integer.parseInt(parts[0]);
-        String status = parts[1];
-        double totalPrice = Double.parseDouble(parts[2]);
-        String shippingAddress = parts[3];
-        int buyer = Integer.parseInt(parts[4]);
-        int seller = Integer.parseInt(parts[5]);
 
-        Order order = new Order(new ArrayList<>(), status, shippingAddress, buyer, seller);
-        order.setId(orderId);
-        return order;
+        try{
+            String[] parts = line.split(",");
+            int orderId = Integer.parseInt(parts[0]);
+            String status = parts[1];
+            double totalPrice = Double.parseDouble(parts[2]);
+            String shippingAddress = parts[3];
+            int buyer = Integer.parseInt(parts[4]);
+            int seller = Integer.parseInt(parts[5]);
+
+            Order order = new Order(new ArrayList<>(), status, shippingAddress, buyer, seller);
+            order.setId(orderId);
+            return order;
+        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){
+            throw new IllegalArgumentException("Error parsing user data: " + line, e);
+        }
     }
 
     @Override
     public void loadDataFromFile() {
-        //List<Order> orders = super.getAll();
-        super.loadDataFromFile();
-        loadOrderedProducts().forEach((key, value) -> {
-            Order o = super.read(key);
-            o.getProducts().clear();
-            o.getProducts().addAll(value);
-        });
+
+        try {
+            super.loadDataFromFile();
+            loadOrderedProducts().forEach((key, value) -> {
+                Order o = super.read(key);
+                o.getProducts().clear();
+                o.getProducts().addAll(value);
+            });
+        }catch(RuntimeException e) {
+            System.err.println("Error loading data from file: " + e.getMessage());
+        }
     }
 
     private Map<Integer, List<Integer>> loadOrderedProducts() {
@@ -60,6 +74,8 @@ public class OrderFileRepository extends FileRepository<Order> {
             String line;
             Map<Integer, List<Integer>> orderedProducts = new HashMap<>();
             while ((line = reader.readLine()) != null) {
+
+
                 String[] parts = line.split(",");
                 int orderId = Integer.parseInt(parts[0]);
                 int productId = Integer.parseInt(parts[1]);

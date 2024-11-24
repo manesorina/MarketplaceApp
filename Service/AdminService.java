@@ -59,15 +59,23 @@ public class AdminService extends VisitorService {
      * @return {@code true} if the user is successfully deleted; {@code false} otherwise.
      */
     public boolean deleteUser(String adminUsername, String adminPassword, int userId) {
-        if (authenticate(adminUsername, adminPassword)) {
-            List<User> users=userRepo.getAll();
-            for(User user:users){
-                if (user.getId()==userId){
-                    userRepo.delete(userId);
-                    return true;
+        try {
+            if (authenticate(adminUsername, adminPassword)) {
+                List<User> users = userRepo.getAll();
+                for (User user : users) {
+                    if (user.getId() == userId) {
+                        userRepo.delete(userId);
+                        return true;
+                    }
                 }
+                throw new IllegalArgumentException("User with ID " + userId + " does not exist.");
+            } else {
+                throw new SecurityException("Authentication failed for admin: " + adminUsername);
             }
+        }catch (Exception e) {
+            System.err.println("Error deleting user: " + e.getMessage());
         }
+
         return false;
     }
 
@@ -81,16 +89,28 @@ public class AdminService extends VisitorService {
      * @return {@code true} if the review is successfully deleted; {@code false} otherwise.
      */
     public boolean deleteReview(String adminUsername, String adminPassword, int reviewId) {
+
+        try{
         if (authenticate(adminUsername, adminPassword)) {
             List<Review> reviews = reviewRepo.getAll();
             for (Review review:reviews) {
                 if(review.getId()==reviewId){
                     User user = userRepo.read(reviewRepo.read(reviewId).getReviewer());
+                    if (user == null) {
+                        throw new IllegalStateException("Reviewer for review ID " + reviewId + " does not exist.");
+                    }
                     user.incrementFlaggedActions();
                     reviewRepo.delete(reviewId);
+                    return true;
                 }
             }
+            throw new IllegalArgumentException("Review with ID " + reviewId + " does not exist.");
         }
+        }
+        catch (Exception e) {
+            System.err.println("Error deleting review: " + e.getMessage());
+        }
+
         return false;
     }
 
@@ -103,6 +123,8 @@ public class AdminService extends VisitorService {
      * @return {@code true} if the product is successfully deleted; {@code false} otherwise.
      */
     public boolean deleteProduct(String adminUsername, String adminPassword, int productId) {
+
+        try{
         if (authenticate(adminUsername,adminPassword)) {
             List<Product> products=productRepo.getAll();
             for(Product product:products){
@@ -110,8 +132,13 @@ public class AdminService extends VisitorService {
                     User user = userRepo.read(productRepo.read(productId).getListedBy());
                     user.incrementFlaggedActions();
                     productRepo.delete(productId);
+                    return true;
                 }
             }
+            throw new IllegalArgumentException("Product with ID " + productId + " does not exist.");
+        }
+        } catch (Exception e) {
+            System.err.println("Error deleting product: " + e.getMessage());
         }
         return false;
     }
@@ -127,20 +154,35 @@ public class AdminService extends VisitorService {
      * @return {@code true} if the category is successfully updated; {@code false} otherwise.
      */
     public boolean updateCategory(String adminUsername,String adminPassword, int productId, int newCategory){
+
+        try{
         if (authenticate(adminUsername,adminPassword)) {
             List<Product> products=productRepo.getAll();
-            Product targetetdProduct=productRepo.read(productId);
-            for(Product product:products){
-                if(product.equals(targetetdProduct)){
-                    targetetdProduct.setCategory(newCategory);
-                    int userId = productRepo.read(productId).getListedBy();
-                    User user = userRepo.read(userId);
-                    user.incrementFlaggedActions();
-                    productRepo.update(targetetdProduct);
-                }
+            Product targetedProduct=productRepo.read(productId);
+
+            if (targetedProduct == null) {
+                throw new IllegalArgumentException("Product with ID " + productId + " does not exist.");
             }
 
+            for(Product product:products){
+                if(product.equals(targetedProduct)){
+                    targetedProduct.setCategory(newCategory);
+                    int userId = productRepo.read(productId).getListedBy();
+                    User user = userRepo.read(userId);
 
+                    if (user == null) {
+                        throw new IllegalStateException("User listing product ID " + productId + " does not exist.");
+                    }
+
+                    user.incrementFlaggedActions();
+                    productRepo.update(targetedProduct);
+                    return true;
+                }
+            }
+            throw new IllegalStateException("Failed to update category for product ID " + productId);
+        }
+        } catch (Exception e) {
+            System.err.println("Error updating category: " + e.getMessage());
         }
         return false;
     }
@@ -197,28 +239,42 @@ public class AdminService extends VisitorService {
 
 
     public Map<String, Double> sortCategoriesByIncome() {
-        List<Order> allOrders = orderRepo.getAll();
-        if (allOrders.isEmpty()) {
-            return Map.of();
-        }
-        Map<String, Double> incomeByCategory = new HashMap<>();
-        for (Order order:allOrders) {
-            for (int productId: order.getProducts()) {
-                Product product = productRepo.read(productId);
-                if (product != null) {
-                    String categoryName = String.valueOf(categoryRepo.read(product.getCategory()).getName());
-                    double productPrice = product.getPrice();
-                    incomeByCategory.merge(categoryName, productPrice, Double::sum);
+
+        try {
+            List<Order> allOrders = orderRepo.getAll();
+            if (allOrders.isEmpty()) {
+                return Map.of();
+            }
+            Map<String, Double> incomeByCategory = new HashMap<>();
+            for (Order order : allOrders) {
+                for (int productId : order.getProducts()) {
+
+                    try {
+                        Product product = productRepo.read(productId);
+                        if (product != null) {
+                            String categoryName = String.valueOf(categoryRepo.read(product.getCategory()).getName());
+                            double productPrice = product.getPrice();
+                            incomeByCategory.merge(categoryName, productPrice, Double::sum);
+                        }
+                    } catch (IllegalStateException e) {
+                        System.err.println("Error processing product ID " + productId + ": " + e.getMessage());
+                    }
                 }
             }
+
+
+            List<Map.Entry<String, Double>> sortedEntries = new ArrayList<>(incomeByCategory.entrySet());
+            sortedEntries.sort(Map.Entry.<String, Double>comparingByValue().reversed());
+            Map<String, Double> sortedIncomeByCategory = new LinkedHashMap<>();
+            for (Map.Entry<String, Double> entry : sortedEntries) {
+                sortedIncomeByCategory.put(entry.getKey(), entry.getValue());
+            }
+            return sortedIncomeByCategory;
+
+        }catch (Exception e) {
+            System.err.println("Error sorting categories by income: " + e.getMessage());
+            return Map.of();
         }
-        List<Map.Entry<String, Double>> sortedEntries = new ArrayList<>(incomeByCategory.entrySet());
-        sortedEntries.sort(Map.Entry.<String, Double>comparingByValue().reversed());
-        Map<String, Double> sortedIncomeByCategory = new LinkedHashMap<>();
-        for (Map.Entry<String, Double> entry : sortedEntries) {
-            sortedIncomeByCategory.put(entry.getKey(), entry.getValue());
-        }
-        return sortedIncomeByCategory;
 
     }
 
