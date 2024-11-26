@@ -25,8 +25,6 @@ public class ProductFileRepository extends FileRepository<Product> {
                 product.getNrLikes()+ "," +
                 product.getListedBy()+ "," +
                 product.isAvailable();
-
-        System.out.println("Serialized product: " + serialized);
         return serialized;
     }
 

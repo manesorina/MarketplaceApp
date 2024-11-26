@@ -20,7 +20,6 @@ public abstract class FileRepository<T extends Identifiable> extends IMRepositor
 
     @Override
     public void create(T object) {
-        System.out.println("Creating object: " + object);
 
         int existing_id = exists(object);
 
