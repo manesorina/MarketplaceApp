@@ -296,6 +296,7 @@ public class UserService extends VisitorService {
                     }
 
                     product.setAvailable(false);
+                    productRepo.update(product);
                     productsBySeller.computeIfAbsent(product.getListedBy(), k -> new ArrayList<>()).add(selectedProductsId);
                 }
 
